@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -15,10 +16,10 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [userinfo, setUserInfo] = useState({
-    nickname: '',
-    age: '',
-    gender: '',
-    email: ''
+    nickname: 'ollabu3',
+    age: '20',
+    gender: 'female',
+    email: 'ollabu3@gmail.com'
   });
   const [isLogin, setIsLogin] = useState(false);
   const [hateFoods, setHateFoods] = useState(null);
@@ -26,7 +27,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Intro" component={IntroScreen} />
+        <Stack.Screen name="Intro">
+          {props => <IntroScreen {...props} isLogin={isLogin} />}
+        </Stack.Screen>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="HateFoods" component={HateFoodsScreen} />
         <Stack.Screen name="Recommend" component={RecommendBtnScreen} />

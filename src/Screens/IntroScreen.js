@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function IntroScreen({ navigation, isLogin }) {
   console.log(isLogin);
 
-  isLogin이 false면 Login으로 넘어가기 아닐시 hateFoods로 넘어가기
+  // isLogin이 false면 Login으로 넘어가기 아닐시 hateFoods로 넘어가기
   if (isLogin === false) {
     setTimeout(() => {
       navigation.replace('Login');

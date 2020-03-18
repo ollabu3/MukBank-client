@@ -1,17 +1,28 @@
+// eslint-disable-next-line import/prefer-default-export
 export const locations = [
   {
-    name: 'destination01',
-    address: 'aaa',
-    coords: { latitude: 37.785834, longitude: -122.407518 }
+    name: '백곱식당',
+    address: '서울특별시 강북구 미아동 44-1',
+    coords: { latitude: 37.612285076, longitude: 127.031281877 }
   },
   {
-    name: 'destination02',
-    address: 'bbb',
-    coords: { latitude: 37.785834, longitude: -122.408518 }
+    name: '애슐리퀸즈 미아사거리역점',
+    address: '서울특별시 강북구 미아동 1364',
+    coords: { latitude: 37.61368879, longitude: 127.030530076 }
   },
   {
-    name: 'destination03',
-    address: 'ccc',
-    coords: { latitude: 37.785834, longitude: -122.409518 }
+    name: '숯불곱창 양대꾸이',
+    address: '서울특별시 강북구 미아동 44-1',
+    coords: { latitude: 37.612285076, longitude: 127.031281877 }
+  },
+  {
+    name: '어니언 미아',
+    address: '서울특별시 강북구 미아동 127-9',
+    coords: { latitude: 37.624103241, longitude: 127.028106248 }
+  },
+  {
+    name: '피자몰 미아사거리점',
+    address: '서울특별시 강북구 미아동 44-1',
+    coords: { latitude: 37.61368879, longitude: 127.030530076 }
   }
 ];

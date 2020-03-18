@@ -3,8 +3,6 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import * as Google from 'expo-google-app-auth';
 
-axios.defaults.withCredentials = true;
-
 export default function LoginScreen({
   navigation,
   userinfo,

@@ -13,9 +13,6 @@ import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
 
 const Stack = createStackNavigator();
-import axios from 'axios';
-
-axios.defaults.withCredentials = true;
 
 export default function App() {
   const [userinfo, setUserInfo] = useState({

@@ -2,38 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ScrollView } from 'react-native';
 // import { FlatList } from 'react-native-gesture-handler';
 import { fakeData } from './fakeData';
-import axios from 'axios';
 
 export default function HateFoodsScreen({ navigation }) {
   const [notSelectedList, setNotSelectedList] = useState(fakeData);
   const [selectedList, setSelectedList] = useState([]);
-
-  console.log(notSelectedList);
-
-  function set() {
-    setNotSelectedList([]);
-    setSelectedList([]);
-  }
-
-  function plus(selected) {
-    let selectedArr = selectedList;
-    let notSelectedArr = notSelectedList.filter(item => selected !== item);
-    selectedArr.push(selected);
-    setNotSelectedList(notSelectedArr);
-    setSelectedList(selectedArr);
-  }
-
-  function minus(selected) {
-    let notSelectedArr = notSelectedList;
-    let selectedArr = selectedList.filter(item => selected !== item);
-    notSelectedArr.push(selected);
-
-    notSelectedArr.sort((a, b) => {
-      return a - b;
-    });
-    setNotSelectedList(notSelectedArr);
-    setSelectedList(selectedArr);
-  }
 
   return (
     <View style={{ flex: 1 }}>

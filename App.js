@@ -13,16 +13,21 @@ import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
 
 const Stack = createStackNavigator();
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 export default function App() {
   const [userinfo, setUserInfo] = useState({
-    nickname: 'ollabu3',
-    age: '20',
-    gender: 'female',
-    email: 'ollabu3@gmail.com'
+    name: '',
+    age: '',
+    gender: '',
+    email: ''
   });
   const [isLogin, setIsLogin] = useState(false);
   const [hateFoods, setHateFoods] = useState(null);
+
+  // user가 접속할 때 정보를 업데이트 해주는 function
 
   return (
     <NavigationContainer>
@@ -30,7 +35,11 @@ export default function App() {
         <Stack.Screen name="Intro">
           {props => <IntroScreen {...props} isLogin={isLogin} />}
         </Stack.Screen>
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Login">
+          {props => (
+            <LoginScreen {...props} userinfo={userinfo} isLogin={isLogin} />
+          )}
+        </Stack.Screen>
         <Stack.Screen name="HateFoods" component={HateFoodsScreen} />
         <Stack.Screen name="Recommend" component={RecommendBtnScreen} />
         <Stack.Screen name="MainPlace" component={MainPlaceScreen} />

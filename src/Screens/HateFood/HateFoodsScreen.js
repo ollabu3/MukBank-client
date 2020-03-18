@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ScrollView } from 'react-native';
 // import { FlatList } from 'react-native-gesture-handler';
 import { fakeData } from './fakeData';
+import axios from 'axios';
 
 export default function HateFoodsScreen({ navigation }) {
   const [notSelectedList, setNotSelectedList] = useState(fakeData);
@@ -40,8 +41,13 @@ export default function HateFoodsScreen({ navigation }) {
       <Text>selected</Text>
       <ScrollView horizontal>
         <View style={{ flex: 2, flexDirection: 'row' }}>
-          {selectedList.map(item => (
-            <Button title={item} onPress={() => minus(item)} />
+          {selectedList.map((item, index) => (
+            <Button
+              key={index}
+              title={item}
+              type="outline"
+              onPress={() => minus(item)}
+            />
           ))}
         </View>
       </ScrollView>
@@ -50,8 +56,8 @@ export default function HateFoodsScreen({ navigation }) {
       <View style={{ flex: 9 }}>
         <ScrollView horizontal>
           <View style={{ flex: 2, flexDirection: 'row' }}>
-            {notSelectedList.map(item => (
-              <Button title={item} onPress={() => plus(item)} />
+            {notSelectedList.map((item, index) => (
+              <Button key={index} title={item} onPress={() => plus(item)} />
             ))}
           </View>
         </ScrollView>

@@ -4,6 +4,7 @@ import App from './App';
 AppRegistry.registerComponent('mukbankClient', () => App);
 
 if (Platform.OS === 'web') {
-  const rootTag = document.getElementById('root') || document.getElementById('main');
+  const rootTag =
+    document.getElementById('root') || document.getElementById('main');
   AppRegistry.runApplication('mukbankClient', { rootTag });
 }

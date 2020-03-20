@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, Text, View, Dimensions, Image } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Dimensions,
+  Image
+} from 'react-native';
 import MapView, { Marker, Polyline, Callout, Circle } from 'react-native-maps';
 import { ScrollView } from 'react-native-gesture-handler';
+import Carousel from 'react-native-snap-carousel';
+
 import { locations } from './fakeData';
 
 export default function MapScreen() {
@@ -9,6 +19,12 @@ export default function MapScreen() {
   const [location, setLocation] = useState({
     coords: { latitude: 32, longitude: 127 }
   });
+
+  function renderCarouselItem({ item }) {
+    <View>
+      <Text>aaa</Text>
+    </View>;
+  }
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -23,6 +39,14 @@ export default function MapScreen() {
     );
     console.log(location);
   }, []);
+  /** */
+
+  function handleSnapToItem(index) {
+    console.log('snapped to ', index);
+  }
+  _carousel = {};
+  /** */
+
   if (!location) {
     return (
       <View>
@@ -30,8 +54,33 @@ export default function MapScreen() {
       </View>
     );
   }
+
+  _renderItem = ({ item, index }) => {
+    console.log('rendering,', index, item);
+    return (
+      <View>
+        <View
+          onPress={() => {
+            _carousel.snapToItem(index);
+          }}
+        >
+          {/* <Image source={{ uri: item.thumbnail }} /> */}
+        </View>
+        {/* <Image source={{ uri: item.nextVideoId }} /> */}
+        <Text>{item.name}</Text>
+        <Text>{item.address}</Text>
+        <Button
+          title="길찾기"
+          onPress={() => {
+            console.log('찾아가자');
+          }}
+        />
+      </View>
+    );
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
       <Text>zsghfd</Text>
       <MapView
         showsUserLocation
@@ -46,24 +95,44 @@ export default function MapScreen() {
           longitudeDelta: 0.0021
         }}
       >
-        {/* <Polyline
-          coordinates={this.state.coordinate}
-          fillColor={'rgba(100,100,200,0,3)'}
-        /> */}
-        {/* <Circle
-          center={{ latitude: 37.612285, longitude: 127.031282 }}
-          radius={10000}
-          fillColor={'rgb(200,300,200,0.5)'}
-        /> */}
+        <Circle
+          center={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          }}
+          radius={100}
+          fillColor={'rgba(100, 200, 200, 0.3)'}
+        />
+
         <Marker title="현위치" coordinate={location.coords}>
           <Callout>
-            <Image
-              source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
-            />
             <Text>Anasdfasdfaf city</Text>
           </Callout>
         </Marker>
       </MapView>
+
+      <View>
+        <Carousel
+          ref={c => {
+            _carousel = c;
+          }}
+          data={locations}
+          renderItem={_renderItem}
+          onSnapToItem={handleSnapToItem}
+          sliderWidth={360}
+          itemWidth={256}
+          layout={'default'}
+          firstItem={0}
+        />
+        {console.log(_carousel)}
+      </View>
     </View>
   );
 }
+
+let styles = StyleSheet.create({
+  container: { ...StyleSheet.absoluteFillObject },
+  map: {
+    ...StyleSheet.absoluteFillObject
+  }
+});

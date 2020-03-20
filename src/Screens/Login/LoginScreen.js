@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  ToastAndroid,
   BackHandler,
   StyleSheet,
   Text,
@@ -10,10 +9,17 @@ import {
 
 export default function LoginScreen({
   navigation,
-  userinfo,
   googleSignIn,
-  isLogin
+  isLogin,
+  backBtn
 }) {
+  // 뒤로가기
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backBtn);
+
+    return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.title}>

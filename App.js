@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BackHandler, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -63,10 +63,8 @@ export default function App() {
     console.log('googleSignin');
     try {
       const result = await Google.logInAsync({
-        androidClientId:
-          '52821634197-55clu7kimjhtv51lve2r9aba37t4j9h3.apps.googleusercontent.com',
-        iosClientId:
-          '52821634197-7e3hn2unolbik7h883j4sa5lis5oln6a.apps.googleusercontent.com',
+        androidClientId: '',
+        iosClientId: '',
         scopes: ['profile', 'email', 'openid']
       });
       if (result.type === 'success') {

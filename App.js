@@ -48,9 +48,9 @@ export default function App() {
     try {
       const result = await Google.logInAsync({
         androidClientId:
-          '52821634197-55clu7kimjhtv51lve2r9aba37t4j9h3.apps.googleusercontent.com',
+          '',
         iosClientId:
-          '52821634197-7e3hn2unolbik7h883j4sa5lis5oln6a.apps.googleusercontent.com',
+          '',
         scopes: ['profile', 'email', 'openid']
       });
       if (result.type === 'success') {

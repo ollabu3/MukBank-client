@@ -1,83 +1,138 @@
-import React, { useState } from 'react';
-import { Platform, Text, View, Dimensions } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import Constants from 'expo-constants';
-import * as Location from 'expo-location';
-import * as Permissions from 'expo-permissions';
+import React, { useState, useEffect } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Dimensions,
+  Image
+} from 'react-native';
+import MapView, { Marker, Polyline, Callout, Circle } from 'react-native-maps';
 import { ScrollView } from 'react-native-gesture-handler';
+import Carousel from 'react-native-snap-carousel';
+
 import { locations } from './fakeData';
 
 export default function MapScreen() {
-  const [location, setLocation] = useState(null);
-  const [deslocations, setDesLocations] = useState(locations[0]);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [error, setError] = useState();
+  const [location, setLocation] = useState({
+    coords: { latitude: 32, longitude: 127 }
+  });
 
-  if (Platform.os === 'android' && !Constants.isDevice) {
-    setErrorMessage(
-      'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+  function renderCarouselItem({ item }) {
+    <View>
+      <Text>aaa</Text>
+    </View>;
+  }
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        setLocation(position);
+        setError(null);
+      }
+      // err => {
+      //   setError(err),
+      //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 };
+      // }
     );
-  } else {
-    _getLocationAsync();
-  }
-  async function _getLocationAsync() {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      setErrorMessage('Permission to access location was denied');
-    }
+    console.log(location);
+  }, []);
+  /** */
 
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
+  function handleSnapToItem(index) {
+    console.log('snapped to ', index);
   }
+  _carousel = {};
+  /** */
 
-  console.log('d', deslocations.coords);
-
-  let text = 'Waiting..';
-  if (errorMessage) {
-    text = errorMessage;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
   if (!location) {
     return (
       <View>
-        <Text>로딩중</Text>
+        <Text>loding</Text>
       </View>
     );
   }
-  const points = [
-    { latitude: 37.8025259, longitude: -122.4351431 },
-    { latitude: 37.7896386, longitude: -122.421646 },
-    { latitude: 37.7665248, longitude: -122.4161628 },
-    { latitude: 37.7734153, longitude: -122.4577787 },
-    { latitude: 37.7948605, longitude: -122.4596065 },
-    { latitude: 37.8025259, longitude: -122.4351431 }
-  ];
 
-  return (
-    <View>
-      <Text>{text}zzzaazz</Text>
-      <ScrollView>
-        <MapView
-          showsUserLocation
-          style={{
-            width: Dimensions.get('window').width,
-            height: 600
-          }}
-          region={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
-            // latitudeDelta: 110,
-            // longitudeDelta: 110
+  _renderItem = ({ item, index }) => {
+    console.log('rendering,', index, item);
+    return (
+      <View>
+        <View
+          onPress={() => {
+            _carousel.snapToItem(index);
           }}
         >
-          <MapView.Polyline
-            coordinates={points}
-            strokeWidth={10}
-            strokeColor="#00a8ff"
-            lineCap="around"
-          />
-        </MapView>
-      </ScrollView>
+          {/* <Image source={{ uri: item.thumbnail }} /> */}
+        </View>
+        {/* <Image source={{ uri: item.nextVideoId }} /> */}
+        <Text>{item.name}</Text>
+        <Text>{item.address}</Text>
+        <Button
+          title="길찾기"
+          onPress={() => {
+            console.log('찾아가자');
+          }}
+        />
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text>zsghfd</Text>
+      <MapView
+        showsUserLocation
+        style={{
+          width: Dimensions.get('window').width,
+          height: Dimensions.get('window').height
+        }}
+        region={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.0015,
+          longitudeDelta: 0.0021
+        }}
+      >
+        <Circle
+          center={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          }}
+          radius={100}
+          fillColor={'rgba(100, 200, 200, 0.3)'}
+        />
+
+        <Marker title="현위치" coordinate={location.coords}>
+          <Callout>
+            <Text>Anasdfasdfaf city</Text>
+          </Callout>
+        </Marker>
+      </MapView>
+
+      <View>
+        <Carousel
+          ref={c => {
+            _carousel = c;
+          }}
+          data={locations}
+          renderItem={_renderItem}
+          onSnapToItem={handleSnapToItem}
+          sliderWidth={360}
+          itemWidth={256}
+          layout={'default'}
+          firstItem={0}
+        />
+        {console.log(_carousel)}
+      </View>
     </View>
   );
 }
+
+let styles = StyleSheet.create({
+  container: { ...StyleSheet.absoluteFillObject },
+  map: {
+    ...StyleSheet.absoluteFillObject
+  }
+});

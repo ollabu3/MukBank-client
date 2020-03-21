@@ -81,7 +81,7 @@ export default function HateFoodsScreen({ navigation }) {
               }}
             >
               {notSelectedList.map((item, index) => (
-                <View style={{ margin: 1, r }}>
+                <View style={{ margin: 1 }}>
                   <Button key={index} title={item} onPress={() => plus(item)} />
                 </View>
               ))}

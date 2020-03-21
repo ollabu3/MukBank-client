@@ -4,7 +4,9 @@ import React, { useState } from 'react';
 import { BackHandler, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import * as Google from 'expo-google-app-auth';
+import KakaoLogins from '@react-native-seoul/kakao-login';
 import axios from 'axios';
 
 import HateFoodsScreen from './src/Screens/HateFood/HateFoodsScreen';
@@ -58,6 +60,28 @@ export default function App() {
       snsId: userinfo.user.id
     });
   }
+
+  //KaKao signin
+
+  const kakaoSignin = () => {
+    KakaoLogins.login()
+      .then(result => {
+        setIsLogin(true);
+        console.log(` ### Login Result : ${JSON.stringify(result)}`);
+        KakaoLogins.getProfile()
+          .then(result => {
+            console.log(`### Profile Result : ${JSON.stringify(result)}`);
+            return result;
+          })
+          .catch(err => {
+            console.log(`### Profile Error : ${JSON.stringify(err)}`);
+          });
+      })
+      .catch(err => {
+        console.log(`### Login Error : ${JSON.stringify(err)}`);
+      });
+  };
+
   //google signin
   const googleSignIn = async () => {
     console.log('googleSignin');
@@ -100,6 +124,7 @@ export default function App() {
               userinfo={userinfo}
               isLogin={isLogin}
               googleSignIn={googleSignIn}
+              kakaoSignin={kakaoSignin}
               backBtn={backBtn}
             />
           )}

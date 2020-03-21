@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import {
-  BackHandler,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity
-} from 'react-native';
+
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 export default function LoginScreen({
   navigation,
   googleSignIn,
   isLogin,
-  backBtn
+  kakaoSignin
 }) {
   // 뒤로가기
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', backBtn);
+  // useEffect(() => {
+  //   BackHandler.addEventListener('hardwareBackPress', backBtn);
 
-    return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
-  }, []);
+  //   return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -32,7 +27,16 @@ export default function LoginScreen({
           </TouchableOpacity>
         </View>
         <View>
-          <TouchableOpacity style={styles.btn2}>
+          <TouchableOpacity
+            style={styles.btn2}
+            onPress={() =>
+              kakaoSignin().then(() => {
+                if (isLogin === true) {
+                  navigation.replace('HateFoods');
+                }
+              })
+            }
+          >
             <Text style={styles.font2}>Kakao 로그인</Text>
           </TouchableOpacity>
         </View>

@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Button,
+  ImageBackground,
+  TouchableOpacity
+} from 'react-native';
 import axios from 'axios';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+// import { Button } from 'react-native-elements';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 // import { FlatList } from 'react-native-gesture-handler';
 import { fakeData } from './fakeData';
+import ScrollList from './ScrollList';
 
 export default function HateFoodsScreen({ navigation }) {
   const [notSelectedList, setNotSelectedList] = useState(fakeData);
   const [selectedList, setSelectedList] = useState([]);
-
-  function set() {
-    setNotSelectedList([]);
-    setSelectedList([]);
-  }
 
   function plus(selected) {
     let selectedArr = selectedList;
@@ -26,69 +32,77 @@ export default function HateFoodsScreen({ navigation }) {
     let selectedArr = selectedList.filter(item => selected !== item);
     notSelectedArr.push(selected);
 
-    notSelectedArr.sort((a, b) => {
-      return a - b;
-    });
+    // Number(newArr[0].slice(newArr.indexOf('~')))
+    notSelectedArr.sort();
+
     setNotSelectedList(notSelectedArr);
     setSelectedList(selectedArr);
   }
 
   useEffect(() => {
-    let aaa = [];
-    axios('https://mukbank.xyz:5001/hello')
-      .then(res => {
-        for (let i = 0; i < 40; i++) {
-          aaa.push(res.data + i);
-        }
-      })
-      .then(() => {
-        setNotSelectedList(aaa);
-      });
-    // setNotSelectedList(aaa);
+    axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
+      setNotSelectedList(res.data.sort());
+      console.log('axios 작동 하고 있습니다.');
+    });
   }, []);
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: 'red' }}>
-        <Text>selected</Text>
-        <ScrollView horizontal>
-          <View
+      <ImageBackground
+        style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+        source={require('./memo.jpg')}
+      >
+        <Grid>
+          <Col
             style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
+              marginTop: 10,
+              marginRight: 5,
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
               alignItems: 'center'
             }}
           >
-            {selectedList.map((item, index) => (
-              <View style={{ margin: 1 }}>
-                <Button key={index} title={item} onPress={() => minus(item)} />
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
-      {/* <Button title="back" onPress={() => navigation.navigate('Intro')} /> */}
-
-      <View style={{ flex: 5, backgroundColor: 'skyblue' }}>
-        <Text>notSelected</Text>
-        <View style={{ flex: 8 }}>
-          <ScrollView horizontal>
-            <View
-              style={{
-                flex: 2,
-                flexDirection: 'row',
-                alignItems: 'flex-start'
-              }}
-            >
-              {notSelectedList.map((item, index) => (
-                <View style={{ margin: 1 }}>
-                  <Button key={index} title={item} onPress={() => plus(item)} />
-                </View>
-              ))}
-            </View>
-          </ScrollView>
+            <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'blue' }}>
+              조아 하는거
+            </Text>
+            <ScrollList notSelectedList={notSelectedList} selItem={plus} />
+          </Col>
+          <Col
+            style={{
+              marginTop: 10,
+              marginLeft: 5,
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              alignItems: 'center'
+            }}
+          >
+            <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'red' }}>
+              시러 하는거
+            </Text>
+            <ScrollList notSelectedList={selectedList} selItem={minus} />
+          </Col>
+        </Grid>
+        <View
+          style={{
+            height: 80,
+            backgroundColor: 'skyblue',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 20,
+            marginRight: 20,
+            marginBottom: 20,
+            marginTop: 5,
+            borderRadius: 30
+          }}
+        >
+          <Text
+            style={{ fontSize: 30 }}
+            onPress={() => {
+              navigation.navigate('Map');
+            }}
+          >
+            음식 추천
+          </Text>
         </View>
-      </View>
+      </ImageBackground>
     </View>
   );
 }

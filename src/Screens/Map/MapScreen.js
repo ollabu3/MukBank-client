@@ -18,7 +18,7 @@ import { locations } from './fakeData';
 export default function MapScreen() {
   const [error, setError] = useState();
   const [location, setLocation] = useState({
-    coords: { latitude: 32, longitude: 127 }
+    coords: { latitude: 37, longitude: 127 }
   });
 
   // function renderCarouselItem({ item }) {
@@ -85,10 +85,7 @@ export default function MapScreen() {
       <Text>zsghfd</Text>
       <MapView
         showsUserLocation
-        style={{
-          width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height
-        }}
+        style={styles.map}
         region={{
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,

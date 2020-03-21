@@ -11,6 +11,7 @@ import {
 import MapView, { Marker, Polyline, Callout, Circle } from 'react-native-maps';
 import { ScrollView } from 'react-native-gesture-handler';
 import Carousel from 'react-native-snap-carousel';
+import Geolocation from 'react-native-geolocation-service';
 
 import { locations } from './fakeData';
 
@@ -20,14 +21,14 @@ export default function MapScreen() {
     coords: { latitude: 32, longitude: 127 }
   });
 
-  function renderCarouselItem({ item }) {
-    <View>
-      <Text>aaa</Text>
-    </View>;
-  }
+  // function renderCarouselItem({ item }) {
+  //   <View>
+  //     <Text>aaa</Text>
+  //   </View>;
+  // }
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
+    Geolocation.getCurrentPosition(
       position => {
         setLocation(position);
         setError(null);

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   Button,
   ImageBackground,
-  TouchableOpacity
+  PermissionsAndroid,
+  Alert
 } from 'react-native';
 import axios from 'axios';
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -19,6 +19,7 @@ export default function HateFoodsScreen({ navigation }) {
   const [notSelectedList, setNotSelectedList] = useState(fakeData);
   const [selectedList, setSelectedList] = useState([]);
 
+  // 싫어하는 목록에 추가 할수 있는 메서드
   function plus(selected) {
     let selectedArr = selectedList;
     let notSelectedArr = notSelectedList.filter(item => selected !== item);
@@ -26,7 +27,7 @@ export default function HateFoodsScreen({ navigation }) {
     setNotSelectedList(notSelectedArr);
     setSelectedList(selectedArr);
   }
-
+  // 좋아하는 목록에 추가 할수 있는 메서드
   function minus(selected) {
     let notSelectedArr = notSelectedList;
     let selectedArr = selectedList.filter(item => selected !== item);
@@ -39,10 +40,10 @@ export default function HateFoodsScreen({ navigation }) {
     setSelectedList(selectedArr);
   }
 
+  // 카테고리 정보를 가져옴
   useEffect(() => {
     axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
       setNotSelectedList(res.data.sort());
-      console.log('axios 작동 하고 있습니다.');
     });
   }, []);
 
@@ -61,7 +62,7 @@ export default function HateFoodsScreen({ navigation }) {
               alignItems: 'center'
             }}
           >
-            <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'blue' }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'blue' }}>
               조아 하는거
             </Text>
             <ScrollList notSelectedList={notSelectedList} selItem={plus} />
@@ -74,7 +75,7 @@ export default function HateFoodsScreen({ navigation }) {
               alignItems: 'center'
             }}
           >
-            <Text style={{ fontSize: 30, fontWeight: 'bold', color: 'red' }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>
               시러 하는거
             </Text>
             <ScrollList notSelectedList={selectedList} selItem={minus} />
@@ -95,8 +96,20 @@ export default function HateFoodsScreen({ navigation }) {
         >
           <Text
             style={{ fontSize: 30 }}
-            onPress={() => {
-              navigation.navigate('Map');
+            onPress={async () => {
+              const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                  title: 'ReactNativeCode Location Permission',
+                  message: 'ReactNativeCode App needs access to your location '
+                }
+              );
+              if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                // Alert.alert('Location Permission Granted.');
+                navigation.navigate('Map');
+              } else {
+                Alert.alert('Location Permission Not Granted');
+              }
             }}
           >
             음식 추천

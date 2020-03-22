@@ -5,9 +5,10 @@ export default function ScrollList(props) {
   console.log(props);
   return (
     <ScrollView>
-      {props.notSelectedList.map(item => {
+      {props.notSelectedList.map((item, index) => {
         return (
           <View
+            key={index}
             style={{
               justifyContent: 'center',
               alignItems: 'center',

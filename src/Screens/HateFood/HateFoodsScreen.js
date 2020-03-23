@@ -14,7 +14,8 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import { fakeData } from './fakeData';
 import ScrollList from './ScrollList';
 
-export default function HateFoodsScreen({ navigation }) {
+export default function HateFoodsScreen({ navigation, route }) {
+  // console.log('헤이트스크린에서', route.params.isLogin);
   const [notSelectedList, setNotSelectedList] = useState(fakeData);
   const [selectedList, setSelectedList] = useState([]);
 

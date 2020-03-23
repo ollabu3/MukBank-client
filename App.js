@@ -1,11 +1,20 @@
+/* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import { BackHandler, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
-import * as Google from 'expo-google-app-auth';
+import {
+  GoogleSignin,
+  statusCodes
+} from '@react-native-community/google-signin';
+// import {
+//   GoogleSignin,
+//   GoogleSigninButton,
+//   statusCodes
+// } from '@react-native-community/google-signin';
+// import * as Google from 'expo-google-app-auth';
 import KakaoLogins from '@react-native-seoul/kakao-login';
 import axios from 'axios';
 
@@ -16,7 +25,24 @@ import MapScreen from './src/Screens/Map/MapScreen';
 import MyPageScreen from './src/Screens/MyPageScreen';
 import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
+
+
+// GoogleSignin.configure();
+GoogleSignin.configure({
+  scopes: [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email'
+  ], // what API you want to access on behalf of the user, default is email and profile
+  webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  hostedDomain: '', // specifies a hosted domain restriction
+  forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+  accountName: '' // [Android] specifies an account name on the device that should be used
+});
+
+
 import Direction from './src/Screens/Map/Direction';
+
 const Stack = createStackNavigator();
 
 axios.defaults.withCredentials = true;
@@ -52,62 +78,89 @@ export default function App() {
     return true;
   }
   //로그인 시 유저정보 보낼 때
-  function postUserInfo() {
+  function postUserInfo(provider) {
     axios.post('API', {
       email: userinfo.email,
       nick: userinfo.name,
       profile: userinfo.profile,
-      snsId: userinfo.user.id
+      snsId: userinfo.user.id,
+      provider: provider
     });
   }
 
-  //KaKao signin
+  //카카오 로그인
+  function getKakaoProfile() {
+    return new Promise((resolve, reject) => {
+      KakaoLogins.getProfile((err, result) => {
+        if (result !== null && result !== undefined) {
+          resolve({ success: true, result: result });
+        }
+        if (err) {
+          reject({ success: false, result: err });
+        }
+      });
+    });
+  }
 
   const kakaoSignin = () => {
-    KakaoLogins.login()
-      .then(result => {
+    console.log('KakaoSignin');
+    KakaoLogins.login(async (err, result) => {
+      console.log(result);
+      if (result !== null && result !== undefined) {
         setIsLogin(true);
-        console.log(` ### Login Result : ${JSON.stringify(result)}`);
-        KakaoLogins.getProfile()
-          .then(result => {
-            console.log(`### Profile Result : ${JSON.stringify(result)}`);
-            return result;
-          })
-          .catch(err => {
-            console.log(`### Profile Error : ${JSON.stringify(err)}`);
-          });
-      })
-      .catch(err => {
-        console.log(`### Login Error : ${JSON.stringify(err)}`);
-      });
+        try {
+          const profile = await getKakaoProfile();
+          if (profile.success) {
+            // 프로필 받아오기 성공
+            // // 프로필정보를 받아온 후 해야할 것들
+            // console.log(profile.result);
+          } else throw profile.result;
+        } catch (error) {
+          console.log('getKakaoProfile error ', error);
+        }
+      }
+      if (err) {
+        console.log('Error', err);
+        return;
+      }
+    });
   };
 
   //google signin
+  // const googleSignin = async () => {
+  //   try {
+  //     const result = await GoogleSignin.signIn();
+  //     console.log(result);
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       Alert.alert('Error', '로그인이 취소되었습니다');
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //       Alert.alert('Error', '이미 처리되었습니다');
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //     }
+  //   }
+  // };
   const googleSignIn = async () => {
-    console.log('googleSignin');
     try {
-      const result = await Google.logInAsync({
-        androidClientId: '',
-        iosClientId: '',
-        scopes: ['profile', 'email', 'openid']
-      });
-      if (result.type === 'success') {
-        console.log(result);
-        setIsLogin(true);
-        // userinfo의 state변경해주고
-        setUserInfo({
-          name: result.user.name,
-          email: result.user.email,
-          profile: result.user.photoUrl,
-          snsId: result.user.id
-        });
-        // userinfo를 서버에 보내준다
-        // postUserInfo();
+      await GoogleSignin.hasPlayServices();
+      const user = await GoogleSignin.signIn();
+      console.log(user);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+        Alert.alert('Error', '로그인이 취소되었습니다');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+        Alert.alert('Error', '이미 처리되었습니다');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
       } else {
-        console.log('cancelled');
+        // some other error happened
       }
-    } catch (e) {
-      console.log('error', e);
     }
   };
 
@@ -130,14 +183,7 @@ export default function App() {
           )}
         </Stack.Screen>
         <Stack.Screen name="HateFoods">
-          {props => (
-            <HateFoodsScreen
-              {...props}
-              userinfo={userinfo}
-              isLogin={isLogin}
-              backBtn={backBtn}
-            />
-          )}
+          {props => <HateFoodsScreen {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Recommend" component={RecommendBtnScreen} />
         <Stack.Screen name="MainPlace" component={MainPlaceScreen} />

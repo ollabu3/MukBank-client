@@ -1,50 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Dimensions,
-  Image
-} from 'react-native';
-import MapView, { Marker, Polyline, Callout, Circle } from 'react-native-maps';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import MapView, { Marker, Circle, Callout } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
-
+import Geolocation from 'react-native-geolocation-service';
+import axios from 'axios';
 import { locations } from './fakeData';
 
-export default function MapScreen() {
-  const [error, setError] = useState();
+export default function MapScreen({ navigation }) {
+  let _carousel;
+  let _map;
+  let _marker; // 각각의 컴포넌트에서 가져온 것을 저장
+  // 초기값 => 현재 위치
   const [location, setLocation] = useState({
-    coords: { latitude: 32, longitude: 127 }
+    latitude: 37,
+    longitude: 127
   });
+  const [desLocations, setDesLocations] = useState(locations); // 식당 데이터 배열
 
-  function renderCarouselItem({ item }) {
-    <View>
-      <Text>aaa</Text>
-    </View>;
-  }
-
+  // 식당 혹은 카페 정보 가져오기
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        setLocation(position);
-        setError(null);
+    axios({
+      method: 'post',
+      url: 'https://mukbank.xyz:5001/restaurant/distance',
+      data: {
+        latitude: location.latitude,
+        longitude: location.longitude,
+        sort: 'distance',
+        distance: 0.5,
+        parent: '음식점'
       }
-      // err => {
-      //   setError(err),
-      //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 };
-      // }
-    );
-    console.log(location);
+    }).then(res => {
+      setDesLocations(res.data);
+    });
+  }, [location]);
+  // 현재위치 가져오기
+  useEffect(() => {
+    Geolocation.getCurrentPosition(position => {
+      // console.log('현재 위치는 --------', position);
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    });
   }, []);
-  /** */
 
+  // 스냅헸을때 가리키는 인덱스를 가지고 맵의 보이는 위치를 변환한다.
   function handleSnapToItem(index) {
-    console.log('snapped to ', index);
+    // console.log('snapped to ', index);
   }
-  _carousel = {};
+
   /** */
 
   if (!location) {
@@ -55,76 +59,123 @@ export default function MapScreen() {
     );
   }
 
-  _renderItem = ({ item, index }) => {
-    console.log('rendering,', index, item);
+  function onCarouselItemChange(index) {
+    _map.animateToRegion({
+      latitude: Number(desLocations[index].latitude),
+      longitude: Number(desLocations[index].longitude),
+      latitudeDelta: 0.0019,
+      longitudeDelta: 0.0019
+    });
+    // _marker[index].showCallout();
+  }
+  function onMarkerPressed(item, index) {
+    _map.animateToRegion({
+      latitude: Number(item.latitude),
+      longitude: Number(item.longitude),
+      latitudeDelta: 0.0019,
+      longitudeDelta: 0.0019
+    });
+    _carousel.snapToItem(index);
+  }
+
+  function _renderItem({ item, index }) {
+    // console.log('rendering,', index, item);
     return (
-      <View>
-        <View
+      <View style={{ alignItems: 'center' }}>
+        {/* <View
           onPress={() => {
             _carousel.snapToItem(index);
           }}
-        >
-          {/* <Image source={{ uri: item.thumbnail }} /> */}
-        </View>
-        {/* <Image source={{ uri: item.nextVideoId }} /> */}
-        <Text>{item.name}</Text>
-        <Text>{item.address}</Text>
-        <Button
-          title="길찾기"
+        /> */}
+        <Text style={{ fontSize: 20 }}>{item.name}</Text>
+        <Text
           onPress={() => {
-            console.log('찾아가자');
+            navigation.navigate('Direction');
           }}
-        />
+        >
+          길찾기
+        </Text>
+        <Text
+          onPress={() => {
+            console.log('따르릉~~~');
+          }}
+        >
+          전화 걸기
+        </Text>
       </View>
     );
-  };
+  }
 
   return (
     <View style={styles.container}>
-      <Text>zsghfd</Text>
+      <Text>a</Text>
       <MapView
         showsUserLocation
-        style={{
-          width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height
+        ref={map => {
+          _map = map;
         }}
+        style={styles.map}
         region={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          latitudeDelta: 0.0015,
-          longitudeDelta: 0.0021
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02
         }}
       >
+        {desLocations.map((item, index) => {
+          return (
+            <Marker
+              ref={marker => {
+                _marker = marker;
+                // console.log(marker);
+              }}
+              key={index}
+              coordinate={{
+                latitude: Number(item.latitude),
+                longitude: Number(item.longitude)
+              }}
+              title={item.name}
+              onPress={() => {
+                onMarkerPressed(item, index);
+              }}
+            >
+              <Callout style={{ alignItems: 'center' }}>
+                <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
+                <Text>{item.address}</Text>
+              </Callout>
+            </Marker>
+          );
+        })}
         <Circle
+          radius={500}
           center={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
+            latitude: location.latitude,
+            longitude: location.longitude
           }}
-          radius={100}
           fillColor={'rgba(100, 200, 200, 0.3)'}
         />
-
-        <Marker title="현위치" coordinate={location.coords}>
-          <Callout>
-            <Text>Anasdfasdfaf city</Text>
-          </Callout>
-        </Marker>
       </MapView>
-
-      <View>
+      <View style={{ backgroundColor: 'skyblue', marginTop: 500 }}>
         <Carousel
+          // contentContainerStyle={{ bottom: 11111 }} // ?? 이건 모르겠네
+          // containerCustomStyle={{ bottom: 0 }} // 안에 있는 내용물들의 속성
+          // contentContainerCustomStyle={{ bottom: 0 }} // 내용물이 밖으로 안나가고 안에서...
           ref={c => {
             _carousel = c;
           }}
-          data={locations}
+          data={desLocations}
           renderItem={_renderItem}
           onSnapToItem={handleSnapToItem}
-          sliderWidth={360}
-          itemWidth={256}
-          layout={'default'}
+          sliderWidth={Dimensions.get('window').width}
+          itemWidth={Dimensions.get('window').width}
+          layout="default"
           firstItem={0}
+          removeClippedSubviews={false}
+          onSnapToItem={index => {
+            onCarouselItemChange(index);
+          }}
         />
-        {console.log(_carousel)}
+        {/* {console.log(_carousel)} */}
       </View>
     </View>
   );
@@ -133,6 +184,8 @@ export default function MapScreen() {
 let styles = StyleSheet.create({
   container: { ...StyleSheet.absoluteFillObject },
   map: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
+    marginTop: 0,
+    marginBottom: 80
   }
 });

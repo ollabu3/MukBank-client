@@ -1,4 +1,6 @@
 rootProject.name = 'mukbankClient'
+include ':react-native-webview'
+project(':react-native-webview').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-webview/android')
 
 include ':react-native-google-signin', ':app'
 project(':react-native-google-signin').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/google-signin/android')

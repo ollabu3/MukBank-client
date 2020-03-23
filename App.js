@@ -26,6 +26,7 @@ import MyPageScreen from './src/Screens/MyPageScreen';
 import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
 
+
 // GoogleSignin.configure();
 GoogleSignin.configure({
   scopes: [
@@ -38,6 +39,9 @@ GoogleSignin.configure({
   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
   accountName: '' // [Android] specifies an account name on the device that should be used
 });
+
+
+import Direction from './src/Screens/Map/Direction';
 
 const Stack = createStackNavigator();
 
@@ -184,6 +188,7 @@ export default function App() {
         <Stack.Screen name="Recommend" component={RecommendBtnScreen} />
         <Stack.Screen name="MainPlace" component={MainPlaceScreen} />
         <Stack.Screen name="Map" component={MapScreen} />
+        <Stack.Screen name="Direction" component={Direction} />
         <Stack.Screen name="MyPage" component={MyPageScreen} />
       </Stack.Navigator>
     </NavigationContainer>

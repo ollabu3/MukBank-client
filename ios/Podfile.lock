@@ -55,6 +55,22 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - kakao-login (2.4.1):
+    - KakaoOpenSDK (~> 1.20.0)
+    - React
+  - KakaoOpenSDK (1.20.0):
+    - KakaoOpenSDK/KakaoCommon (= 1.20.0)
+    - KakaoOpenSDK/KakaoLink (= 1.20.0)
+    - KakaoOpenSDK/KakaoMessageTemplate (= 1.20.0)
+    - KakaoOpenSDK/KakaoNavi (= 1.20.0)
+    - KakaoOpenSDK/KakaoOpenSDK (= 1.20.0)
+  - KakaoOpenSDK/KakaoCommon (1.20.0)
+  - KakaoOpenSDK/KakaoLink (1.20.0):
+    - KakaoOpenSDK/KakaoCommon
+  - KakaoOpenSDK/KakaoMessageTemplate (1.20.0)
+  - KakaoOpenSDK/KakaoNavi (1.20.0):
+    - KakaoOpenSDK/KakaoCommon
+  - KakaoOpenSDK/KakaoOpenSDK (1.20.0)
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
@@ -218,11 +234,11 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-geolocation (2.0.2):
-    - React
   - react-native-maps (0.26.1):
     - React
   - react-native-safe-area-context (0.6.0):
+    - React
+  - react-native-webview (9.0.1):
     - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
@@ -267,6 +283,8 @@ PODS:
     - React
   - RNScreens (2.0.0-alpha.12):
     - React
+  - RNVectorIcons (6.6.0):
+    - React
   - UMBarCodeScannerInterface (5.0.0)
   - UMCameraInterface (5.0.0)
   - UMConstantsInterface (5.0.0)
@@ -302,6 +320,7 @@ DEPENDENCIES:
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - "kakao-login (from `../node_modules/@react-native-seoul/kakao-login`)"
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -313,9 +332,9 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -331,6 +350,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
   - UMConstantsInterface (from `../node_modules/unimodules-constants-interface/ios`)
@@ -349,6 +369,7 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - boost-for-react-native
+    - KakaoOpenSDK
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -397,6 +418,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  kakao-login:
+    :path: "../node_modules/@react-native-seoul/kakao-login"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -415,12 +438,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
-  react-native-geolocation:
-    :path: "../node_modules/@react-native-community/geolocation"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -449,6 +472,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   UMBarCodeScannerInterface:
     :path: !ruby/object:Pathname
     path: "../node_modules/unimodules-barcode-scanner-interface/ios"
@@ -508,6 +533,8 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  kakao-login: 0a270ca2d3c68f6f0f14895bc3487b37d21203f5
+  KakaoOpenSDK: 797d97ec4a7074a23d7175147f13ec274c81c9b9
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -517,9 +544,9 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
   react-native-maps: 6e499eee4eabf422ba8b6f94e993cc768bf35153
   react-native-safe-area-context: 870aba8339684c9b888d42103580b687ff3f0d0c
+  react-native-webview: a6c8c1d244240d8009197874bf93646b76ea6917
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -534,6 +561,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 911d3b110a7a233a34c4f800e7188a84b75319c6
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
   RNScreens: 254da4b84f25971cbb30ed3ddc84131f23cac812
+  RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   UMBarCodeScannerInterface: 550e7ffd7a789289260bde3d547be29407e75437
   UMCameraInterface: 51e4568d64e77615557afaad9a3acdaad5d32d9f
   UMConstantsInterface: 23d658b73efc2b8090519b32007c3de725339492
@@ -548,6 +576,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: ee5b1ee1056eb338ff2d521ba79460d8cd0bae7d
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: 574ff1383b84ba6cd2e47a1b7003a5bf1b6f946f
+PODFILE CHECKSUM: 1e721474e7e615749b46288109f0b4297bad091b
 
 COCOAPODS: 1.9.1

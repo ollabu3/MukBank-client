@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
+import { GoogleSigninButton } from '@react-native-community/google-signin';
 export default function LoginScreen({
   navigation,
   googleSignIn,
@@ -22,36 +23,27 @@ export default function LoginScreen({
       </View>
       <View style={styles.button}>
         <View>
-          <TouchableOpacity style={styles.btn1}>
-            <Text style={styles.font1}>Facebook 로그인</Text>
+          <TouchableOpacity>
+            <GoogleSigninButton
+              style={{ width: `100%`, height: 60, justifyContent: 'center' }}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={googleSignIn}
+            />
+            {/* <Text style={styles.font1}>Facebook 로그인</Text> */}
           </TouchableOpacity>
         </View>
         <View>
           <TouchableOpacity
             style={styles.btn2}
-            onPress={() =>
-              kakaoSignin().then(() => {
-                if (isLogin === true) {
-                  navigation.replace('HateFoods');
-                }
-              })
-            }
+            onPress={() => {
+              kakaoSignin();
+              if (isLogin === true) {
+                navigation.replace('HateFoods');
+              }
+            }}
           >
             <Text style={styles.font2}>Kakao 로그인</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.btn3}
-            onPress={() =>
-              googleSignIn().then(() => {
-                if (isLogin === true) {
-                  navigation.replace('HateFoods');
-                }
-              })
-            }
-          >
-            <Text style={styles.font3}>Google 로그인</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -100,16 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   font2: {
-    fontSize: 20
-  },
-  btn3: {
-    marginBottom: 10,
-    borderRadius: 5,
-    height: '50%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  font3: {
     fontSize: 20
   }
 });

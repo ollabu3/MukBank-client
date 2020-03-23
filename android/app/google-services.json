@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "243767808333",
+    "firebase_url": "https://mukbank.firebaseio.com",
+    "project_id": "mukbank",
+    "storage_bucket": "mukbank.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "",
+        "android_client_info": {
+          "package_name": "com.toNaEat.mukbankClient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.toNaEat.mukbankClient",
+            "certificate_hash": ""
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

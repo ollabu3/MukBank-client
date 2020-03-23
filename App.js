@@ -14,8 +14,6 @@ import {
 //   GoogleSigninButton,
 //   statusCodes
 // } from '@react-native-community/google-signin';
-// import * as Google from 'expo-google-app-auth';
-import KakaoLogins from '@react-native-seoul/kakao-login';
 import axios from 'axios';
 
 import HateFoodsScreen from './src/Screens/HateFood/HateFoodsScreen';
@@ -26,20 +24,18 @@ import MyPageScreen from './src/Screens/MyPageScreen';
 import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
 
-
-// GoogleSignin.configure();
-GoogleSignin.configure({
-  scopes: [
-    'https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/userinfo.email'
-  ], // what API you want to access on behalf of the user, default is email and profile
-  webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
-  offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-  hostedDomain: '', // specifies a hosted domain restriction
-  forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
-  accountName: '' // [Android] specifies an account name on the device that should be used
-});
-
+GoogleSignin.configure();
+// GoogleSignin.configure({
+//   scopes: [
+//     'https://www.googleapis.com/auth/userinfo.profile',
+//     'https://www.googleapis.com/auth/userinfo.email'
+//   ], // what API you want to access on behalf of the user, default is email and profile
+//   webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
+//   offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+//   hostedDomain: '', // specifies a hosted domain restriction
+//   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+//   accountName: '' // [Android] specifies an account name on the device that should be used
+// });
 
 import Direction from './src/Screens/Map/Direction';
 
@@ -87,44 +83,6 @@ export default function App() {
       provider: provider
     });
   }
-
-  //카카오 로그인
-  function getKakaoProfile() {
-    return new Promise((resolve, reject) => {
-      KakaoLogins.getProfile((err, result) => {
-        if (result !== null && result !== undefined) {
-          resolve({ success: true, result: result });
-        }
-        if (err) {
-          reject({ success: false, result: err });
-        }
-      });
-    });
-  }
-
-  const kakaoSignin = () => {
-    console.log('KakaoSignin');
-    KakaoLogins.login(async (err, result) => {
-      console.log(result);
-      if (result !== null && result !== undefined) {
-        setIsLogin(true);
-        try {
-          const profile = await getKakaoProfile();
-          if (profile.success) {
-            // 프로필 받아오기 성공
-            // // 프로필정보를 받아온 후 해야할 것들
-            // console.log(profile.result);
-          } else throw profile.result;
-        } catch (error) {
-          console.log('getKakaoProfile error ', error);
-        }
-      }
-      if (err) {
-        console.log('Error', err);
-        return;
-      }
-    });
-  };
 
   //google signin
   // const googleSignin = async () => {
@@ -177,8 +135,9 @@ export default function App() {
               userinfo={userinfo}
               isLogin={isLogin}
               googleSignIn={googleSignIn}
-              kakaoSignin={kakaoSignin}
+              // kakaoSignin={kakaoSignin}
               backBtn={backBtn}
+              setIsLogin={setIsLogin}
             />
           )}
         </Stack.Screen>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Button,
   ImageBackground,
   PermissionsAndroid,
   Alert
@@ -38,6 +37,23 @@ export default function HateFoodsScreen({ navigation }) {
 
     setNotSelectedList(notSelectedArr);
     setSelectedList(selectedArr);
+  }
+
+  // 위치 권한 허용 Alert
+  async function PermissionsLocation() {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'ReactNativeCode Location Permission',
+        message: 'ReactNativeCode App needs access to your location '
+      }
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      // Alert.alert('Location Permission Granted.');
+      navigation.navigate('Map');
+    } else {
+      Alert.alert('Location Permission Not Granted');
+    }
   }
 
   // 카테고리 정보를 가져옴
@@ -96,20 +112,8 @@ export default function HateFoodsScreen({ navigation }) {
         >
           <Text
             style={{ fontSize: 30 }}
-            onPress={async () => {
-              const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                {
-                  title: 'ReactNativeCode Location Permission',
-                  message: 'ReactNativeCode App needs access to your location '
-                }
-              );
-              if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                // Alert.alert('Location Permission Granted.');
-                navigation.navigate('Map');
-              } else {
-                Alert.alert('Location Permission Not Granted');
-              }
+            onPress={() => {
+              PermissionsLocation();
             }}
           >
             음식 추천

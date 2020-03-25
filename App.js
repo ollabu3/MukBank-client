@@ -15,7 +15,8 @@ import MapScreen from './src/Screens/Map/MapScreen';
 import MyPageScreen from './src/Screens/MyPageScreen';
 import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
-import SelectFoodOrCafeScreen from './src/Screens/SelectFoodOrCafe/SelectFoodOrCafe';
+import SelectFoodOrCafeScreen from './src/Screens/SelectFoodOrCafe/SelectFoodOrCafeScreen';
+
 const Stack = createStackNavigator();
 
 axios.defaults.withCredentials = true;

@@ -1,21 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import MapView, { Marker, Circle, Callout } from 'react-native-maps';
+import MapView, { Marker, Circle, Callout, Polyline } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
+
 import { locations } from './fakeData';
 
-export default function MapScreen({ navigation }) {
+export default function MapScreen() {
   let _carousel;
   let _map;
-  let _marker; // 각각의 컴포넌트에서 가져온 것을 저장
+  let _marker = [];
   // 초기값 => 현재 위치
   const [location, setLocation] = useState({
     latitude: 37,
     longitude: 127
   });
-  const [desLocations, setDesLocations] = useState(locations); // 식당 데이터 배열
+  const [datas, setDatas] = useState(locations); // 식당 데이터 배열      (객체 배열)
+  const [desLocation, setDesLocation] = useState([]); // 길찾기 배열     (객체 배열)
+  const [lastDes, setLastDes] = useState(null); // 길찾기 목적지        (배열)
+  const mapboxKey =
+    'pk.eyJ1IjoibWljaGFlbDAwOTg3IiwiYSI6ImNrN3hkMDZ0cTBiN3AzZ285NnJpeHYwOTAifQ.TCXZ4FUB9wcMhubjQcRR3g';
+
+  // 길찾기
+  function direction() {
+    axios(
+      `https://api.mapbox.com/directions/v5/mapbox/walking/${location.longitude},${location.latitude};${lastDes.longitude},${lastDes.latitude}?geometries=geojson&access_token=${mapboxKey}`
+      // `https://api.mapbox.com/directions/v5/mapbox/driving/${location.longitude},${location.latitude};127.034142509,37.583646125?waypoints=0;2&access_token=${mapboxKey}`
+    ).then(res => {
+      // console.log(res.data.routes[0].geometry.coordinates);
+      let a = res.data.routes[0].geometry.coordinates.map(item => {
+        // console.log(a);
+        return { latitude: item[1], longitude: item[0] };
+      });
+      setDesLocation(a);
+      console.log('경로', desLocation);
+      // console.log(num);
+    });
+  }
 
   // 식당 혹은 카페 정보 가져오기
   useEffect(() => {
@@ -25,14 +47,16 @@ export default function MapScreen({ navigation }) {
       data: {
         latitude: location.latitude,
         longitude: location.longitude,
-        sort: 'distance',
+        sort: 'review',
         distance: 0.5,
         parent: '음식점'
       }
     }).then(res => {
-      setDesLocations(res.data);
+      setDatas(res.data);
+      console.log(res.data.length);
     });
   }, [location]);
+
   // 현재위치 가져오기
   useEffect(() => {
     Geolocation.getCurrentPosition(position => {
@@ -45,12 +69,10 @@ export default function MapScreen({ navigation }) {
   }, []);
 
   // 스냅헸을때 가리키는 인덱스를 가지고 맵의 보이는 위치를 변환한다.
-  function handleSnapToItem(index) {
-    // console.log('snapped to ', index);
-  }
-
+  // function handleSnapToItem(index) {
+  //   // console.log('snapped to ', index);
+  // }
   /** */
-
   if (!location) {
     return (
       <View>
@@ -61,36 +83,40 @@ export default function MapScreen({ navigation }) {
 
   function onCarouselItemChange(index) {
     _map.animateToRegion({
-      latitude: Number(desLocations[index].latitude),
-      longitude: Number(desLocations[index].longitude),
-      latitudeDelta: 0.0019,
-      longitudeDelta: 0.0019
+      latitude: Number(datas[index].latitude),
+      longitude: Number(datas[index].longitude),
+      latitudeDelta: 0.007,
+      longitudeDelta: 0.007
     });
-    // _marker[index].showCallout();
+    // console.log(_marker);
+    // _marker.showCallout();
   }
+
   function onMarkerPressed(item, index) {
+    // setNum(index);
     _map.animateToRegion({
       latitude: Number(item.latitude),
       longitude: Number(item.longitude),
-      latitudeDelta: 0.0019,
-      longitudeDelta: 0.0019
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01
     });
     _carousel.snapToItem(index);
   }
 
-  function _renderItem({ item, index }) {
+  function renderItem({ item, index }) {
     // console.log('rendering,', index, item);
     return (
       <View style={{ alignItems: 'center' }}>
-        {/* <View
+        <View
           onPress={() => {
             _carousel.snapToItem(index);
           }}
-        /> */}
+        />
         <Text style={{ fontSize: 20 }}>{item.name}</Text>
         <Text
           onPress={() => {
-            navigation.navigate('Direction');
+            console.log('aaaaaa', lastDes);
+            direction(index);
           }}
         >
           길찾기
@@ -122,12 +148,17 @@ export default function MapScreen({ navigation }) {
           longitudeDelta: 0.02
         }}
       >
-        {desLocations.map((item, index) => {
+        <Polyline
+          coordinates={desLocation}
+          strokeColor="red"
+          fillColor="rgba(255,0,0,0.5)"
+          strokeWidth={5}
+        />
+        {datas.map((item, index) => {
           return (
             <Marker
-              ref={marker => {
-                _marker = marker;
-                // console.log(marker);
+              ref={ref => {
+                _marker = ref;
               }}
               key={index}
               coordinate={{
@@ -136,6 +167,7 @@ export default function MapScreen({ navigation }) {
               }}
               title={item.name}
               onPress={() => {
+                setLastDes(datas[index]);
                 onMarkerPressed(item, index);
               }}
             >
@@ -157,25 +189,22 @@ export default function MapScreen({ navigation }) {
       </MapView>
       <View style={{ backgroundColor: 'skyblue', marginTop: 500 }}>
         <Carousel
-          // contentContainerStyle={{ bottom: 11111 }} // ?? 이건 모르겠네
-          // containerCustomStyle={{ bottom: 0 }} // 안에 있는 내용물들의 속성
-          // contentContainerCustomStyle={{ bottom: 0 }} // 내용물이 밖으로 안나가고 안에서...
           ref={c => {
             _carousel = c;
           }}
-          data={desLocations}
-          renderItem={_renderItem}
-          onSnapToItem={handleSnapToItem}
+          data={datas}
+          renderItem={renderItem}
+          // onSnapToItem={handleSnapToItem}
           sliderWidth={Dimensions.get('window').width}
           itemWidth={Dimensions.get('window').width}
           layout="default"
           firstItem={0}
           removeClippedSubviews={false}
           onSnapToItem={index => {
+            setLastDes(datas[index]);
             onCarouselItemChange(index);
           }}
         />
-        {/* {console.log(_carousel)} */}
       </View>
     </View>
   );

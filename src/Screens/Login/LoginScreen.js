@@ -1,69 +1,71 @@
 import React, { useState, useEffect } from 'react';
-
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  BackHandler,
+  Alert
+} from 'react-native';
 import KakaoLogins from '@react-native-seoul/kakao-login';
+import {
+  statusCodes,
+  GoogleSignin,
+  GoogleSigninButton
+} from '@react-native-community/google-signin';
+// GoogleSignin.configure();
+GoogleSignin.configure({
+  scopes: [], // what API you want to access on behalf of the user, default is email and profile
+  webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  hostedDomain: '',
+  offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.
+});
 
-import { GoogleSigninButton } from '@react-native-community/google-signin';
 export default function LoginScreen({
   navigation,
-  googleSignIn,
-  // kakaoSignin,
+  userInfo,
+  setUserInfo,
   isLogin,
-  setIsLogin
+  setIsLogin,
+  backBtn
 }) {
   // console.log('로그인스크린', isLogin, setIsLogin);
 
   // 뒤로가기
-  // useEffect(() => {
-  //   BackHandler.addEventListener('hardwareBackPress', backBtn);
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backBtn);
 
-  //   return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
-  // }, []);
+    return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
+  }, []);
 
-  // //카카오 로그인
-  // function getKakaoProfile() {
-  //   return new Promise((resolve, reject) => {
-  //     KakaoLogins.getProfile((err, result) => {
-  //       if (result !== null && result !== undefined) {
-  //         resolve({ success: true, result: result });
-  //       }
-  //       if (err) {
-  //         reject({ success: false, result: err });
-  //       }
-  //     });
-  //   });
-  // }
-
-  // const kakaoSignin = () => {
-  //   console.log('KakaoSignin');
-  //   KakaoLogins.login(async (err, result) => {
-  //     console.log(result); // 토큰 찍힘
-  //     if (result !== null && result !== undefined) {
-  //       setIsLogin(true); // true되어야 한다. true해줘도 이럼!
-  //       console.log('앱', isLogin);
-  //       try {
-  //         const profile = await getKakaoProfile();
-  //         if (profile.success) {
-  //           // 프로필 받아오기 성공
-  //           // // 프로필정보를 받아온 후 해야할 것들
-  //           console.log('프로필 결과값', profile.result);
-  //         } else throw profile.result;
-  //       } catch (error) {
-  //         console.log('getKakaoProfile error ', error);
-  //       }
-  //     }
-  //     if (err) {
-  //       console.log('Error', err);
-  //       return;
-  //     }
-  //   });
-  // };
   useEffect(() => {
     console.log('LoginScreen에서 useEffect 했다');
     if (isLogin === true) {
       navigation.replace('HateFoods', { isLogin: true });
     }
   }, [isLogin]);
+
+  const googleSignIn = async () => {
+    console.log('googleSignin눌렀다');
+    try {
+      const userinfo = await GoogleSignin.signIn();
+      console.log(userinfo);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+        Alert.alert('Error', '로그인이 취소되었습니다');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+        Alert.alert('Error', '이미 처리되었습니다');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+        Alert.alert('Error', '이용 불가능한 아이디 입니다.');
+      } else {
+        // some other error happened
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -72,15 +74,13 @@ export default function LoginScreen({
       </View>
       <View style={styles.button}>
         <View>
-          <TouchableOpacity>
-            <GoogleSigninButton
-              style={{ width: `100%`, height: 60, justifyContent: 'center' }}
-              size={GoogleSigninButton.Size.Wide}
-              color={GoogleSigninButton.Color.Dark}
-              onPress={googleSignIn}
-            />
-            {/* <Text style={styles.font1}>Facebook 로그인</Text> */}
-          </TouchableOpacity>
+          <GoogleSigninButton
+            style={{ width: `100%`, height: 60, justifyContent: 'center' }}
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={googleSignIn}
+          />
+          {/* <Text style={styles.font1}>Facebook 로그인</Text> */}
         </View>
         <View>
           <TouchableOpacity

@@ -5,15 +5,7 @@ import React, { useState } from 'react';
 import { BackHandler, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  GoogleSignin,
-  statusCodes
-} from '@react-native-community/google-signin';
-// import {
-//   GoogleSignin,
-//   GoogleSigninButton,
-//   statusCodes
-// } from '@react-native-community/google-signin';
+
 import axios from 'axios';
 
 import HateFoodsScreen from './src/Screens/HateFood/HateFoodsScreen';
@@ -24,19 +16,6 @@ import MyPageScreen from './src/Screens/MyPageScreen';
 import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
 
-GoogleSignin.configure();
-// GoogleSignin.configure({
-//   scopes: [
-//     'https://www.googleapis.com/auth/userinfo.profile',
-//     'https://www.googleapis.com/auth/userinfo.email'
-//   ], // what API you want to access on behalf of the user, default is email and profile
-//   webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
-//   offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-//   hostedDomain: '', // specifies a hosted domain restriction
-//   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
-//   accountName: '' // [Android] specifies an account name on the device that should be used
-// });
-
 import Direction from './src/Screens/Map/Direction';
 
 const Stack = createStackNavigator();
@@ -44,7 +23,7 @@ const Stack = createStackNavigator();
 axios.defaults.withCredentials = true;
 
 export default function App() {
-  const [userinfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
     snsId: '',
@@ -76,10 +55,10 @@ export default function App() {
   //로그인 시 유저정보 보낼 때
   function postUserInfo(provider) {
     axios.post('API', {
-      email: userinfo.email,
-      nick: userinfo.name,
-      profile: userinfo.profile,
-      snsId: userinfo.user.id,
+      email: userInfo.email,
+      nick: userInfo.name,
+      profile: userInfo.profile,
+      snsId: userInfo.user.id,
       provider: provider
     });
   }
@@ -102,25 +81,6 @@ export default function App() {
   //     }
   //   }
   // };
-  const googleSignIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const user = await GoogleSignin.signIn();
-      console.log(user);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-        Alert.alert('Error', '로그인이 취소되었습니다');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-        Alert.alert('Error', '이미 처리되었습니다');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        // some other error happened
-      }
-    }
-  };
 
   return (
     <NavigationContainer>
@@ -132,11 +92,10 @@ export default function App() {
           {props => (
             <LoginScreen
               {...props}
-              userinfo={userinfo}
-              isLogin={isLogin}
-              googleSignIn={googleSignIn}
-              // kakaoSignin={kakaoSignin}
+              userInfo={userInfo}
+              setUserInfo={setUserInfo}
               backBtn={backBtn}
+              isLogin={isLogin}
               setIsLogin={setIsLogin}
             />
           )}

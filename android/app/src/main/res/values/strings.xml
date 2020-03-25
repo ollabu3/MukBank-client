@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">mukbank</string>
     <string name="kakao_app_key"></string>
-    <string name="server_client_id"></string>
 </resources>

@@ -9,7 +9,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.mukbankclient.generated.BasePackageList;
 
 import org.unimodules.adapters.react.ReactAdapterPackage;
@@ -23,6 +22,8 @@ import expo.modules.filesystem.FileSystemPackage;
 
 import java.util.Arrays;
 import java.util.List;
+
+import co.apptailor.googlesignin.RNGoogleSigninPackage; // google signin
 
 public class MainApplication extends Application implements ReactApplication {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
@@ -40,7 +41,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
-      // packages.add(new RNGoogleSigninPackage());
+      
+      // packages.add(new RNGoogleSigninPackage()); // <-- google signin this needs to be in the list
+      
       return packages;
     }
 

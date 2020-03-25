@@ -19,8 +19,7 @@ export default function MapScreen() {
   const [datas, setDatas] = useState(locations); // 식당 데이터 배열      (객체 배열)
   const [desLocation, setDesLocation] = useState([]); // 길찾기 배열     (객체 배열)
   const [lastDes, setLastDes] = useState(null); // 길찾기 목적지        (배열)
-  const mapboxKey =
-    'pk.eyJ1IjoibWljaGFlbDAwOTg3IiwiYSI6ImNrN3hkMDZ0cTBiN3AzZ285NnJpeHYwOTAifQ.TCXZ4FUB9wcMhubjQcRR3g';
+  const mapboxKey = '';
 
   // 길찾기
   function direction() {

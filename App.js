@@ -15,7 +15,7 @@ import MapScreen from './src/Screens/Map/MapScreen';
 import MyPageScreen from './src/Screens/MyPageScreen';
 import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
-
+import SelectFoodOrCafeScreen from './src/Screens/SelectFoodOrCafe/SelectFoodOrCafe';
 const Stack = createStackNavigator();
 
 axios.defaults.withCredentials = true;
@@ -98,6 +98,11 @@ export default function App() {
             />
           )}
         </Stack.Screen>
+        <Stack.Screen
+          name="SelectFoodOrCafe"
+          component={SelectFoodOrCafeScreen}
+        />
+
         <Stack.Screen name="HateFoods">
           {props => <HateFoodsScreen {...props} />}
         </Stack.Screen>

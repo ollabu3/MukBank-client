@@ -3,43 +3,27 @@ import {
   View,
   Text,
   ImageBackground,
+  StyleSheet,
   PermissionsAndroid,
-  Alert
+  Alert,
+  TouchableHighlight,
+  Dimensions,
+  Button,
+  TouchableOpacity
 } from 'react-native';
 import axios from 'axios';
-import { Col, Row, Grid } from 'react-native-easy-grid';
+import { Avatar, ListItem } from 'react-native-elements';
 // import { Button } from 'react-native-elements';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 // import { FlatList } from 'react-native-gesture-handler';
 import { fakeData } from './fakeData';
-import ScrollList from './ScrollList';
+// import ScrollList from './ScrollList';
+import { ScrollView } from 'react-native-gesture-handler';
 
-export default function HateFoodsScreen({ navigation, route }) {
-  // console.log('헤이트스크린에서', route.params.isLogin);
-  const [notSelectedList, setNotSelectedList] = useState(fakeData);
-  const [selectedList, setSelectedList] = useState([]);
-
-  // 싫어하는 목록에 추가 할수 있는 메서드
-  function plus(selected) {
-    let selectedArr = selectedList;
-    let notSelectedArr = notSelectedList.filter(item => selected !== item);
-    selectedArr.push(selected);
-    setNotSelectedList(notSelectedArr);
-    setSelectedList(selectedArr);
-  }
-  // 좋아하는 목록에 추가 할수 있는 메서드
-  function minus(selected) {
-    let notSelectedArr = notSelectedList;
-    let selectedArr = selectedList.filter(item => selected !== item);
-    notSelectedArr.push(selected);
-
-    // Number(newArr[0].slice(newArr.indexOf('~')))
-    notSelectedArr.sort();
-
-    setNotSelectedList(notSelectedArr);
-    setSelectedList(selectedArr);
-  }
-
+export default function HateFoodsScreen({ navigation }) {
+  const [notSelected, setNotSelected] = useState(null); // 초기 값을 데이터 베이스에서 불러와서 넣어 줘야 한다.
+  const [selected, setSelected] = useState(null); // 초기 값을 데이터 베이스에서 불러와서 넣어 줘야 한다.
+  const slected = true;
   // 위치 권한 허용 Alert
   async function PermissionsLocation() {
     const granted = await PermissionsAndroid.request(
@@ -58,69 +42,108 @@ export default function HateFoodsScreen({ navigation, route }) {
   }
 
   // 카테고리 정보를 가져옴
-  useEffect(() => {
-    axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
-      setNotSelectedList(res.data.sort());
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
+  //     setNotSelectedList(res.data.sort());
+  //   });
+  // }, []);
+
+  function ScrollList() {
+    return (
+      <ScrollView>
+        {fakeData.map(item => {
+          return (
+            <View>
+              <TouchableOpacity
+                style={[
+                  styles.notSelectedBG,
+                  {
+                    width: Dimensions.get('window').width,
+                    alignItems: 'stretch',
+                    flexDirection: 'row'
+                  }
+                ]}
+                onPress={() => {
+                  console.log('');
+                }}
+              >
+                <View>
+                  <Avatar
+                    rounded
+                    width={70}
+                    imageProps={{ resizeMode: 'cover' }}
+                    containerStyle={{ flex: 1 }}
+                    source={{
+                      uri:
+                        'https://i.pinimg.com/474x/42/8a/bb/428abb048635b7bdaf71b629e8e9c70e.jpg'
+                    }}
+                  />
+                </View>
+                <View style={{ marginLeft: 3 }}>
+                  <Text style={styles.notSelectedTitle}>{item}</Text>
+                  <Text style={styles.notSelectedDes}>description</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          );
+        })}
+      </ScrollView>
+    );
+  }
 
   return (
-    <View style={{ flex: 1 }}>
-      <ImageBackground
-        style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
-        source={require('./memo.jpg')}
+    <View style={styles.container}>
+      <View style={styles.titlefraim}>
+        <Text style={styles.title}>오늘은 그닥...</Text>
+      </View>
+      <ScrollList />
+      <TouchableOpacity
+        onPress={() => {
+          PermissionsLocation();
+        }}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'skyblue',
+          borderRadius: 26,
+          height: 60
+        }}
       >
-        <Grid>
-          <Col
-            style={{
-              marginTop: 10,
-              marginRight: 5,
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
-              alignItems: 'center'
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'blue' }}>
-              조아 하는거
-            </Text>
-            <ScrollList notSelectedList={notSelectedList} selItem={plus} />
-          </Col>
-          <Col
-            style={{
-              marginTop: 10,
-              marginLeft: 5,
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
-              alignItems: 'center'
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'red' }}>
-              시러 하는거
-            </Text>
-            <ScrollList notSelectedList={selectedList} selItem={minus} />
-          </Col>
-        </Grid>
-        <View
-          style={{
-            height: 80,
-            backgroundColor: 'skyblue',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: 20,
-            marginRight: 20,
-            marginBottom: 20,
-            marginTop: 5,
-            borderRadius: 30
-          }}
-        >
-          <Text
-            style={{ fontSize: 30 }}
-            onPress={() => {
-              PermissionsLocation();
-            }}
-          >
-            음식 추천
-          </Text>
-        </View>
-      </ImageBackground>
+        <Text style={{ fontSize: 30 }}>음식 추천해줘</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  titlefraim: {
+    alignItems: 'center',
+    backgroundColor: '#5babd4'
+  },
+  title: {
+    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 35
+  },
+  notSelectedTitle: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 35
+  },
+  notSelectedDes: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 35
+  },
+  notSelectedBG: {
+    backgroundColor: 'white'
+  },
+
+  selectedTitle: { fontWeight: 'bold', color: 'black', fontSize: 35 },
+
+  selectedDes: { fontWeight: 'bold', color: 'black', fontSize: 35 },
+  selectedBG: { backgroundColor: '#d8d8d8' }
+});

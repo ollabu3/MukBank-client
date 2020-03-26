@@ -62,28 +62,13 @@ export default function App() {
     });
   }
 
-  //google signin
-  // const googleSignin = async () => {
-  //   try {
-  //     const result = await GoogleSignin.signIn();
-  //     console.log(result);
-  //   } catch (error) {
-  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-  //       Alert.alert('Error', '로그인이 취소되었습니다');
-  //     } else if (error.code === statusCodes.IN_PROGRESS) {
-  //       // operation (e.g. sign in) is in progress already
-  //       Alert.alert('Error', '이미 처리되었습니다');
-  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-  //       // play services not available or outdated
-  //     } else {
-  //       // some other error happened
-  //     }
-  //   }
-  // };
-
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+          name="SelectFoodOrCafe"
+          component={SelectFoodOrCafeScreen}
+        />
         <Stack.Screen name="Intro">
           {props => <IntroScreen {...props} isLogin={isLogin} />}
         </Stack.Screen>
@@ -99,10 +84,6 @@ export default function App() {
             />
           )}
         </Stack.Screen>
-        <Stack.Screen
-          name="SelectFoodOrCafe"
-          component={SelectFoodOrCafeScreen}
-        />
 
         <Stack.Screen name="HateFoods">
           {props => <HateFoodsScreen {...props} />}

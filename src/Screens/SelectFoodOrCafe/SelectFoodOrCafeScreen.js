@@ -10,9 +10,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   titleText: {
+    fontFamily: 'NanumGothic-Bold',
     fontSize: 40,
     color: 'black',
-    fontWeight: 'bold',
     textAlign: 'center'
   },
   btn: {
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   columnBtnText: {
+    fontFamily: 'NanumGothic-Bold',
     fontSize: 25,
     color: 'black'
   }

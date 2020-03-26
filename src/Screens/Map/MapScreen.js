@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import MapView, { Marker, Circle, Callout, Polyline } from 'react-native-maps';
+import { StyleSheet, Text, View, Dimensions, Button } from 'react-native';
+import MapView, { Circle, Callout } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
+// var ReactNativeComponentTree = require('react/lib/ReactNativeComponentTree');
 
 import { locations } from './fakeData';
 
@@ -11,21 +12,22 @@ export default function MapScreen() {
   let _carousel;
   let _map;
   let _marker = [];
+  let _btn;
   // 초기값 => 현재 위치
   const [location, setLocation] = useState({
     latitude: 37,
     longitude: 127
   });
-  const [datas, setDatas] = useState(locations); // 식당 데이터 배열      (객체 배열)
+  const [datas, setDatas] = useState(null); // 식당 데이터 배열      (객체 배열)
   const [desLocation, setDesLocation] = useState([]); // 길찾기 배열     (객체 배열)
   const [lastDes, setLastDes] = useState(null); // 길찾기 목적지        (배열)
+  const [distance, setDistance] = useState(0.3);
   const mapboxKey = '';
 
   // 길찾기
   function direction() {
     axios(
       `https://api.mapbox.com/directions/v5/mapbox/walking/${location.longitude},${location.latitude};${lastDes.longitude},${lastDes.latitude}?geometries=geojson&access_token=${mapboxKey}`
-      // `https://api.mapbox.com/directions/v5/mapbox/driving/${location.longitude},${location.latitude};127.034142509,37.583646125?waypoints=0;2&access_token=${mapboxKey}`
     ).then(res => {
       // console.log(res.data.routes[0].geometry.coordinates);
       let a = res.data.routes[0].geometry.coordinates.map(item => {
@@ -38,8 +40,7 @@ export default function MapScreen() {
     });
   }
 
-  // 식당 혹은 카페 정보 가져오기
-  useEffect(() => {
+  function aaa() {
     axios({
       method: 'post',
       url: 'https://mukbank.xyz:5001/restaurant/distance',
@@ -52,8 +53,13 @@ export default function MapScreen() {
       }
     }).then(res => {
       setDatas(res.data);
+      setLastDes(res.data[0]);
       console.log(res.data.length);
     });
+  }
+  // 식당 혹은 카페 정보 가져오기
+  useEffect(() => {
+    aaa();
   }, [location]);
 
   // 현재위치 가져오기
@@ -72,7 +78,7 @@ export default function MapScreen() {
   //   // console.log('snapped to ', index);
   // }
   /** */
-  if (!location) {
+  if (!datas) {
     return (
       <View>
         <Text>loding</Text>
@@ -132,8 +138,7 @@ export default function MapScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>a</Text>
+    <View style={{ flex: 1 }}>
       <MapView
         showsUserLocation
         ref={map => {
@@ -147,7 +152,7 @@ export default function MapScreen() {
           longitudeDelta: 0.02
         }}
       >
-        <Polyline
+        <MapView.Polyline
           coordinates={desLocation}
           strokeColor="red"
           fillColor="rgba(255,0,0,0.5)"
@@ -155,7 +160,7 @@ export default function MapScreen() {
         />
         {datas.map((item, index) => {
           return (
-            <Marker
+            <MapView.Marker
               ref={ref => {
                 _marker = ref;
               }}
@@ -174,11 +179,11 @@ export default function MapScreen() {
                 <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
                 <Text>{item.address}</Text>
               </Callout>
-            </Marker>
+            </MapView.Marker>
           );
         })}
         <Circle
-          radius={500}
+          radius={distance * 1000}
           center={{
             latitude: location.latitude,
             longitude: location.longitude
@@ -186,7 +191,38 @@ export default function MapScreen() {
           fillColor={'rgba(100, 200, 200, 0.3)'}
         />
       </MapView>
-      <View style={{ backgroundColor: 'skyblue', marginTop: 500 }}>
+
+      <View
+        style={{
+          position: 'absolute',
+          top: '0%',
+          alignSelf: 'flex-start',
+          flexDirection: 'row'
+        }}
+      >
+        <Button
+          title="100m"
+          ref={btn => (_btn = btn)}
+          name="a"
+          style={{ width: 100 }}
+          onPress={() => {
+            // setDistance(e.target.value);
+            aaa();
+            setDistance(100 / 1000);
+          }}
+        />
+        <Button
+          title="200m"
+          value="----------------------------------------------------------------------------------------------------------------"
+          style={{ width: 100 }}
+          onPress={() => {
+            // setDistance(e.target.value);
+            setDistance(200 / 1000);
+            aaa();
+          }}
+        />
+      </View>
+      <View style={styles.carousel}>
         <Carousel
           ref={c => {
             _carousel = c;
@@ -210,10 +246,13 @@ export default function MapScreen() {
 }
 
 let styles = StyleSheet.create({
-  container: { ...StyleSheet.absoluteFillObject },
+  container: { flex: 1 },
   map: {
-    ...StyleSheet.absoluteFillObject,
-    marginTop: 0,
-    marginBottom: 80
+    flex: 7
+  },
+  carousel: {
+    flex: 1,
+    bottom: '0%',
+    backgroundColor: 'skyblue'
   }
 });

@@ -63,6 +63,7 @@ export default function LoginScreen({
         Alert.alert('Error', '이용 불가능한 아이디 입니다.');
       } else {
         // some other error happened
+        console.log(error);
       }
     }
   };

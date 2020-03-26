@@ -48,7 +48,7 @@ export default function MapScreen() {
         latitude: location.latitude,
         longitude: location.longitude,
         sort: 'review',
-        distance: 0.5,
+        distance: distance,
         parent: '음식점'
       }
     }).then(res => {
@@ -213,7 +213,6 @@ export default function MapScreen() {
         />
         <Button
           title="200m"
-          value="----------------------------------------------------------------------------------------------------------------"
           style={{ width: 100 }}
           onPress={() => {
             // setDistance(e.target.value);

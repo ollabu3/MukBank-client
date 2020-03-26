@@ -9,12 +9,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     backgroundColor: 'white'
   },
-  titleText: {
-    fontFamily: 'NanumGothic-Bold',
-    fontSize: 40,
-    color: 'black',
-    textAlign: 'center'
-  },
   btn: {
     width: '35%',
     borderRadius: 10,
@@ -23,7 +17,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5
   },
-  columnBtnText: {
+  text: {
     fontFamily: 'NanumGothic-Bold',
     fontSize: 25,
     color: 'black'
@@ -36,20 +30,20 @@ export default function SelectFoodOrCafeScreen({ navigation }) {
       <Grid>
         <Row size={2} />
         <Row size={1} style={{ justifyContent: 'center' }}>
-          <Text style={styles.titleText}>뭐 먹고 싶어요?</Text>
+          <Text style={[styles.text, { fontSize: 40 }]}>뭐 먹고 싶어요?</Text>
         </Row>
         <Row size={1} style={{ justifyContent: 'center' }}>
           <TouchableOpacity
             style={[styles.btn, { marginRight: '5%' }]}
             onPress={() => navigation.navigate('Map')}
           >
-            <Text style={styles.columnBtnText}>디저트</Text>
+            <Text style={styles.text}>디저트</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.btn, { marginLeft: '5%' }]}
             onPress={() => navigation.navigate('HateFoods')}
           >
-            <Text style={styles.columnBtnText}>음식점</Text>
+            <Text style={styles.text}>음식점</Text>
           </TouchableOpacity>
         </Row>
         <Row size={2} />

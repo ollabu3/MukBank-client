@@ -43,6 +43,7 @@ export default function HateFoodsScreen({ navigation }) {
     <View>
       <Text>HateFoodsScreen</Text>
       <Button
+        title="음식추천"
         onPress={() => {
           PermissionsLocation();
         }}

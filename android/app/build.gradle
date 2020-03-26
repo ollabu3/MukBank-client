@@ -115,6 +115,7 @@ android {
         manifestPlaceholders = [
         appAuthRedirectScheme: 'mukbank'
       ]
+      manifestPlaceholders = [googleMapApiKey:googleMapApiKey]
     }
     splits {
         abi {

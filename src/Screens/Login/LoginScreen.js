@@ -16,7 +16,8 @@ import {
 // GoogleSignin.configure();
 GoogleSignin.configure({
   scopes: [], // what API you want to access on behalf of the user, default is email and profile
-  webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  webClientId:
+    '578020632037-cnou0a4fbevnkp07mmpfgjp7roj1a8ub.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
   hostedDomain: '',
   offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
   forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.

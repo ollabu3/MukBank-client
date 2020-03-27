@@ -1,3 +1,7 @@
+# 임시 
+android/app/src/main/AndroidManifest.xml
+android/app/src/main/test.txt
+
 node_modules/**/*
 .expo/*
 npm-debug.*
@@ -73,3 +77,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+
+

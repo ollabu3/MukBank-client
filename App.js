@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import HateFoodsScreen from './src/Screens/HateFood/HateFoodsScreen';
 import IntroScreen from './src/Screens/IntroScreen';
@@ -20,6 +21,21 @@ import SelectFoodOrCafeScreen from './src/Screens/SelectFoodOrCafe/SelectFoodOrC
 const Stack = createStackNavigator();
 
 axios.defaults.withCredentials = true;
+
+const getJwt = async () => {
+  try {
+    const jwtObj = await AsyncStorage.getItem('jwt');
+    const token = JSON.parse(jwtObj).jwt;
+    console.log('token: ', token);
+
+    return token;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// const jwtToken = getJwt();
+// console.log(jwtToken);
 
 export default function App() {
   const [userInfo, setUserInfo] = useState({
@@ -51,6 +67,13 @@ export default function App() {
     ]);
     return true;
   }
+
+  // axios
+  //   .get('http://10.0.2.2:5001/user/info', {
+  //     headers: { Authorization: `Bearer ${jwtToken}` }
+  //   })
+  //   .then(res => console.log(res.data))
+  //   .catch(err => console.log(err));
 
   // 로그인 시 유저정보 보낼 때
   // `https://mukbank.xyz:5001/auth/${provider}/signin`
@@ -85,7 +108,6 @@ export default function App() {
               backBtn={backBtn}
               isLogin={isLogin}
               setIsLogin={setIsLogin}
-              // postUserInfo={postUserInfo}
             />
           )}
         </Stack.Screen>

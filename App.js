@@ -51,24 +51,28 @@ export default function App() {
     ]);
     return true;
   }
-  //로그인 시 유저정보 보낼 때
-  function postUserInfo(provider) {
-    axios.post('API', {
-      email: userInfo.email,
-      nick: userInfo.name,
-      profile: userInfo.profile,
-      snsId: userInfo.user.id,
-      provider: provider
-    });
-  }
+
+  // 로그인 시 유저정보 보낼 때
+  // `https://mukbank.xyz:5001/auth/${provider}/signin`
+  // function postUserInfo(provider, userData) {
+  //   axios
+  //     .post(`http://localhost:5001/auth/${provider}/signin`, {
+  //       email: userData.user.email,
+  //       nick: userData.user.name,
+  //       snsId: userData.user.id,
+  //       userimage: userData.user.photo
+  //     })
+  //     .then(res => console.log('res: ', res.data))
+  //     .cathch(err => console.log('err: ', err));
+  // }
+
+  axios
+    .get('https://mukbank.xyz:5001/hello')
+    .then(res => console.log(res.data));
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="SelectFoodOrCafe"
-          component={SelectFoodOrCafeScreen}
-        />
         <Stack.Screen name="Intro">
           {props => <IntroScreen {...props} isLogin={isLogin} />}
         </Stack.Screen>
@@ -81,9 +85,14 @@ export default function App() {
               backBtn={backBtn}
               isLogin={isLogin}
               setIsLogin={setIsLogin}
+              // postUserInfo={postUserInfo}
             />
           )}
         </Stack.Screen>
+        <Stack.Screen
+          name="SelectFoodOrCafe"
+          component={SelectFoodOrCafeScreen}
+        />
 
         <Stack.Screen name="HateFoods">
           {props => <HateFoodsScreen {...props} />}

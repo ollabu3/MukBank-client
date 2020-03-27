@@ -4,7 +4,7 @@ import MapView, { Circle, Callout } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
-// var ReactNativeComponentTree = require('react/lib/ReactNativeComponentTree');
+
 import Buttons from './Components/Buttons';
 import { locations } from './fakeData';
 
@@ -41,7 +41,7 @@ export default function MapScreen() {
       // console.log(num);
     });
   }
-
+  // 식당 및 카페 데이터
   function find() {
     axios({
       method: 'post',
@@ -94,7 +94,6 @@ export default function MapScreen() {
   }
 
   function onMarkerPressed(item, index) {
-    // setNum(index);
     _map.animateToRegion({
       latitude: Number(item.latitude),
       longitude: Number(item.longitude),
@@ -108,20 +107,19 @@ export default function MapScreen() {
     console.log('마커 찍었을때 아이템 정보', item);
   }
 
-  function renderItem({ item, index }) {
-    // console.log('rendering,', index, item);
+  function renderItem(item, index) {
+    console.log('아이템----------------------------', item.item);
     return (
       <View style={{ alignItems: 'center' }}>
+        <Text style={{ fontSize: 20 }}>{item.item.name}</Text>
         <View
           onPress={() => {
             _carousel.snapToItem(index);
           }}
         />
-        <Text style={{ fontSize: 20 }}>{item.name}</Text>
         <View style={styles.carouselBtn}>
           <Text
             onPress={() => {
-              console.log('aaaaaa', lastDes);
               direction(index);
             }}
           >
@@ -173,7 +171,7 @@ export default function MapScreen() {
               ref={ref => {
                 _marker = ref;
               }}
-              key={index}
+              key={item.name}
               coordinate={{
                 latitude: Number(item.latitude),
                 longitude: Number(item.longitude)
@@ -198,7 +196,7 @@ export default function MapScreen() {
             latitude: location.latitude,
             longitude: location.longitude
           }}
-          fillColor={'rgba(100, 200, 200, 0.3)'}
+          fillColor="rgba(100, 200, 200, 0.3)"
         />
       </MapView>
       <Buttons find={find} setDistance={setDistance} />

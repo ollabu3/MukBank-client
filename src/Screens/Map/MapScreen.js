@@ -244,36 +244,3 @@ let styles = StyleSheet.create({
     flexDirection: 'row'
   }
 });
-
-// let a = {"__reactInternalMemoizedMaskedChildContext": {"provider": undefined},
-//          "__reactInternalMemoizedUnmaskedChildContext": {"provider": undefined, "rootTag": 1},
-//          "_reactInternalFiber": {
-//           "_debugHookTypes": null, "_debugID": 4207, "_debugIsCurrentlyTiming": false, "_debugNeedsRemount": false,
-//           "_debugOwner": {
-//             "_debugHookTypes": [Array], "_debugID": 2205, "_debugIsCurrentlyTiming": false, "_debugNeedsRemount": false, "_debugOwner": [FiberNode], "_debugSource": [Object], "actualDuration": 120, "actualStartTime": 1585302174543, "alternate": [FiberNode], "child": [FiberNode], "childExpirationTime": 0, "dependencies": null, "effectTag": 0, "elementType": [Function MapScreen], "expirationTime": 1073741823, "firstEffect": [FiberNode], "index": 0, "key": null, "lastEffect": [FiberNode], "memoizedProps": [Object], "memoizedState": [Object], "mode": 8, "nextEffect": null, "pendingProps": [Object], "ref": null, "return": [FiberNode], "selfBaseDuration": 160, "sibling": null, "stateNode": null, "tag": 0, "treeBaseDuration": 430, "type": [Function MapScreen], "updateQueue": [Object]},
-//             "_debugSource": {"fileName": "/Users/michael/Desktop/final/MukBank-client/src/Screens/Map/MapScreen.js", "lineNumber": 167},
-//             "actualDuration": 6, "actualStartTime": 1585302168752, "alternate": null,
-//             "child": {
-//               "_debugHookTypes": null, "_debugID": 5511, "_debugIsCurrentlyTiming": false, "_debugNeedsRemount": false, "_debugOwner": [Circular], "_debugSource": [Object], "actualDuration": 6, "actualStartTime": 1585302168752, "alternate": null, "child": [FiberNode], "childExpirationTime": 0, "dependencies": null, "effectTag": 128, "elementType": "AIRMapMarker", "expirationTime": 0, "firstEffect": null, "index": 0, "key": null, "lastEffect": null, "memoizedProps": [Object], "memoizedState": null, "mode": 8, "nextEffect": null, "pendingProps": [Object], "ref": [Function ref], "return": [Circular], "selfBaseDuration": 1, "sibling": null, "stateNode": [ReactNativeFiberHostComponent], "tag": 5, "treeBaseDuration": 3, "type": "AIRMapMarker", "updateQueue": null},
-//               "childExpirationTime": 0, "dependencies": null, "effectTag": 129, "elementType": [Function MapMarker], "expirationTime": 0, "firstEffect": {"_debugHookTypes": null, "_debugID": 5511, "_debugIsCurrentlyTiming": false, "_debugNeedsRemount": false, "_debugOwner": [Circular], "_debugSource": [Object], "actualDuration": 6, "actualStartTime": 1585302168752, "alternate": null, "child": [FiberNode], "childExpirationTime": 0, "dependencies": null, "effectTag": 128, "elementType": "AIRMapMarker", "expirationTime": 0, "firstEffect": null, "index": 0, "key": null, "lastEffect": null, "memoizedProps": [Object], "memoizedState": null, "mode": 8, "nextEffect": null, "pendingProps": [Object], "ref": [Function ref], "return": [Circular], "selfBaseDuration": 1, "sibling": null, "stateNode": [ReactNativeFiberHostComponent], "tag": 5, "treeBaseDuration": 3, "type": "AIRMapMarker", "updateQueue": null},
-//               "index": 42, "key": "42",
-//               "lastEffect": {
-//                 "_debugHookTypes": null, "_debugID": 5511, "_debugIsCurrentlyTiming": false, "_debugNeedsRemount": false, "_debugOwner": [Circular], "_debugSource": [Object], "actualDuration": 6, "actualStartTime": 1585302168752, "alternate": null, "child": [FiberNode], "childExpirationTime": 0, "dependencies": null, "effectTag": 128, "elementType": "AIRMapMarker", "expirationTime": 0, "firstEffect": null, "index": 0, "key": null, "lastEffect": null, "memoizedProps": [Object], "memoizedState": null, "mode": 8, "nextEffect": null, "pendingProps": [Object], "ref": [Function ref], "return": [Circular], "selfBaseDuration": 1, "sibling": null, "stateNode": [ReactNativeFiberHostComponent], "tag": 5, "treeBaseDuration": 3, "type": "AIRMapMarker", "updateQueue": null},
-//                 "memoizedProps": {"children": <MapCallout … />, "coordinate": [Object], "onPress": [Function onPress], "stopPropagation": false, "title": "유로코피자 서울 강북점"},
-//                 "memoizedState": null, "mode": 8, "nextEffect": null, "pendingProps": {"children": <MapCallout … />, "coordinate": [Object], "onPress": [Function onPress], "stopPropagation": false, "title": "유로코피자 서울 강북점"},
-//                 "ref": [Function ref],
-//                 "return": {
-//                   "_debugHookTypes": null, "_debugID": 4159, "_debugIsCurrentlyTiming": false, "_debugNeedsRemount": false, "_debugOwner": null, "_debugSource": null, "actualDuration": 422, "actualStartTime": 1585302168303, "alternate": null, "child": [FiberNode], "childExpirationTime": 0, "dependencies": null, "effectTag": 0, "elementType": null, "expirationTime": 0, "firstEffect": [FiberNode], "index": 1, "key": null, "lastEffect": [Circular], "memoizedProps": [Array], "memoizedState": null, "mode": 8, "nextEffect": null, "pendingProps": [Array], "ref": null, "return": [FiberNode], "selfBaseDuration": 0, "sibling": [FiberNode], "stateNode": null, "tag": 7, "treeBaseDuration": 141, "type": null, "updateQueue": null},
-//                   "selfBaseDuration": 0, "sibling": null, "stateNode": [Circular], "tag": 1, "treeBaseDuration": 3, "type": [Function MapMarker], "updateQueue": null},
-//         "_reactInternalInstance": {},
-//         "animateMarkerToCoordinate": [Function bound animateMarkerToCoordinate],
-//         "context": {"provider": undefined},
-//         "hideCallout": [Function bound hideCallout],
-//         "marker": {"_children": [[ReactNativeFiberHostComponent]],
-//         "_nativeTag": 1185,
-//         "viewConfig": {"Commands": [Object], "NativeProps": [Object], "bubblingEventTypes": undefined, "directEventTypes": [Object], "uiViewClassName": "AIRMapMarker", "validAttributes": [Object]}
-//                  },
-//         "props": {"children": <MapCallout alphaHitTest={false} style={[Object]} tooltip={false}><ForwardRef(Text) … /><ForwardRef(Text) … /></MapCallout>, "coordinate": {"latitude": 37.627386482, "longitude": 127.017878353}, "onPress": [Function onPress], "stopPropagation": false, "title": "유로코피자 서울 강북점"},
-//         "redrawCallout": [Function bound redrawCallout], "refs": {},
-//         "showCallout": [Function bound showCallout], "state": null,
-//         "updater": {"enqueueForceUpdate": [Function enqueueForceUpdate], "enqueueReplaceState": [Function enqueueReplaceState], "enqueueSetState": [Function enqueueSetState], "isMounted": [Function isMounted]}}

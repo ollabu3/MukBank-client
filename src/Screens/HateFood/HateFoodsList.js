@@ -11,24 +11,12 @@ import {
 } from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import HateFoodsListEntry from './HateFoodsListEntry';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 export default function HateFoodsList({ foodCategory }) {
+  const [check, setCheck] = useState(false);
   // console.log(foodCategory, '여귕');
   // console.log(foodCategory.length, '여귕길이');
-  /*
-그림을 
-ㅁ ㅁ
-ㅁ ㅁ
-ㅁ ㅁ
-ㅁ ㅁ
-ㅁ ㅁ
-ㅁ ㅁ 
-이런식으로 UI가 디자인 되었으면 좋겠다.
-그러려면..!
-엔트리 없이 하는것이 더 편할지도!
-HateFoodList에서
-prop받은 data를 홀수 짝수 배열로 나누고 Grid로 나눠서 배열해보자
-*/
+
   var oddCategory = [];
   var evenCategory = [];
 
@@ -39,26 +27,26 @@ prop받은 data를 홀수 짝수 배열로 나누고 Grid로 나눠서 배열해
       oddCategory.push(foodCategory[i]);
     }
   }
-  console.log('짝수', evenCategory);
-  console.log('홀수', oddCategory);
+  // console.log('짝수', evenCategory);
+  // console.log('홀수', oddCategory);
 
   return (
     <View>
       <ScrollView>
         <Grid>
           <Col size={1}>
-            <TouchableOpacity>
-              {oddCategory.map(item => (
-                <Text>{item}</Text>
-              ))}
-            </TouchableOpacity>
+            {oddCategory.map((item, idx) => (
+              <View>
+                <HateFoodsListEntry key={idx} category={item} />
+              </View>
+            ))}
           </Col>
           <Col size={1}>
-            <TouchableOpacity>
-              {evenCategory.map(item => (
-                <Text>{item}</Text>
-              ))}
-            </TouchableOpacity>
+            {evenCategory.map((item, idx) => (
+              <View>
+                <HateFoodsListEntry key={idx} category={item} />
+              </View>
+            ))}
           </Col>
         </Grid>
       </ScrollView>
@@ -66,9 +54,9 @@ prop받은 data를 홀수 짝수 배열로 나누고 Grid로 나눠서 배열해
   );
 }
 
-/* {props.fakedata.map((item, idx) => (
-          <View>
-            <HateFoodsListEntry key={idx} category={item} />
-          </View>
-
-        ))} */
+/* {oddCategory.map(item => (
+              <TouchableOpacity>
+                {checkIcon}
+                <Text>{item}</Text>
+              </TouchableOpacity>
+            ))} */

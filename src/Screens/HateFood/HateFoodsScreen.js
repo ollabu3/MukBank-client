@@ -20,7 +20,7 @@ import axios from 'axios';
 // import { fakeData } from './fakeData';
 
 export default function HateFoodsScreen({ navigation }) {
-  const [foodCategory, setFoodCategory] = useState(null);
+  const [foodCategory, setFoodCategory] = useState([]);
   // 위치 권한 허용 Alert
 
   async function PermissionsLocation() {
@@ -57,8 +57,8 @@ export default function HateFoodsScreen({ navigation }) {
   return (
     <View>
       <SafeAreaView>
-        <View style={{ justifyContent: 'center' }}>
-          <Text>오늘은 별로.. </Text>
+        <View>
+          <Text style={{ textAlign: 'center' }}>오늘은 별로.. </Text>
         </View>
         <HateFoodsList foodCategory={foodCategory} />
         <Button

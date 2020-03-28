@@ -4,7 +4,7 @@ import MapView, { Circle, Callout } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
-// var ReactNativeComponentTree = require('react/lib/ReactNativeComponentTree');
+
 import Buttons from './Components/Buttons';
 import { locations } from './fakeData';
 
@@ -41,8 +41,9 @@ export default function MapScreen() {
       // console.log(num);
     });
   }
-
+  // 식당 및 카페 데이터
   function find() {
+    console.log('--------', distance);
     axios({
       method: 'post',
       url: 'https://mukbank.xyz:5001/restaurant/distance',
@@ -88,40 +89,54 @@ export default function MapScreen() {
       latitudeDelta: distance * 0.03,
       longitudeDelta: distance * 0.03
     });
-    console.log('케러셀 선택', index);
+    setDesLocation([]);
     // _marker.showCallout(index);
     // _marker.hideCallout(index);
   }
 
   function onMarkerPressed(item, index) {
-    // setNum(index);
     _map.animateToRegion({
       latitude: Number(item.latitude),
       longitude: Number(item.longitude),
       latitudeDelta: distance * 0.03,
       longitudeDelta: distance * 0.03
     });
-    console.log('마커 클릭', index);
     // setDesLocation(null);
+    setDesLocation([]);
     _carousel.snapToItem(index);
     // setDesLocation([]);
-    console.log('마커 찍었을때 아이템 정보', item);
   }
 
-  function renderItem({ item, index }) {
-    // console.log('rendering,', index, item);
+  function renderItem(item, index) {
     return (
-      <View style={{ alignItems: 'center' }}>
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: '#feee7d',
+          borderWidth: 3,
+          borderColor: 'red'
+        }}
+      >
+        {item.item.name.length > 13 ? (
+          <Text style={{ fontSize: 17 }}>{item.item.name}</Text>
+        ) : (
+          <Text style={{ fontSize: 20 }}>{item.item.name}</Text>
+        )}
         <View
           onPress={() => {
             _carousel.snapToItem(index);
           }}
         />
-        <Text style={{ fontSize: 20 }}>{item.name}</Text>
-        <View style={styles.carouselBtn}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'red',
+            flexDirection: 'row',
+            justifyContent: 'space-around'
+          }}
+        >
           <Text
             onPress={() => {
-              console.log('aaaaaa', lastDes);
               direction(index);
             }}
           >
@@ -173,7 +188,7 @@ export default function MapScreen() {
               ref={ref => {
                 _marker = ref;
               }}
-              key={index}
+              key={item.name}
               coordinate={{
                 latitude: Number(item.latitude),
                 longitude: Number(item.longitude)
@@ -198,24 +213,22 @@ export default function MapScreen() {
             latitude: location.latitude,
             longitude: location.longitude
           }}
-          fillColor={'rgba(100, 200, 200, 0.3)'}
+          fillColor="rgba(100, 200, 200, 0.3)"
         />
       </MapView>
-      <Buttons find={find} setDistance={setDistance} />
-      <View style={styles.carousel}>
+      <View style={[styles.carousel, { height: 70 }]}>
         <Carousel
           ref={c => {
             _carousel = c;
           }}
           data={datas}
           renderItem={renderItem}
-          // onSnapToItem={handleSnapToItem}
           sliderWidth={Dimensions.get('window').width}
-          itemWidth={Dimensions.get('window').width}
+          itemWidth={Dimensions.get('window').width * 0.6}
           firstItem={0}
           removeClippedSubviews={false}
-          layout="stack"
-          layoutCardOffset={1000}
+          layout="default"
+          layoutCardOffset={20}
           onSnapToItem={index => {
             setLastDes(datas[index]);
             // _marker.hideCallout();
@@ -224,6 +237,7 @@ export default function MapScreen() {
           }}
         />
       </View>
+      <Buttons find={find} distance={distance} setDistance={setDistance} />
     </View>
   );
 }
@@ -231,16 +245,15 @@ export default function MapScreen() {
 let styles = StyleSheet.create({
   container: { flex: 1 },
   map: {
-    flex: 7
+    flex: 10
   },
   carousel: {
+    position: 'absolute',
     flex: 1,
-    height: 100,
     bottom: '0%'
-    // borderColor: 'red'
-    // backgroundColor: '#feee7d'
   },
   carouselBtn: {
     flexDirection: 'row'
+    // color: '#feee7d'
   }
 });

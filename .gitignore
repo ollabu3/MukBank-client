@@ -1,6 +1,10 @@
 # 임시 
-android/app/src/main/AndroidManifest.xml
-android/app/src/main/test.txt
+android/app/src/main/res/values/key.txt
+src/Screens/Login/webclid.txt
+android/app/google-serviece.txt
+android/app/key.txt
+android/app/google-services.json
+
 
 node_modules/**/*
 .expo/*

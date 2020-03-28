@@ -1,12 +1,13 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BackHandler, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import HateFoodsScreen from './src/Screens/HateFood/HateFoodsScreen';
 import IntroScreen from './src/Screens/IntroScreen';
@@ -51,24 +52,72 @@ export default function App() {
     ]);
     return true;
   }
-  //로그인 시 유저정보 보낼 때
-  function postUserInfo(provider) {
-    axios.post('API', {
-      email: userInfo.email,
-      nick: userInfo.name,
-      profile: userInfo.profile,
-      snsId: userInfo.user.id,
-      provider: provider
-    });
+
+  // useEffect(() => {
+  //   axios.get('https://mukbank.xyz:5001/hello').then(res => {
+  //     console.log(res.data);
+  //     setUserToken('test');
+  //   });
+  // }, []);
+
+  async function getUser() {
+    try {
+      const tokenStr = await AsyncStorage.getItem('jwt');
+      const token = await JSON.parse(tokenStr).jwt;
+      console.log('togkenStr: ', tokenStr);
+      console.log('toeken:', token);
+
+      const res = await axios('http://10.0.2.2:5001/user/info', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log('res::: ', res.data);
+
+      await setUserInfo(res.data);
+      // await setUserToken('ttt');
+      await setIsLogin(true);
+    } catch (err) {
+      console.log(err);
+    }
+
+    // console.log('info::', userInfo);
+
+    // AsyncStorage.getItem('jwt').then(tokenStr => {
+    //   const token = JSON.parse(tokenStr).jwt;
+    //   axios
+    //     .get('http://10.0.2.2:5001/user/info', {
+    //       headers: { Authorization: `Bearer ${token}` }
+    //     })
+    //     .then(res => {
+    //       console.log(res.data);
+    //       // setUserToken('test');
+    //     })
+    //     .catch(err => console.log(err));
+    // });
   }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  // console.log('userInfo~~~', userInfo);
+
+  // 로그인 시 유저정보 보낼 때
+  // `https://mukbank.xyz:5001/auth/${provider}/signin`
+  // function postUserInfo(provider, userData) {
+  //   axios
+  //     .post(`http://localhost:5001/auth/${provider}/signin`, {
+  //       email: userData.user.email,
+  //       nick: userData.user.name,
+  //       snsId: userData.user.id,
+  //       userimage: userData.user.photo
+  //     })
+  //     .then(res => console.log('res: ', res.data))
+  //     .cathch(err => console.log('err: ', err));
+  // }
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="SelectFoodOrCafe"
-          component={SelectFoodOrCafeScreen}
-        />
         <Stack.Screen name="Intro">
           {props => <IntroScreen {...props} isLogin={isLogin} />}
         </Stack.Screen>
@@ -84,6 +133,10 @@ export default function App() {
             />
           )}
         </Stack.Screen>
+        <Stack.Screen
+          name="SelectFoodOrCafe"
+          component={SelectFoodOrCafeScreen}
+        />
 
         <Stack.Screen name="HateFoods">
           {props => <HateFoodsScreen {...props} />}

@@ -5,13 +5,13 @@ import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 // var ReactNativeComponentTree = require('react/lib/ReactNativeComponentTree');
-
+import Buttons from './Components/Buttons';
 import { locations } from './fakeData';
 
 export default function MapScreen() {
   let _carousel;
   let _map;
-  let _marker = [];
+  let _marker;
   let _btn;
   // 초기값 => 현재 위치
   const [location, setLocation] = useState({
@@ -27,20 +27,22 @@ export default function MapScreen() {
   // 길찾기
   function direction() {
     axios(
-      `https://api.mapbox.com/directions/v5/mapbox/walking/${location.longitude},${location.latitude};${lastDes.longitude},${lastDes.latitude}?geometries=geojson&access_token=${mapboxKey}`
+      `https://api.mapbox.com/directions/v5/mapbox/walking/
+      ${location.longitude},${location.latitude};${lastDes.longitude},${lastDes.latitude}
+      ?geometries=geojson&access_token=${mapboxKey}`
     ).then(res => {
       // console.log(res.data.routes[0].geometry.coordinates);
-      let a = res.data.routes[0].geometry.coordinates.map(item => {
+      const coords = res.data.routes[0].geometry.coordinates.map(item => {
         // console.log(a);
         return { latitude: item[1], longitude: item[0] };
       });
-      setDesLocation(a);
+      setDesLocation(coords);
       console.log('경로', desLocation);
       // console.log(num);
     });
   }
 
-  function aaa() {
+  function find() {
     axios({
       method: 'post',
       url: 'https://mukbank.xyz:5001/restaurant/distance',
@@ -48,18 +50,18 @@ export default function MapScreen() {
         latitude: location.latitude,
         longitude: location.longitude,
         sort: 'review',
-        distance: distance,
+        distance,
         parent: '음식점'
       }
     }).then(res => {
       setDatas(res.data);
       setLastDes(res.data[0]);
-      console.log(res.data.length);
+      console.log('가져오는 데이터의 크기', res.data.length);
     });
   }
   // 식당 혹은 카페 정보 가져오기
   useEffect(() => {
-    aaa();
+    find();
   }, [location]);
 
   // 현재위치 가져오기
@@ -78,23 +80,17 @@ export default function MapScreen() {
   //   // console.log('snapped to ', index);
   // }
   /** */
-  if (!datas) {
-    return (
-      <View>
-        <Text>loding</Text>
-      </View>
-    );
-  }
 
   function onCarouselItemChange(index) {
     _map.animateToRegion({
       latitude: Number(datas[index].latitude),
       longitude: Number(datas[index].longitude),
-      latitudeDelta: 0.007,
-      longitudeDelta: 0.007
+      latitudeDelta: distance * 0.03,
+      longitudeDelta: distance * 0.03
     });
-    // console.log(_marker);
-    // _marker.showCallout();
+    console.log('케러셀 선택', index);
+    // _marker.showCallout(index);
+    // _marker.hideCallout(index);
   }
 
   function onMarkerPressed(item, index) {
@@ -102,10 +98,14 @@ export default function MapScreen() {
     _map.animateToRegion({
       latitude: Number(item.latitude),
       longitude: Number(item.longitude),
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01
+      latitudeDelta: distance * 0.03,
+      longitudeDelta: distance * 0.03
     });
+    console.log('마커 클릭', index);
+    // setDesLocation(null);
     _carousel.snapToItem(index);
+    // setDesLocation([]);
+    console.log('마커 찍었을때 아이템 정보', item);
   }
 
   function renderItem({ item, index }) {
@@ -118,27 +118,36 @@ export default function MapScreen() {
           }}
         />
         <Text style={{ fontSize: 20 }}>{item.name}</Text>
-        <Text
-          onPress={() => {
-            console.log('aaaaaa', lastDes);
-            direction(index);
-          }}
-        >
-          길찾기
-        </Text>
-        <Text
-          onPress={() => {
-            console.log('따르릉~~~');
-          }}
-        >
-          전화 걸기
-        </Text>
+        <View style={styles.carouselBtn}>
+          <Text
+            onPress={() => {
+              console.log('aaaaaa', lastDes);
+              direction(index);
+            }}
+          >
+            길찾기
+          </Text>
+          <Text
+            onPress={() => {
+              console.log('따르릉~~~');
+            }}
+          >
+            전화 걸기
+          </Text>
+        </View>
+      </View>
+    );
+  }
+  if (!datas) {
+    return (
+      <View>
+        <Text>loading</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <MapView
         showsUserLocation
         ref={map => {
@@ -148,8 +157,8 @@ export default function MapScreen() {
         region={{
           latitude: location.latitude,
           longitude: location.longitude,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02
+          latitudeDelta: distance * 0.03,
+          longitudeDelta: distance * 0.03
         }}
       >
         <MapView.Polyline
@@ -171,6 +180,7 @@ export default function MapScreen() {
               }}
               title={item.name}
               onPress={() => {
+                console.log('마커', index);
                 setLastDes(datas[index]);
                 onMarkerPressed(item, index);
               }}
@@ -191,36 +201,7 @@ export default function MapScreen() {
           fillColor={'rgba(100, 200, 200, 0.3)'}
         />
       </MapView>
-
-      <View
-        style={{
-          position: 'absolute',
-          top: '0%',
-          alignSelf: 'flex-start',
-          flexDirection: 'row'
-        }}
-      >
-        <Button
-          title="100m"
-          ref={btn => (_btn = btn)}
-          name="a"
-          style={{ width: 100 }}
-          onPress={() => {
-            // setDistance(e.target.value);
-            aaa();
-            setDistance(100 / 1000);
-          }}
-        />
-        <Button
-          title="200m"
-          style={{ width: 100 }}
-          onPress={() => {
-            // setDistance(e.target.value);
-            setDistance(200 / 1000);
-            aaa();
-          }}
-        />
-      </View>
+      <Buttons find={find} setDistance={setDistance} />
       <View style={styles.carousel}>
         <Carousel
           ref={c => {
@@ -231,12 +212,15 @@ export default function MapScreen() {
           // onSnapToItem={handleSnapToItem}
           sliderWidth={Dimensions.get('window').width}
           itemWidth={Dimensions.get('window').width}
-          layout="default"
           firstItem={0}
           removeClippedSubviews={false}
+          layout="stack"
+          layoutCardOffset={1000}
           onSnapToItem={index => {
             setLastDes(datas[index]);
+            // _marker.hideCallout();
             onCarouselItemChange(index);
+            // lastDes = datas[index];
           }}
         />
       </View>
@@ -251,7 +235,12 @@ let styles = StyleSheet.create({
   },
   carousel: {
     flex: 1,
-    bottom: '0%',
-    backgroundColor: 'skyblue'
+    height: 100,
+    bottom: '0%'
+    // borderColor: 'red'
+    // backgroundColor: '#feee7d'
+  },
+  carouselBtn: {
+    flexDirection: 'row'
   }
 });

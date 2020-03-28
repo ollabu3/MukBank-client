@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
-import { BackHandler, Alert } from 'react-native';
+import { BackHandler, Alert, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -151,9 +151,20 @@ export default function App() {
           )}
         </Stack.Screen>
 
-        <Stack.Screen name="SelectFoodOrCafe">
-          {/* component={SelectFoodOrCafeScreen} */}
-          {props => <SelectFoodOrCafeScreen {...props} />}
+        <Stack.Screen
+          name="SelectFoodOrCafe"
+          component={SelectFoodOrCafeScreen}
+          options={{
+            headerRight: () => (
+              <Button
+                onPress={() => alert('This is a button!')}
+                title="test-logout"
+                color="powderblue"
+              />
+            )
+          }}
+        >
+          {/* {props => <SelectFoodOrCafeScreen {...props} />} */}
         </Stack.Screen>
 
         <Stack.Screen name="HateFoods">

@@ -6,9 +6,8 @@ import {
   PermissionsAndroid,
   Alert,
   Button,
-  Dimensions,
-  TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  ScrollView
 } from 'react-native';
 
 import HateFoodsList from './HateFoodsList';
@@ -48,26 +47,37 @@ export default function HateFoodsScreen({ navigation }) {
 
   useEffect(() => {
     axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
-      console.log(res.data, '51번째줄');
+      // console.log(res.data, '51번째줄');
       setFoodCategory(res.data);
     });
   }, []);
   // console.log(foodCategory, '53번째줄');
 
   return (
-    <View>
+    <View style={{ backgroundColor: 'white' }}>
       <SafeAreaView>
-        <View>
-          <Text style={{ textAlign: 'center' }}>오늘은 별로.. </Text>
-        </View>
-        <HateFoodsList foodCategory={foodCategory} />
-        <Button
-          title="선택 완료"
-          onPress={() => {
-            PermissionsLocation();
-          }}
-        />
+        <ScrollView>
+          <View>
+            <Text style={styles.titleText}>오늘은 별로.. </Text>
+          </View>
+          <HateFoodsList foodCategory={foodCategory} />
+          <Button
+            title="선택 완료"
+            onPress={() => {
+              PermissionsLocation();
+            }}
+          />
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  titleText: {
+    fontFamily: 'NanumGothic-Bold',
+    textAlign: 'center',
+    fontSize: 35,
+    color: 'black'
+  }
+});

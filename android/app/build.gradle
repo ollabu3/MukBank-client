@@ -2,6 +2,7 @@ apply plugin: "com.android.application"
 
 apply plugin: 'com.google.gms.google-services' // <--- this should be the last line
 
+
 import com.android.build.OutputFile
 
 /**
@@ -79,8 +80,11 @@ project.ext.react = [
     enableHermes: false
 ]
 
+
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
 apply from: "../../node_modules/react-native/react.gradle"
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle" // add this line
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -179,4 +183,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle");
+
 applyNativeModulesAppBuildGradle(project)

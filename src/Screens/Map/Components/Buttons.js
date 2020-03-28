@@ -1,30 +1,42 @@
 import React, { useState } from 'react';
-import { View, Button } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-export default function ScrollList({ find, setDistance }) {
+export default function ScrollList({ find, setDistance, distance }) {
   const dis = useState([100, 200, 300, 400, 500])[0];
   return (
     <View
       style={{
         position: 'absolute',
-        width: '120%',
-        // backgroundColor: 'red',
-        alignItems: 'center',
-        flexDirection: 'row'
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingBottom: 1
       }}
     >
       {dis.map(item => {
         return (
-          <Button
-            title={`${item}m`}
+          <TouchableOpacity
+            style={{}}
             key={item}
-            style={{ flex: 1 }}
             onPress={() => {
-              // setDistance(e.target.value);
-              find();
               setDistance(item / 1000);
+              find();
             }}
-          />
+          >
+            <Text
+              style={{
+                backgroundColor: '#feee7d',
+                borderColor: 'red',
+                borderWidth: 2,
+                borderRadius: 10,
+                fontSize: 20,
+                paddingLeft: 3,
+                paddingRight: 3
+              }}
+            >
+              {item}m
+            </Text>
+          </TouchableOpacity>
         );
       })}
     </View>

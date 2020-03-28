@@ -1,63 +1,44 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-export default function ScrollList(props) {
-  console.log(props);
+export default function ScrollList({ find, setDistance, distance }) {
+  const dis = useState([100, 200, 300, 400, 500])[0];
   return (
     <View
       style={{
         position: 'absolute',
-        width: '120%',
-        // backgroundColor: 'red',
-        alignItems: 'center',
-        flexDirection: 'row'
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingBottom: 1
       }}
     >
-      <Button
-        title="100m"
-        style={{ flex: 1 }}
-        onPress={() => {
-          // setDistance(e.target.value);
-          props.find();
-          props.setDistance(100 / 1000);
-        }}
-      />
-      <Button
-        title="200m"
-        style={{ width: 200 }}
-        onPress={() => {
-          // setDistance(e.target.value);
-          props.setDistance(200 / 1000);
-          props.find();
-        }}
-      />
-      <Button
-        title="300m"
-        style={{ width: 100 }}
-        onPress={() => {
-          // setDistance(e.target.value);
-          props.setDistance(300 / 1000);
-          props.find();
-        }}
-      />
-      <Button
-        title="400m"
-        style={{ width: 100 }}
-        onPress={() => {
-          // setDistance(e.target.value);
-          props.setDistance(400 / 1000);
-          props.find();
-        }}
-      />
-      <Button
-        title="500m"
-        style={{ width: 100 }}
-        onPress={() => {
-          // setDistance(e.target.value);
-          props.setDistance(500 / 1000);
-          props.find();
-        }}
-      />
+      {dis.map(item => {
+        return (
+          <TouchableOpacity
+            style={{}}
+            key={item}
+            onPress={() => {
+              setDistance(item / 1000);
+              find();
+            }}
+          >
+            <Text
+              style={{
+                backgroundColor: '#feee7d',
+                borderColor: 'red',
+                borderWidth: 2,
+                borderRadius: 10,
+                fontSize: 20,
+                paddingLeft: 3,
+                paddingRight: 3
+              }}
+            >
+              {item}m
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 }

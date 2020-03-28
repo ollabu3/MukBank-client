@@ -32,6 +32,7 @@ export default function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [userToken, setUserToken] = useState('');
   const [hateFoods, setHateFoods] = useState(null);
+  const [authCheck, setAuthCheck] = useState(false);
 
   // useEffect(() => {
   // BackHandler.addEventListener('hardwareBackPress', handleBackBtn);
@@ -60,9 +61,21 @@ export default function App() {
   //   });
   // }, []);
 
+  // clear()
+  // clearAsyncStorage = async () => {
+  //   AsyncStorage.clear();
+  // };
+
+  // AsyncStorage.clear();
+
   async function getUser() {
     try {
       const tokenStr = await AsyncStorage.getItem('jwt');
+      if (tokenStr === null) {
+        console.log('token 이 없습니다');
+        setAuthCheck(true);
+        return;
+      }
       const token = await JSON.parse(tokenStr).jwt;
       console.log('togkenStr: ', tokenStr);
       console.log('toeken:', token);
@@ -70,11 +83,12 @@ export default function App() {
       const res = await axios('http://10.0.2.2:5001/user/info', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log('res::: ', res.data);
+      console.log('res.data~~~~ ', res.data);
 
       await setUserInfo(res.data);
       // await setUserToken('ttt');
       await setIsLogin(true);
+      setAuthCheck(true);
     } catch (err) {
       console.log(err);
     }
@@ -119,8 +133,11 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Intro">
-          {props => <IntroScreen {...props} isLogin={isLogin} />}
+          {props => (
+            <IntroScreen {...props} isLogin={isLogin} authCheck={authCheck} />
+          )}
         </Stack.Screen>
+
         <Stack.Screen name="Login">
           {props => (
             <LoginScreen
@@ -133,10 +150,11 @@ export default function App() {
             />
           )}
         </Stack.Screen>
-        <Stack.Screen
-          name="SelectFoodOrCafe"
-          component={SelectFoodOrCafeScreen}
-        />
+
+        <Stack.Screen name="SelectFoodOrCafe">
+          {/* component={SelectFoodOrCafeScreen} */}
+          {props => <SelectFoodOrCafeScreen {...props} />}
+        </Stack.Screen>
 
         <Stack.Screen name="HateFoods">
           {props => <HateFoodsScreen {...props} />}

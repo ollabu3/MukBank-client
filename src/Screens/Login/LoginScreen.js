@@ -26,8 +26,8 @@ GoogleSignin.configure({
   scopes: [], // what API you want to access on behalf of the user, default is email and profile
   webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
   hostedDomain: '',
-  offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-  forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.
+  offlineAccess: true // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  // forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.
 });
 
 const storeData = async () => {
@@ -88,12 +88,12 @@ export default function LoginScreen({
     return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
   }, []);
 
-  useEffect(() => {
-    console.log('LoginScreen에서 useEffect 했다');
-    if (isLogin === true) {
-      navigation.replace('HateFoods', { isLogin: true });
-    }
-  }, [isLogin]);
+  // useEffect(() => {
+  //   console.log('LoginScreen에서 useEffect 했다');
+  //   if (isLogin === true) {
+  //     navigation.replace('SelectFoodOrCafe', { isLogin: true });
+  //   }
+  // }, [isLogin]);
 
   const googleSignIn = async () => {
     console.log('googleSignin눌렀다');

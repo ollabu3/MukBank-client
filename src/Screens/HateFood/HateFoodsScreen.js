@@ -7,15 +7,22 @@ import {
   Alert,
   Button,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
+
+import HateFoodsList from './HateFoodsList';
+
 import axios from 'axios';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 // import { FlatList } from 'react-native-gesture-handler';
-import { fakeData } from './fakeData';
+
+// import { fakeData } from './fakeData';
 
 export default function HateFoodsScreen({ navigation }) {
+  const [foodCategory, setFoodCategory] = useState([]);
   // 위치 권한 허용 Alert
+
   async function PermissionsLocation() {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -39,15 +46,28 @@ export default function HateFoodsScreen({ navigation }) {
   //   });
   // }, []);
 
+  useEffect(() => {
+    axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
+      console.log(res.data, '51번째줄');
+      setFoodCategory(res.data);
+    });
+  }, []);
+  // console.log(foodCategory, '53번째줄');
+
   return (
     <View>
-      <Text>HateFoodsScreen</Text>
-      <Button
-        title="음식추천"
-        onPress={() => {
-          PermissionsLocation();
-        }}
-      />
+      <SafeAreaView>
+        <View>
+          <Text style={{ textAlign: 'center' }}>오늘은 별로.. </Text>
+        </View>
+        <HateFoodsList foodCategory={foodCategory} />
+        <Button
+          title="선택 완료"
+          onPress={() => {
+            PermissionsLocation();
+          }}
+        />
+      </SafeAreaView>
     </View>
   );
 }

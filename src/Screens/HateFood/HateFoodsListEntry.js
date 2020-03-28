@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
@@ -20,15 +20,32 @@ export default function HateFoodsListEntry(props) {
   return (
     <View styles={styles.container}>
       <TouchableOpacity
+        activeOpacity={1.0}
         style={[styles.Box, styles.boxMargin]}
         onPress={() => setCheck(!check)}
       >
         <Grid>
-          <Col size={1} style={{ justifyContent: 'center' }}>
-            <Icon name="food" size={30} style={styles.foodIcon} />
-          </Col>
+          <Col size={1} />
+          {/* <Col size={1} style={{ justifyContent: 'center' }}> */}
+
+          {/* </Col> */}
           <Col size={3} style={{ justifyContent: 'center' }}>
-            <Text style={styles.categoryText}>{props.category}</Text>
+            <Row
+              size={2.5}
+              style={{ justifyContent: 'center', alignItems: 'flex-end' }}
+            >
+              <Image
+                style={{ height: '80%', width: '80%', position: 'relative' }}
+                source={require('./foodImage/남미음식.png')}
+              />
+              {/* <Icon name="food" size={30} style={styles.foodIcon} /> */}
+            </Row>
+            <Row
+              size={1}
+              style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+              <Text style={styles.categoryText}>{props.category}</Text>
+            </Row>
           </Col>
           <Col size={1} style={{ justifyContent: 'center' }}>
             {checkIcon}
@@ -44,14 +61,14 @@ const styles = StyleSheet.create({
   boxMargin: {
     marginBottom: '2.5%',
     marginTop: '2.5%',
-    marginLeft: '4%',
-    marginRight: '4%'
+    marginLeft: '8%',
+    marginRight: '8%'
   },
   Box: {
-    height: 120,
+    height: 140,
     borderRadius: 10,
     justifyContent: 'center',
-    alignItems: 'center',
+
     backgroundColor: 'white',
     elevation: 7
   },

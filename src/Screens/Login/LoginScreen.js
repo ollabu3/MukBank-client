@@ -30,31 +30,31 @@ GoogleSignin.configure({
   // forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.
 });
 
-const storeData = async () => {
-  try {
-    await AsyncStorage.setItem('@KEY', 'hahaha~~');
-    console.log('setStore');
-  } catch (err) {
-    console.log(err);
-  }
-};
+// const storeData = async () => {
+//   try {
+//     await AsyncStorage.setItem('@KEY', 'hahaha~~');
+//     console.log('setStore');
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
-const getData = async () => {
-  try {
-    const value = await AsyncStorage.getItem('jwt');
-    console.log('get store');
-    if (value !== null) {
-      console.log('asyncStorage: ', value);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
+// const getData = async () => {
+//   try {
+//     const value = await AsyncStorage.getItem('jwt');
+//     console.log('get store');
+//     if (value !== null) {
+//       console.log('asyncStorage: ', value);
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
 const postUserInfo = async (provider, userData) => {
   try {
     const res = await axios.post(
-      `http://10.0.2.2:5001/auth/${provider}/signin`,
+      `https://mukbank.xyz:5001/auth/${provider}/signin`,
       {
         email: userData.email,
         nick: userData.name || userData.nickname,
@@ -65,6 +65,7 @@ const postUserInfo = async (provider, userData) => {
 
     console.log('res~~~~~~~', res.data);
     await AsyncStorage.setItem('jwt', JSON.stringify(res.data));
+    // setAuthCheck(true);
   } catch (err) {
     console.log(err);
   }
@@ -77,7 +78,6 @@ export default function LoginScreen({
   isLogin,
   setIsLogin,
   backBtn
-  // postUserInfo
 }) {
   // console.log('로그인스크린', isLogin, setIsLogin);
 
@@ -88,12 +88,12 @@ export default function LoginScreen({
     return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
   }, []);
 
-  // useEffect(() => {
-  //   console.log('LoginScreen에서 useEffect 했다');
-  //   if (isLogin === true) {
-  //     navigation.replace('SelectFoodOrCafe', { isLogin: true });
-  //   }
-  // }, [isLogin]);
+  useEffect(() => {
+    console.log('LoginScreen에서 useEffect 했다');
+    if (isLogin === true) {
+      navigation.replace('SelectFoodOrCafe', { isLogin: true });
+    }
+  }, [isLogin]);
 
   const googleSignIn = async () => {
     console.log('googleSignin눌렀다');
@@ -143,7 +143,7 @@ export default function LoginScreen({
         <Text style={styles.titleSize}>MukBank</Text>
       </View>
       <View style={styles.button}>
-        <View>
+        {/* <View>
           <Button
             title="setStore"
             onPress={() => {
@@ -159,7 +159,7 @@ export default function LoginScreen({
               // await AsyncStorage.getItem('jwt');
             }}
           />
-        </View>
+        </View> */}
 
         <View>
           <GoogleSigninButton

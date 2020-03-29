@@ -32,10 +32,7 @@ export default function HateFoodsListEntry({ category }) {
               size={2.5}
               style={{ justifyContent: 'center', alignItems: 'flex-end' }}
             >
-              <Image
-                style={{ height: '80%', width: '80%', position: 'relative' }}
-                source={foodImgs[category]}
-              />
+              <Image style={styles.categoryImage} source={foodImgs[category]} />
             </Row>
             <Row
               size={1}
@@ -65,15 +62,14 @@ const styles = StyleSheet.create({
     height: 140,
     borderRadius: 10,
     justifyContent: 'center',
-
     backgroundColor: 'white',
     elevation: 7
   },
+  categoryImage: { height: '80%', width: '80%', position: 'relative' },
   categoryText: {
     textAlign: 'center',
     fontFamily: 'NanumGothic-Bold',
     fontSize: 20,
     color: 'black'
-  },
-  foodIcon: {}
+  }
 });

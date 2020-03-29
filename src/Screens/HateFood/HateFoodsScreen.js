@@ -37,19 +37,19 @@ export default function HateFoodsScreen({ navigation }) {
   }
 
   // 카테고리 정보를 가져옴
-  // useEffect(() => {
-  //   axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
-  //     setNotSelectedList(res.data.sort());
-  //   });
-  // }, []);
+  useEffect(() => {
+    axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
+      setNotSelectedList(res.data.sort());
+    });
+  }, []);
 
-  // useEffect(() => {
-  //   axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
-  //     // console.log(res.data, '51번째줄');
-  //     setFoodCategory(res.data);
-  //   });
-  // }, []);
-  // console.log(foodCategory, '53번째줄');
+  useEffect(() => {
+    axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
+      // console.log(res.data, '51번째줄');
+      setFoodCategory(res.data);
+    });
+  }, []);
+  console.log(foodCategory, '53번째줄');
 
   return (
     <View style={{ backgroundColor: 'white' }}>

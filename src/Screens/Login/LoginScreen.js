@@ -6,8 +6,7 @@ import {
   View,
   TouchableOpacity,
   BackHandler,
-  Alert,
-  Button
+  Alert
 } from 'react-native';
 import KakaoLogins from '@react-native-seoul/kakao-login';
 import {
@@ -15,7 +14,6 @@ import {
   GoogleSignin,
   GoogleSigninButton
 } from '@react-native-community/google-signin';
-// GoogleSignin.configure();
 import AsyncStorage from '@react-native-community/async-storage';
 
 import axios from 'axios';
@@ -30,27 +28,6 @@ GoogleSignin.configure({
   // forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.
 });
 
-// const storeData = async () => {
-//   try {
-//     await AsyncStorage.setItem('@KEY', 'hahaha~~');
-//     console.log('setStore');
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
-// const getData = async () => {
-//   try {
-//     const value = await AsyncStorage.getItem('jwt');
-//     console.log('get store');
-//     if (value !== null) {
-//       console.log('asyncStorage: ', value);
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
 const postUserInfo = async (provider, userData) => {
   try {
     const res = await axios.post(
@@ -62,10 +39,7 @@ const postUserInfo = async (provider, userData) => {
         userimage: userData.photo || userData.profile_image_url
       }
     );
-
-    console.log('res~~~~~~~', res.data);
     await AsyncStorage.setItem('jwt', JSON.stringify(res.data));
-    // setAuthCheck(true);
   } catch (err) {
     console.log(err);
   }
@@ -73,33 +47,25 @@ const postUserInfo = async (provider, userData) => {
 
 export default function LoginScreen({
   navigation,
-  userInfo,
-  setUserInfo,
   isLogin,
   setIsLogin,
   backBtn
 }) {
-  // console.log('로그인스크린', isLogin, setIsLogin);
-
   // 뒤로가기
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', backBtn);
-
     return () => BackHandler.removeEventListener('hardwareBackPress', backBtn);
   }, []);
 
   useEffect(() => {
-    console.log('LoginScreen에서 useEffect 했다');
     if (isLogin === true) {
       navigation.replace('SelectFoodOrCafe', { isLogin: true });
     }
   }, [isLogin]);
 
   const googleSignIn = async () => {
-    console.log('googleSignin눌렀다');
     try {
       const userinfo = await GoogleSignin.signIn();
-      console.log(userinfo);
       await postUserInfo('google', userinfo.user);
       setIsLogin(true);
     } catch (error) {
@@ -120,13 +86,10 @@ export default function LoginScreen({
   };
 
   const kakaoSignIn = async () => {
-    console.log('kakaoSignin눌렀다');
     try {
       const login = await KakaoLogins.login();
-      console.log(login);
       if (login.accessToken) {
         const userinfo = await KakaoLogins.getProfile();
-        console.log('userinfo: ', userinfo);
         await postUserInfo('kakao', userinfo);
         setIsLogin(true);
       } else {
@@ -143,24 +106,6 @@ export default function LoginScreen({
         <Text style={styles.titleSize}>MukBank</Text>
       </View>
       <View style={styles.button}>
-        {/* <View>
-          <Button
-            title="setStore"
-            onPress={() => {
-              storeData();
-            }}
-          />
-        </View>
-        <View>
-          <Button
-            title="getStore"
-            onPress={async () => {
-              getData();
-              // await AsyncStorage.getItem('jwt');
-            }}
-          />
-        </View> */}
-
         <View>
           <GoogleSigninButton
             style={{ width: `100%`, height: 60, justifyContent: 'center' }}
@@ -168,27 +113,9 @@ export default function LoginScreen({
             color={GoogleSigninButton.Color.Dark}
             onPress={googleSignIn}
           />
-          {/* <Text style={styles.font1}>Facebook 로그인</Text> */}
         </View>
         <View>
-          <TouchableOpacity
-            style={styles.btn2}
-            onPress={
-              kakaoSignIn
-
-              // () =>
-              // KakaoLogins.login()
-              //   .then(() => {
-              //     KakaoLogins.getProfile().then(result => {
-              //       setIsLogin(true);
-              //       console.log(result);
-              //     });
-              //   })
-              //   .catch(err => {
-              //     throw err;
-              //   })
-            }
-          >
+          <TouchableOpacity style={styles.btn2} onPress={kakaoSignIn}>
             <Text style={styles.font2}>Kakao 로그인</Text>
           </TouchableOpacity>
         </View>

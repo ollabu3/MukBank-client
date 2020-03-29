@@ -23,8 +23,7 @@ export default function MapScreen() {
   const [desLocation, setDesLocation] = useState([]); // 길찾기 배열     (객체 배열)
   const [lastDes, setLastDes] = useState(null); // 길찾기 목적지        (배열)
   const [distance, setDistance] = useState(0.3);
-  const mapboxKey =
-    'pk.eyJ1IjoibWljaGFlbDAwOTg3IiwiYSI6ImNrODZwMzJmNTAxMjYzZXBqZjlydGFwNWsifQ.xLWG5j1XRzLQ15_hm88O4Q';
+  const mapboxKey = '';
 
   // 길찾기
   function direction() {
@@ -114,7 +113,7 @@ export default function MapScreen() {
       <View style={styles.carouselRenderContainer}>
         <View style={styles.imageConstainer}>
           <Image
-            source={require('/Users/michael/Desktop/final/MukBank-client/src/Screens/HateFood/memo.jpg')}
+            source={require('../HateFood/memo.jpg')}
             style={styles.renderImage}
           />
         </View>

@@ -5,17 +5,15 @@ import {
   StyleSheet,
   PermissionsAndroid,
   Alert,
-  Button,
   SafeAreaView,
   ScrollView
 } from 'react-native';
-
+import { Button } from 'react-native-elements';
 import HateFoodsList from './HateFoodsList';
-
+import { Col, Row, Grid } from 'react-native-easy-grid';
 import axios from 'axios';
-// import Icon from 'react-native-vector-icons/FontAwesome';
-// import { FlatList } from 'react-native-gesture-handler';
 
+// import { FlatList } from 'react-native-gesture-handler';
 // import { fakeData } from './fakeData';
 
 export default function HateFoodsScreen({ navigation }) {
@@ -45,12 +43,12 @@ export default function HateFoodsScreen({ navigation }) {
   //   });
   // }, []);
 
-  useEffect(() => {
-    axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
-      // console.log(res.data, '51번째줄');
-      setFoodCategory(res.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
+  //     // console.log(res.data, '51번째줄');
+  //     setFoodCategory(res.data);
+  //   });
+  // }, []);
   // console.log(foodCategory, '53번째줄');
 
   return (
@@ -58,15 +56,43 @@ export default function HateFoodsScreen({ navigation }) {
       <SafeAreaView>
         <ScrollView>
           <View>
-            <Text style={styles.titleText}>오늘은 별로.. </Text>
+            <Text
+              style={[
+                styles.titleText,
+                { marginTop: '5%', marginBottom: '5%' }
+              ]}
+            >
+              오늘은 별로..
+            </Text>
           </View>
           <HateFoodsList foodCategory={foodCategory} />
-          <Button
-            title="선택 완료"
-            onPress={() => {
-              PermissionsLocation();
-            }}
-          />
+          <View style={{ marginTop: '5%', marginBottom: '5%' }}>
+            <Grid>
+              <Col size={3} />
+              <Col size={2.4}>
+                <Button
+                  raised
+                  title="선택 완료"
+                  style={styles.completeBtn}
+                  titleStyle={{
+                    fontFamily: 'NanumGothic-Bold',
+                    color: 'black',
+                    fontSize: 23
+                  }}
+                  containerStyle={{ height: 77 }}
+                  buttonStyle={{
+                    height: '100%',
+                    backgroundColor: '#feee7d',
+                    borderRadius: 10
+                  }}
+                  onPress={() => {
+                    PermissionsLocation();
+                  }}
+                />
+              </Col>
+              <Col size={3} />
+            </Grid>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -75,9 +101,13 @@ export default function HateFoodsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   titleText: {
-    fontFamily: 'NanumGothic-Bold',
+    fontFamily: 'NanumGothic-ExtraBold',
     textAlign: 'center',
     fontSize: 35,
     color: 'black'
+  },
+  completeBtn: {
+    backgroundColor: '#feee7d',
+    borderRadius: 10
   }
 });

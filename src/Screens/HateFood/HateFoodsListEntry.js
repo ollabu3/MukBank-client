@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Col, Row, Grid } from 'react-native-easy-grid';
+import foodImgs from './foodImgs';
 
-export default function HateFoodsListEntry(props) {
+export default function HateFoodsListEntry({ category }) {
   const [check, setCheck] = useState(false);
 
   var checkIcon = null;
@@ -26,25 +27,18 @@ export default function HateFoodsListEntry(props) {
       >
         <Grid>
           <Col size={1} />
-          {/* <Col size={1} style={{ justifyContent: 'center' }}> */}
-
-          {/* </Col> */}
           <Col size={3} style={{ justifyContent: 'center' }}>
             <Row
               size={2.5}
               style={{ justifyContent: 'center', alignItems: 'flex-end' }}
             >
-              <Image
-                style={{ height: '80%', width: '80%', position: 'relative' }}
-                source={require('./foodImage/남미음식.png')}
-              />
-              {/* <Icon name="food" size={30} style={styles.foodIcon} /> */}
+              <Image style={styles.categoryImage} source={foodImgs[category]} />
             </Row>
             <Row
               size={1}
               style={{ justifyContent: 'center', alignItems: 'center' }}
             >
-              <Text style={styles.categoryText}>{props.category}</Text>
+              <Text style={styles.categoryText}>{category}</Text>
             </Row>
           </Col>
           <Col size={1} style={{ justifyContent: 'center' }}>
@@ -68,15 +62,14 @@ const styles = StyleSheet.create({
     height: 140,
     borderRadius: 10,
     justifyContent: 'center',
-
     backgroundColor: 'white',
     elevation: 7
   },
+  categoryImage: { height: '80%', width: '80%', position: 'relative' },
   categoryText: {
     textAlign: 'center',
     fontFamily: 'NanumGothic-Bold',
     fontSize: 20,
     color: 'black'
-  },
-  foodIcon: {}
+  }
 });

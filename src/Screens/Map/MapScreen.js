@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, Button } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 import MapView, { Circle, Callout } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 
@@ -22,7 +23,8 @@ export default function MapScreen() {
   const [desLocation, setDesLocation] = useState([]); // 길찾기 배열     (객체 배열)
   const [lastDes, setLastDes] = useState(null); // 길찾기 목적지        (배열)
   const [distance, setDistance] = useState(0.3);
-  const mapboxKey = '';
+  const mapboxKey =
+    'pk.eyJ1IjoibWljaGFlbDAwOTg3IiwiYSI6ImNrODZwMzJmNTAxMjYzZXBqZjlydGFwNWsifQ.xLWG5j1XRzLQ15_hm88O4Q';
 
   // 길찾기
   function direction() {
@@ -107,48 +109,41 @@ export default function MapScreen() {
     // setDesLocation([]);
   }
 
-  function renderItem(item, index) {
+  function renderItem({ item, index }) {
     return (
-      <View
-        style={{
-          alignItems: 'center',
-          backgroundColor: '#feee7d',
-          borderWidth: 3,
-          borderColor: 'red'
-        }}
-      >
-        {item.item.name.length > 13 ? (
-          <Text style={{ fontSize: 17 }}>{item.item.name}</Text>
-        ) : (
-          <Text style={{ fontSize: 20 }}>{item.item.name}</Text>
-        )}
-        <View
-          onPress={() => {
-            _carousel.snapToItem(index);
-          }}
-        />
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'red',
-            flexDirection: 'row',
-            justifyContent: 'space-around'
-          }}
-        >
-          <Text
-            onPress={() => {
-              direction(index);
-            }}
-          >
-            길찾기
+      <View style={styles.carouselRenderContainer}>
+        <View style={styles.imageConstainer}>
+          <Image
+            source={require('/Users/michael/Desktop/final/MukBank-client/src/Screens/HateFood/memo.jpg')}
+            style={styles.renderImage}
+          />
+        </View>
+        <View style={styles.contentsContainer}>
+          {item.name > 13 ? (
+            <Text style={[styles.contentsText, { fontSize: 12 }]}>
+              {index + '. ' + item.name}
+            </Text>
+          ) : (
+            <Text style={[styles.contentsText, { fontSize: 16 }]}>
+              {index + '.' + item.name}
+            </Text>
+          )}
+          <Text style={styles.contentsText}>{item.firstchild}</Text>
+          <Text style={styles.contentsText}>{item.address}</Text>
+        </View>
+        <View style={styles.detailContainer}>
+          <Text style={styles.contentsText}>{item.address.split(' ')[2]}</Text>
+          <Text style={styles.contentsText}>
+            {item.distance.toFixed(2) + 'Km'}
           </Text>
-          <Text
+          <Icon
+            name="bike"
+            size={25}
+            color="red"
             onPress={() => {
-              console.log('따르릉~~~');
+              direction();
             }}
-          >
-            전화 걸기
-          </Text>
+          />
         </View>
       </View>
     );
@@ -224,11 +219,11 @@ export default function MapScreen() {
           data={datas}
           renderItem={renderItem}
           sliderWidth={Dimensions.get('window').width}
-          itemWidth={Dimensions.get('window').width * 0.6}
+          itemWidth={Dimensions.get('window').width * 0.9}
           firstItem={0}
           removeClippedSubviews={false}
-          layout="default"
-          layoutCardOffset={20}
+          layout="stack"
+          layoutCardOffset={19}
           onSnapToItem={index => {
             setLastDes(datas[index]);
             // _marker.hideCallout();
@@ -250,10 +245,31 @@ let styles = StyleSheet.create({
   carousel: {
     position: 'absolute',
     flex: 1,
-    bottom: '0%'
+    bottom: '1%'
   },
   carouselBtn: {
     flexDirection: 'row'
     // color: '#feee7d'
+  },
+  carouselRenderContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderWidth: 1
+  },
+  imageConstainer: {
+    flex: 1.5
+  },
+  renderImage: {
+    width: '100%',
+    height: 69,
+    borderColor: 'red',
+    borderWidth: 1
+  },
+  contentsContainer: { flex: 6, marginLeft: 5 },
+  detailContainer: { flex: 2, alignItems: 'flex-end', marginRight: 10 },
+  contentsText: {
+    fontSize: 12,
+    color: 'black'
   }
 });

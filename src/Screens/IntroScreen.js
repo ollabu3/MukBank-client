@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 export default function IntroScreen({ navigation, isLogin, authCheck }) {
-  console.log('isLogin~', isLogin);
-  console.log('authCheck~', authCheck);
+  // console.log('isLogin~', isLogin);
+  // console.log('authCheck~', authCheck);
 
   // isLogin이 false면 Login으로 넘어가기 아닐시 hateFoods로 넘어가기
   if (authCheck === true && isLogin === false) {

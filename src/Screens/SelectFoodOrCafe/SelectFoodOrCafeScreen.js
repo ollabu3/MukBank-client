@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function SelectFoodOrCafeScreen({ navigation }) {
+export default function SelectFoodOrCafeScreen({ navigation, userInfo }) {
+  // console.log('selectScreen userInfo', userInfo);
   return (
     <SafeAreaView style={styles.container}>
       <Grid>

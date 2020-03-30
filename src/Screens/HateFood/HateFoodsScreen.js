@@ -16,10 +16,10 @@ import axios from 'axios';
 // import { FlatList } from 'react-native-gesture-handler';
 // import { fakeData } from './fakeData';
 
-export default function HateFoodsScreen({ navigation }) {
+export default function HateFoodsScreen({ navigation, userInfo }) {
   const [foodCategory, setFoodCategory] = useState([]);
   // 위치 권한 허용 Alert
-
+  // console.log(userInfo)
   async function PermissionsLocation() {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,

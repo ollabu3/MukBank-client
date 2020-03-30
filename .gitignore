@@ -1,6 +1,7 @@
 # 임시 
 android/app/src/main/res/values/key.txt
 src/Screens/Login/webclid.txt
+src/Screens/Map/mapkey.txt
 android/app/google-serviece.txt
 android/app/key.txt
 android/app/google-services.json

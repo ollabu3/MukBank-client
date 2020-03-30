@@ -2,12 +2,14 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
-import { BackHandler, Alert } from 'react-native';
+import { BackHandler, Alert, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import { GoogleSignin } from '@react-native-community/google-signin';
+import KakaoLogins from '@react-native-seoul/kakao-login';
 
 import HateFoodsScreen from './src/Screens/HateFood/HateFoodsScreen';
 import IntroScreen from './src/Screens/IntroScreen';
@@ -27,10 +29,11 @@ export default function App() {
     name: '',
     email: '',
     snsId: '',
-    profile: ''
+    profile: '',
+    provider: ''
   });
   const [isLogin, setIsLogin] = useState(false);
-  const [userToken, setUserToken] = useState('');
+  const [authCheck, setAuthCheck] = useState(false);
   const [hateFoods, setHateFoods] = useState(null);
 
   // useEffect(() => {
@@ -53,73 +56,73 @@ export default function App() {
     return true;
   }
 
-  // useEffect(() => {
-  //   axios.get('https://mukbank.xyz:5001/hello').then(res => {
-  //     console.log(res.data);
-  //     setUserToken('test');
-  //   });
-  // }, []);
-
   async function getUser() {
     try {
       const tokenStr = await AsyncStorage.getItem('jwt');
+      if (tokenStr === null) {
+        setAuthCheck(true);
+        console.log('tokenstr, ', tokenStr);
+        return;
+      }
       const token = await JSON.parse(tokenStr).jwt;
-      console.log('togkenStr: ', tokenStr);
-      console.log('toeken:', token);
-
-      const res = await axios('http://10.0.2.2:5001/user/info', {
+      console.log('totken ', token);
+      // localhost --> 'http://10.0.2.2:5001/user/info'
+      const res = await axios('https://mukbank.xyz:5001/user/info', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log('res::: ', res.data);
 
+      if (res.data === 'failed' || res.data === 'wrong') {
+        await setUserInfo({
+          name: '',
+          email: '',
+          snsId: '',
+          profile: '',
+          provider: ''
+        });
+        await setIsLogin(false);
+        await setAuthCheck(true);
+        return;
+      }
       await setUserInfo(res.data);
-      // await setUserToken('ttt');
       await setIsLogin(true);
+      setAuthCheck(true);
     } catch (err) {
       console.log(err);
     }
-
-    // console.log('info::', userInfo);
-
-    // AsyncStorage.getItem('jwt').then(tokenStr => {
-    //   const token = JSON.parse(tokenStr).jwt;
-    //   axios
-    //     .get('http://10.0.2.2:5001/user/info', {
-    //       headers: { Authorization: `Bearer ${token}` }
-    //     })
-    //     .then(res => {
-    //       console.log(res.data);
-    //       // setUserToken('test');
-    //     })
-    //     .catch(err => console.log(err));
-    // });
   }
 
   useEffect(() => {
     getUser();
   }, []);
 
-  // console.log('userInfo~~~', userInfo);
+  const signOut = async () => {
+    try {
+      if (userInfo.provider === 'google') {
+        await GoogleSignin.signOut();
+      } else if (userInfo.provider === 'kakao') {
+        await KakaoLogins.logout();
+      }
 
-  // 로그인 시 유저정보 보낼 때
-  // `https://mukbank.xyz:5001/auth/${provider}/signin`
-  // function postUserInfo(provider, userData) {
-  //   axios
-  //     .post(`http://localhost:5001/auth/${provider}/signin`, {
-  //       email: userData.user.email,
-  //       nick: userData.user.name,
-  //       snsId: userData.user.id,
-  //       userimage: userData.user.photo
-  //     })
-  //     .then(res => console.log('res: ', res.data))
-  //     .cathch(err => console.log('err: ', err));
-  // }
+      await setUserInfo({
+        name: '',
+        email: '',
+        snsId: '',
+        profile: '',
+        provider: ''
+      });
+      await AsyncStorage.clear();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Intro">
-          {props => <IntroScreen {...props} isLogin={isLogin} />}
+          {props => (
+            <IntroScreen {...props} isLogin={isLogin} authCheck={authCheck} />
+          )}
         </Stack.Screen>
         <Stack.Screen name="Login">
           {props => (
@@ -136,8 +139,33 @@ export default function App() {
         <Stack.Screen
           name="SelectFoodOrCafe"
           component={SelectFoodOrCafeScreen}
+          options={{
+            headerRight: () => (
+              <Button
+                onPress={() => {
+                  Alert.alert('MukBank', '(테스트)로그아웃 하시겠습니까?', [
+                    {
+                      text: '아니요',
+                      onPress: () => null,
+                      style: 'cancel'
+                    },
+                    {
+                      text: '예',
+                      onPress: async () => {
+                        await signOut();
+                        Alert.alert(
+                          '로그아웃 되었습니다. 앱을 다시 시작해주세요(테스트메시지)'
+                        );
+                      }
+                    }
+                  ]);
+                }}
+                title="test-logout"
+                color="powderblue"
+              />
+            )
+          }}
         />
-
         <Stack.Screen name="HateFoods">
           {props => <HateFoodsScreen {...props} />}
         </Stack.Screen>

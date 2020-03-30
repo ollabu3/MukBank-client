@@ -61,11 +61,11 @@ export default function App() {
       const tokenStr = await AsyncStorage.getItem('jwt');
       if (tokenStr === null) {
         setAuthCheck(true);
-        console.log('tokenstr, ', tokenStr);
+        // console.log('tokenstr, ', tokenStr);
         return;
       }
       const token = await JSON.parse(tokenStr).jwt;
-      console.log('totken ', token);
+      // console.log('totken ', token);
       // localhost --> 'http://10.0.2.2:5001/user/info'
       const res = await axios('https://mukbank.xyz:5001/user/info', {
         headers: { Authorization: `Bearer ${token}` }
@@ -138,7 +138,6 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen
           name="SelectFoodOrCafe"
-          component={SelectFoodOrCafeScreen}
           options={{
             headerRight: () => (
               <Button
@@ -165,9 +164,12 @@ export default function App() {
               />
             )
           }}
-        />
+        >
+          {props => <SelectFoodOrCafeScreen {...props} userInfo={userInfo} />}
+        </Stack.Screen>
+
         <Stack.Screen name="HateFoods">
-          {props => <HateFoodsScreen {...props} />}
+          {props => <HateFoodsScreen {...props} userInfo={userInfo} />}
         </Stack.Screen>
         <Stack.Screen name="Recommend" component={RecommendBtnScreen} />
         <Stack.Screen name="MainPlace" component={MainPlaceScreen} />

@@ -22,7 +22,7 @@ axios.defaults.withCredentials = true;
 
 GoogleSignin.configure({
   scopes: [], // what API you want to access on behalf of the user, default is email and profile
-  webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)', // client ID of type WEB for your server (needed to verify user ID and offline access)
   hostedDomain: '',
   offlineAccess: true // if you want to access Google API on behalf of the user FROM YOUR SERVER
   // forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.
@@ -44,12 +44,12 @@ const postUserInfo = async (provider, userData) => {
     console.log(err);
   }
 };
-
 export default function LoginScreen({
   navigation,
   isLogin,
   setIsLogin,
-  backBtn
+  backBtn,
+  setUserInfo
 }) {
   // 뒤로가기
   useEffect(() => {
@@ -67,6 +67,13 @@ export default function LoginScreen({
     try {
       const userinfo = await GoogleSignin.signIn();
       await postUserInfo('google', userinfo.user);
+      setUserInfo({
+        email: userinfo.user.email,
+        nick: userinfo.user.nick,
+        snsId: userinfo.user.id,
+        userimage: userinfo.user.photo,
+        provider: 'google'
+      });
       setIsLogin(true);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -91,6 +98,13 @@ export default function LoginScreen({
       if (login.accessToken) {
         const userinfo = await KakaoLogins.getProfile();
         await postUserInfo('kakao', userinfo);
+        setUserInfo({
+          email: userinfo.email,
+          nick: userinfo.nickname,
+          snsId: userinfo.id,
+          userimage: userinfo.profile_image_url,
+          provider: 'kakao'
+        });
         setIsLogin(true);
       } else {
         Alert.alert('Wrong', '다시 로그인을 시도해주세요');

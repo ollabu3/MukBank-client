@@ -16,7 +16,8 @@ import axios from 'axios';
 // import { FlatList } from 'react-native-gesture-handler';
 // import { fakeData } from './fakeData';
 
-export default function HateFoodsScreen({ navigation }) {
+export default function HateFoodsScreen({ navigation, userInfo }) {
+  console.log('hatefood userinfo: ~~  ', userInfo);
   const [foodCategory, setFoodCategory] = useState([]);
   // 위치 권한 허용 Alert
 
@@ -37,11 +38,11 @@ export default function HateFoodsScreen({ navigation }) {
   }
 
   // 카테고리 정보를 가져옴
-  useEffect(() => {
-    axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
-      setNotSelectedList(res.data.sort());
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
+  //     setNotSelectedList(res.data.sort());
+  //   });
+  // }, []);
 
   useEffect(() => {
     axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {

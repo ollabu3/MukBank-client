@@ -64,6 +64,7 @@ export default function App() {
         console.log('tokenstr, ', tokenStr);
         return;
       }
+
       const token = await JSON.parse(tokenStr).jwt;
       console.log('totken ', token);
       // localhost --> 'http://10.0.2.2:5001/user/info'
@@ -92,6 +93,7 @@ export default function App() {
   }
 
   useEffect(() => {
+    console.log('getuser()');
     getUser();
   }, []);
 
@@ -121,7 +123,12 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Intro">
           {props => (
-            <IntroScreen {...props} isLogin={isLogin} authCheck={authCheck} />
+            <IntroScreen
+              {...props}
+              isLogin={isLogin}
+              authCheck={authCheck}
+              userInfo={userInfo}
+            />
           )}
         </Stack.Screen>
         <Stack.Screen name="Login">
@@ -167,7 +174,7 @@ export default function App() {
           }}
         />
         <Stack.Screen name="HateFoods">
-          {props => <HateFoodsScreen {...props} />}
+          {props => <HateFoodsScreen {...props} userInfo={userInfo} />}
         </Stack.Screen>
         <Stack.Screen name="Recommend" component={RecommendBtnScreen} />
         <Stack.Screen name="MainPlace" component={MainPlaceScreen} />

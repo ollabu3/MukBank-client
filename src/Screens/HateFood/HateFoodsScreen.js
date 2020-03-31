@@ -63,7 +63,7 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
                     borderRadius: 10
                   }}
                   onPress={() => {
-                    PermissionsLocation();
+                    navigation.navigate('Map', { parent: '음식점' });
                   }}
                 />
               </Col>

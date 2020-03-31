@@ -272,6 +272,7 @@ export default function MapScreen({ navigation, route }) {
             distance={distance}
             setDirection={setDirection}
             setLastDes={setLastDes}
+            setSelectedIndex={setSelectedIndex}
           />
           <DistanceOrReView
             setDirection={setDirection}

@@ -9,7 +9,9 @@ import axios from 'axios';
 import Buttons from './Components/Buttons';
 import { locations } from './fakeData';
 
-export default function MapScreen({ navigation }) {
+export default function MapScreen({ navigation, route }) {
+  let getParent = route.params.parent;
+  // console.log(getParent);
   let _carousel;
   let _map;
   let _btn;

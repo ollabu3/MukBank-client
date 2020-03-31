@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import HateFoodsListEntry from './HateFoodsListEntry';
 
-export default function HateFoodsList({ foodCategory }) {
+export default function HateFoodsList({ foodCategory, hateList, setHateList }) {
   var oddCategory = [];
   var evenCategory = [];
 
@@ -21,16 +21,24 @@ export default function HateFoodsList({ foodCategory }) {
     <View>
       <Grid>
         <Col size={1}>
-          {oddCategory.map((item, idx) => (
-            <View>
-              <HateFoodsListEntry key={idx} category={item} />
+          {oddCategory.map(item => (
+            <View key={JSON.stringify(item)}>
+              <HateFoodsListEntry
+                category={item}
+                hateList={hateList}
+                setHateList={setHateList}
+              />
             </View>
           ))}
         </Col>
         <Col size={1}>
-          {evenCategory.map((item, idx) => (
-            <View>
-              <HateFoodsListEntry key={idx} category={item} />
+          {evenCategory.map(item => (
+            <View key={JSON.stringify(item)}>
+              <HateFoodsListEntry
+                category={item}
+                hateList={hateList}
+                setHateList={setHateList}
+              />
             </View>
           ))}
         </Col>

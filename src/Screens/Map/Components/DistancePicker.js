@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Picker } from 'react-native';
 
-export default function DistancePicker({ setDistance, distance }) {
+export default function DistancePicker({ setDistance }) {
   const [selectedValue, setSelectedValue] = useState('100');
   const dis = useState([100, 200, 300, 400, 500])[0];
   return (

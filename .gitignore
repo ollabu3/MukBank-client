@@ -6,6 +6,7 @@ android/app/google-serviece.txt
 android/app/key.txt
 android/app/google-services.json
 
+config.js
 
 node_modules/**/*
 .expo/*

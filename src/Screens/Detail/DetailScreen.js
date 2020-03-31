@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 export default function DetailScreen() {
   return (
     <View>
-      <Text>DetailScreen</Text>
+      <Text>페이지 준비중</Text>
     </View>
   );
 }

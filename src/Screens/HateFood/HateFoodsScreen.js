@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  PermissionsAndroid,
-  Alert,
-  SafeAreaView,
-  ScrollView
-} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import HateFoodsList from './HateFoodsList';
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -18,30 +10,15 @@ import axios from 'axios';
 
 export default function HateFoodsScreen({ navigation, userInfo }) {
   const [foodCategory, setFoodCategory] = useState([]);
-  // 위치 권한 허용 Alert
+
   // console.log(userInfo)
-  async function PermissionsLocation() {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'ReactNativeCode Location Permission',
-        message: 'ReactNativeCode App needs access to your location '
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      // Alert.alert('Location Permission Granted.');
-      navigation.navigate('Map');
-    } else {
-      Alert.alert('Location Permission Not Granted');
-    }
-  }
 
   // 카테고리 정보를 가져옴
-  useEffect(() => {
-    axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
-      setNotSelectedList(res.data.sort());
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
+  //     setNotSelectedList(res.data.sort());
+  //   });
+  // }, []);
 
   useEffect(() => {
     axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
@@ -49,7 +26,7 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
       setFoodCategory(res.data);
     });
   }, []);
-  console.log(foodCategory, '53번째줄');
+  // console.log(foodCategory, '53번째줄');
 
   return (
     <View style={{ backgroundColor: 'white' }}>

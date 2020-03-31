@@ -7,7 +7,9 @@ import {
   View,
   TouchableOpacity,
   BackHandler,
-  Alert
+  Alert,
+  ToastAndroid,
+  Image
 } from 'react-native';
 import KakaoLogins from '@react-native-seoul/kakao-login';
 import {
@@ -16,7 +18,7 @@ import {
   GoogleSigninButton
 } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { Row, Grid, Col } from 'react-native-easy-grid';
 import axios from 'axios';
 
 axios.defaults.withCredentials = true;
@@ -79,7 +81,11 @@ export default function LoginScreen({
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
-        Alert.alert('Error', '로그인이 취소되었습니다');
+        ToastAndroid.showWithGravity(
+          '로그인이 취소되었습니다',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER
+        );
       } else if (error.code === statusCodes.IN_PROGRESS) {
         // operation (e.g. sign in) is in progress already
         Alert.alert('Error', '이미 처리되었습니다');
@@ -111,29 +117,100 @@ export default function LoginScreen({
         Alert.alert('Wrong', '다시 로그인을 시도해주세요');
       }
     } catch (error) {
+      ToastAndroid.showWithGravity(
+        error[0],
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      );
       console.log(error);
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.title}>
-        <Text style={styles.titleSize}>MukBank</Text>
+      <View
+        style={[
+          styles.logoSpace,
+          { alignItems: 'flex-end', justifyContent: 'center' }
+        ]}
+      >
+        <Image
+          style={styles.logoStyle}
+          source={require('./LoginImages/mukbank_logo.png')}
+        />
       </View>
-      <View style={styles.button}>
-        <View>
-          <GoogleSigninButton
-            style={{ width: `100%`, height: 60, justifyContent: 'center' }}
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={googleSignIn}
-          />
-        </View>
-        <View>
-          <TouchableOpacity style={styles.btn2} onPress={kakaoSignIn}>
-            <Text style={styles.font2}>Kakao 로그인</Text>
-          </TouchableOpacity>
-        </View>
+      {/*  */}
+      <View style={styles.btnSpace}>
+        <Grid>
+          <Col size={1} />
+          <Col size={4}>
+            <View style={styles.btnMargin}>
+              <TouchableOpacity
+                style={[styles.signinBtn, { backgroundColor: '#ffeb00' }]}
+                onPress={kakaoSignIn}
+              >
+                <Grid>
+                  <Col
+                    size={1.5}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Image
+                      style={styles.signinImg}
+                      source={require('./LoginImages/kakaolink_btn_small.png')}
+                    />
+                  </Col>
+                  <Col
+                    size={4}
+                    style={{
+                      justifyContent: 'center'
+                      // backgroundColor: 'red'
+                    }}
+                  >
+                    <Text style={[styles.btnText, { color: '#3c1e1e' }]}>
+                      카카오 계정으로 로그인
+                    </Text>
+                  </Col>
+                </Grid>
+              </TouchableOpacity>
+            </View>
+            {/*  */}
+            <View>
+              <TouchableOpacity
+                style={[styles.signinBtn, { backgroundColor: '#ffffff' }]}
+                onPress={googleSignIn}
+              >
+                <Grid>
+                  <Col
+                    size={1.5}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Image
+                      style={styles.signinImg}
+                      source={require('./LoginImages/googleSignin.png')}
+                    />
+                  </Col>
+
+                  <Col
+                    size={4}
+                    style={{
+                      justifyContent: 'center'
+                      // backgroundColor: 'red'
+                    }}
+                  >
+                    <Text style={styles.btnText}>구글 계정으로 로그인</Text>
+                  </Col>
+                </Grid>
+              </TouchableOpacity>
+            </View>
+          </Col>
+          <Col size={1} />
+        </Grid>
       </View>
     </View>
   );
@@ -142,44 +219,31 @@ export default function LoginScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
     backgroundColor: 'white'
   },
-  title: {
-    flex: 3,
+  logoSpace: {
+    flex: 1.5
+    // ,backgroundColor: 'red'
+  },
+  logoStyle: {
+    resizeMode: 'contain',
+    height: '100%',
+    width: '100%'
+  },
+  btnSpace: {
+    flex: 1.5
+  },
+  signinBtn: {
+    height: 45,
     width: '100%',
-    height: '18%',
-    justifyContent: 'center',
-    alignItems: 'center'
+    borderRadius: 50,
+    elevation: 2
   },
-  titleSize: {
-    fontSize: 40,
-    fontWeight: 'bold'
-  },
-  button: {
-    flex: 1,
-    justifyContent: 'center'
-  },
-  btn1: {
-    marginBottom: 10,
-    borderRadius: 5,
+  signinImg: {
+    resizeMode: 'contain',
     height: '50%',
-    backgroundColor: '#3b5998',
-    alignItems: 'center',
-    justifyContent: 'center'
+    width: '50%'
   },
-  font1: {
-    fontSize: 20
-  },
-  btn2: {
-    marginBottom: 10,
-    borderRadius: 5,
-    height: '50%',
-    backgroundColor: '#f7e600',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  font2: {
-    fontSize: 20
-  }
+  btnMargin: { marginTop: '3%', marginBottom: '3%' },
+  btnText: { fontSize: 15, fontFamily: 'NanumGothic-Bold' }
 });

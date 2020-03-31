@@ -15,6 +15,7 @@ import HateFoodsScreen from './src/Screens/HateFood/HateFoodsScreen';
 import IntroScreen from './src/Screens/IntroScreen';
 import LoginScreen from './src/Screens/Login/LoginScreen';
 import MapScreen from './src/Screens/Map/MapScreen';
+import DetailScreen from './src/Screens/Detail/DetailScreen';
 import MyPageScreen from './src/Screens/MyPageScreen';
 import RecommendBtnScreen from './src/Screens/RecommendBtnScreen';
 import MainPlaceScreen from './src/Screens/PlaceList/MainPlaceScreen';
@@ -174,6 +175,7 @@ export default function App() {
         <Stack.Screen name="Recommend" component={RecommendBtnScreen} />
         <Stack.Screen name="MainPlace" component={MainPlaceScreen} />
         <Stack.Screen name="Map" component={MapScreen} />
+        <Stack.Screen name="Detail" component={DetailScreen} />
         <Stack.Screen name="MyPage" component={MyPageScreen} />
       </Stack.Navigator>
     </NavigationContainer>

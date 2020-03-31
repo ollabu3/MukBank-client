@@ -1,16 +1,14 @@
 import { MAPBOX_ACCESS_TOKEN } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
-import MapView, { Circle, Callout } from 'react-native-maps';
+import MapView, { Circle } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 
 import DistancePicker from './Components/DistancePicker';
 import DistanceOrReView from './Components/DistanceOrReView';
 import { locations } from './fakeData';
-import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function MapScreen({ navigation, route }) {
@@ -142,7 +140,7 @@ export default function MapScreen({ navigation, route }) {
             <Text
               style={styles.detailBtn}
               onPress={() => {
-                navigation.navigate('Detail');
+                navigation.navigate('Detail', { id: datas[selectedIndex].id });
               }}
             >
               Detail

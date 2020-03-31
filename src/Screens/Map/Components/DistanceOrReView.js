@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Picker } from 'react-native';
 
-export default function DistanceOrReView({ setDistance, setReviewOrDistance }) {
+export default function DistanceOrReView({
+  setDirection,
+  setReviewOrDistance
+}) {
   const [selectedValue, setSelectedValue] = useState('review');
   return (
     <View style={styles.container}>
@@ -11,6 +14,7 @@ export default function DistanceOrReView({ setDistance, setReviewOrDistance }) {
         onValueChange={itemValue => {
           setSelectedValue(itemValue);
           setReviewOrDistance(itemValue);
+          setDirection([]);
         }}
       >
         <Picker.Item label="리뷰순" value="review" />

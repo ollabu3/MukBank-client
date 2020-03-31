@@ -1,3 +1,4 @@
+import { GOOGLE_SIGN_IN_KEY } from '../../../config';
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -22,7 +23,7 @@ axios.defaults.withCredentials = true;
 
 GoogleSignin.configure({
   scopes: [], // what API you want to access on behalf of the user, default is email and profile
-  webClientId: '', // client ID of type WEB for your server (needed to verify user ID and offline access)', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  webClientId: GOOGLE_SIGN_IN_KEY, // client ID of type WEB for your server (needed to verify user ID and offline access)', // client ID of type WEB for your server (needed to verify user ID and offline access)
   hostedDomain: '',
   offlineAccess: true // if you want to access Google API on behalf of the user FROM YOUR SERVER
   // forceCodeForRefreshToken: true // [Android] related to `serverAuthCode`, read the docs link below *.

@@ -1,3 +1,4 @@
+import { MAPBOX_ACCESS_TOKEN } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 import MapView, { Circle, Callout } from 'react-native-maps';
@@ -30,8 +31,7 @@ export default function MapScreen({ navigation, route }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reviewOrDistance, setReviewOrDistance] = useState('review');
 
-  const mapboxKey = '';
-
+  const mapboxKey = MAPBOX_ACCESS_TOKEN;
   // 길찾기
   function getDirection() {
     axios(
@@ -111,11 +111,21 @@ export default function MapScreen({ navigation, route }) {
         </View>
         <View style={styles.contentsContainer}>
           {item.name > 13 ? (
-            <Text style={[styles.contentsText, { fontSize: 12 }]}>
+            <Text
+              style={[
+                styles.contentsText,
+                { fontSize: 12, fontFamily: 'NanumGothic-ExtraBold' }
+              ]}
+            >
               {index + 1 + '. ' + item.name}
             </Text>
           ) : (
-            <Text style={[styles.contentsText, { fontSize: 16 }]}>
+            <Text
+              style={[
+                styles.contentsText,
+                { fontSize: 16, fontFamily: 'NanumGothic-ExtraBold' }
+              ]}
+            >
               {index + 1 + '.' + item.name}
             </Text>
           )}
@@ -292,6 +302,7 @@ let styles = StyleSheet.create({
   contentsContainer: { flex: 6, marginLeft: 5 },
   detailContainer: { flex: 2, alignItems: 'flex-end', marginRight: 10 },
   contentsText: {
+    fontFamily: 'NanumGothic',
     fontSize: 12,
     color: 'black'
   },
@@ -302,7 +313,7 @@ let styles = StyleSheet.create({
     marginTop: 10
   },
   detailBtn: {
-    backgroundColor: 'blue',
+    backgroundColor: '#feee7d',
     padding: 2,
     fontSize: 15,
     color: 'white'

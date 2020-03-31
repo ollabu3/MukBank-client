@@ -5,7 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  Image
+  Image,
+  PermissionsAndroid,
+  ToastAndroid
 } from 'react-native';
 import { Row, Grid, Col } from 'react-native-easy-grid';
 
@@ -58,6 +60,39 @@ const styles = StyleSheet.create({
 
 export default function SelectFoodOrCafeScreen({ navigation, userInfo }) {
   // console.log('selectScreen userInfo', userInfo);
+  /*
+ACCESS_FINE_LOCATION: 'android.permission.ACCESS_FINE_LOCATION'
+ACCESS_COARSE_LOCATION: 'android.permission.ACCESS_COARSE_LOCATION'
+*/
+  // 위치 권한 허용 Alert
+  const showToastPermission = () => {
+    ToastAndroid.showWithGravity(
+      '위치 권한을 허용해 주세요',
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+    );
+  };
+
+  const PermissionsLocation = async (navi, select) => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: '위치 권한 설정',
+          message: '"mukbank"에서 위치 권한 설정을 필요로 합니다.',
+          buttonPositive: 'OK'
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        navigation.navigate(navi, { parent: select });
+      } else {
+        showToastPermission();
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Grid>
@@ -69,7 +104,7 @@ export default function SelectFoodOrCafeScreen({ navigation, userInfo }) {
             <TouchableOpacity
               activeOpacity={1.0}
               style={styles.btn}
-              onPress={() => navigation.navigate('Map')}
+              onPress={() => PermissionsLocation('Map', '카페')}
             >
               <Row size={3}>
                 <Image
@@ -87,7 +122,7 @@ export default function SelectFoodOrCafeScreen({ navigation, userInfo }) {
             <TouchableOpacity
               activeOpacity={1.0}
               style={styles.btn}
-              onPress={() => navigation.navigate('HateFoods')}
+              onPress={() => PermissionsLocation('HateFoods', '음식점')}
             >
               <Row size={3}>
                 <Image

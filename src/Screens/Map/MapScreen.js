@@ -6,25 +6,27 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 
-import Buttons from './Components/Buttons';
+import DistancePicker from './Components/DistancePicker';
+import DistanceOrReView from './Components/DistanceOrReView';
 import { locations } from './fakeData';
+import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 export default function MapScreen({ navigation }) {
   let _carousel;
   let _map;
-  let _btn;
   let _marker;
   const [circle, setCircle] = useState(null); //
   // 초기값 => 현재 위치
   const [location, setLocation] = useState({
-    latitude: 37,
-    longitude: 127
+    latitude: 0,
+    longitude: 0
   });
-  const [datas, setDatas] = useState(locations); // 식당 데이터 배열      (객체 배열)
+  const [datas, setDatas] = useState(null); // 식당 데이터 배열      (객체 배열)
   const [direction, setDirection] = useState([]); // 길찾기 배열     (객체 배열)
   const [lastDes, setLastDes] = useState(null); // 길찾기 목적지        (배열)
   const [distance, setDistance] = useState(0.1);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [reviewOrDistance, setReviewOrDistance] = useState('review');
 
   const mapboxKey = '';
 
@@ -54,7 +56,7 @@ export default function MapScreen({ navigation }) {
       data: {
         latitude: location.latitude,
         longitude: location.longitude,
-        sort: 'review',
+        sort: reviewOrDistance,
         distance,
         parent: '음식점'
       }
@@ -67,9 +69,9 @@ export default function MapScreen({ navigation }) {
 
   useEffect(() => {
     getMarkers();
-  }, [location, distance]);
+  }, [location, distance, reviewOrDistance]);
 
-  useEffect(() => {
+  function GetLocation() {
     Geolocation.getCurrentPosition(position => {
       setLocation({
         latitude: position.coords.latitude,
@@ -80,6 +82,9 @@ export default function MapScreen({ navigation }) {
         longitude: position.coords.longitude
       });
     });
+  }
+  useEffect(() => {
+    GetLocation();
   }, []);
 
   function onCarouselItemChange(index) {
@@ -105,11 +110,11 @@ export default function MapScreen({ navigation }) {
         <View style={styles.contentsContainer}>
           {item.name > 13 ? (
             <Text style={[styles.contentsText, { fontSize: 12 }]}>
-              {index + '. ' + item.name}
+              {index + 1 + '. ' + item.name}
             </Text>
           ) : (
             <Text style={[styles.contentsText, { fontSize: 16 }]}>
-              {index + '.' + item.name}
+              {index + 1 + '.' + item.name}
             </Text>
           )}
           <Text style={styles.contentsText}>{item.firstchild}</Text>
@@ -120,14 +125,16 @@ export default function MapScreen({ navigation }) {
           <Text style={styles.contentsText}>
             {`${item.distance.toFixed(2)}Km`}
           </Text>
-          <Icon
-            name="bike"
-            size={25}
-            color="red"
-            onPress={() => {
-              getDirection();
-            }}
-          />
+          <View style={styles.detailBtnContainer}>
+            <Text
+              style={styles.detailBtn}
+              onPress={() => {
+                navigation.navigate('Detail');
+              }}
+            >
+              Detail
+            </Text>
+          </View>
         </View>
       </View>
     );
@@ -185,6 +192,7 @@ export default function MapScreen({ navigation }) {
           <></>
         )}
       </MapView>
+
       <View style={styles.carousel}>
         <Carousel
           ref={c => {
@@ -206,7 +214,47 @@ export default function MapScreen({ navigation }) {
           }}
         />
       </View>
-      <Buttons setDistance={setDistance} distance={distance} />
+      <View style={{ position: 'absolute', flexDirection: 'row' }}>
+        <View style={{ position: 'absolute', flexDirection: 'row' }}>
+          <DistancePicker
+            setDistance={setDistance}
+            distance={distance}
+            setDirection={setDirection}
+            setLastDes={setLastDes}
+          />
+          <DistanceOrReView
+            setDirection={setDirection}
+            setReviewOrDistance={setReviewOrDistance}
+          />
+        </View>
+        <View
+          style={[
+            styles.container,
+            {
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              marginRight: 10
+            }
+          ]}
+        >
+          <Icon
+            style={{
+              backgroundColor: 'white',
+              margin: 2,
+              marginTop: 13,
+              padding: 6,
+              borderColor: 'gray',
+              borderWidth: 2
+            }}
+            name="crosshairs-gps"
+            size={23}
+            color="gray"
+            onPress={() => {
+              GetLocation();
+            }}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -220,7 +268,7 @@ let styles = StyleSheet.create({
     position: 'absolute',
     flex: 1,
     bottom: '1%',
-    height: 110
+    height: 90
   },
   carouselRenderContainer: {
     flex: 1,
@@ -235,7 +283,7 @@ let styles = StyleSheet.create({
   },
   renderImage: {
     width: '100%',
-    height: 80,
+    height: 70,
     borderColor: 'red',
     borderWidth: 1
   },
@@ -244,5 +292,17 @@ let styles = StyleSheet.create({
   contentsText: {
     fontSize: 12,
     color: 'black'
+  },
+  detailBtnContainer: {
+    borderRadius: 5,
+    borderWidth: 2,
+    marginRight: 10,
+    marginTop: 10
+  },
+  detailBtn: {
+    backgroundColor: 'blue',
+    padding: 2,
+    fontSize: 15,
+    color: 'white'
   }
 });

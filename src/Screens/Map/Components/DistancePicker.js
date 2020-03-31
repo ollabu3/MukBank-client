@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Picker } from 'react-native';
 
-export default function DistancePicker({ setDistance, setSelectedIndex }) {
+export default function DistancePicker({
+  setDistance,
+  setSelectedIndex,
+  setDirection
+}) {
   const [selectedValue, setSelectedValue] = useState('100');
   const dis = useState([100, 200, 300, 400, 500])[0];
   return (
@@ -13,6 +17,7 @@ export default function DistancePicker({ setDistance, setSelectedIndex }) {
           setDistance(itemValue / 1000);
           setSelectedValue(itemValue);
           setSelectedIndex(0);
+          setDirection([]);
         }}
       >
         {dis.map((distance, index) => {

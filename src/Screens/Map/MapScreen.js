@@ -11,6 +11,7 @@ import DistancePicker from './Components/DistancePicker';
 import DistanceOrReView from './Components/DistanceOrReView';
 import { locations } from './fakeData';
 import { color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function MapScreen({ navigation, route }) {
   let getParent = route.params.parent;
@@ -169,8 +170,8 @@ export default function MapScreen({ navigation, route }) {
         }}
         style={styles.map}
         region={{
-          latitude: Number(location.latitude),
-          longitude: Number(location.longitude),
+          latitude: Number(lastDes.latitude),
+          longitude: Number(lastDes.longitude),
           latitudeDelta: distance * 0.03,
           longitudeDelta: distance * 0.03
         }}
@@ -182,6 +183,7 @@ export default function MapScreen({ navigation, route }) {
           strokeWidth={5}
         />
         <MapView.Marker
+          // style={{ width: 100, height: 100 }}
           ref={ref => (_map = ref)}
           coordinate={{
             latitude: Number(datas[selectedIndex].latitude),
@@ -190,7 +192,44 @@ export default function MapScreen({ navigation, route }) {
           onPress={() => {
             getDirection();
           }}
-        />
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Image
+              source={require('./marker.png')}
+              style={{ width: 40, height: 40 }}
+            />
+            {selectedIndex > 98 ? (
+              <Text
+                style={{
+                  position: 'absolute',
+                  bottom: '25%',
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  color: 'red'
+                }}
+              >
+                {selectedIndex + 1}
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  position: 'absolute',
+                  bottom: '25%',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: 'red'
+                }}
+              >
+                {selectedIndex + 1}
+              </Text>
+            )}
+          </View>
+        </MapView.Marker>
         {circle ? (
           <Circle
             radius={distance * 1000}
@@ -249,22 +288,26 @@ export default function MapScreen({ navigation, route }) {
             }
           ]}
         >
-          <Icon
-            style={{
-              backgroundColor: 'white',
-              margin: 2,
-              marginTop: 13,
-              padding: 6,
-              borderColor: 'gray',
-              borderWidth: 2
-            }}
-            name="crosshairs-gps"
-            size={23}
-            color="gray"
+          <TouchableOpacity
             onPress={() => {
               GetLocation();
             }}
-          />
+          >
+            <Image
+              style={{
+                backgroundColor: 'white',
+                margin: 2,
+                marginTop: 13,
+                padding: 6,
+                width: 35,
+                height: 35
+              }}
+              source={require('./gps.png')}
+              name="crosshairs-gps"
+              size={23}
+              color="gray"
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

@@ -60,7 +60,7 @@ export default function MapScreen({ navigation, route }) {
         longitude: location.longitude,
         sort: reviewOrDistance,
         distance,
-        parent: '음식점'
+        parent: getParent
       }
     }).then(res => {
       setDatas(res.data);

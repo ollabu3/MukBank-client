@@ -7,9 +7,6 @@ export default function IntroScreen({
   authCheck,
   userInfo
 }) {
-  console.log('intro isLogin~', isLogin);
-  console.log('intro authCheck~', authCheck);
-  console.log('intro userinfo: ', userInfo);
 
   // isLogin이 false면 Login으로 넘어가기 아닐시 hateFoods로 넘어가기
   if (authCheck === true && isLogin === false) {

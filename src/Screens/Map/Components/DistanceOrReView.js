@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Picker } from 'react-native';
 
-export default function ScrollList({ setDistance, distance }) {
-  const [selectedValue, setSelectedValue] = useState('100');
-  const dis = useState([100, 200, 300, 400, 500])[0];
+export default function DistanceOrReView({
+  setDirection,
+  setReviewOrDistance
+}) {
+  const [selectedValue, setSelectedValue] = useState('review');
   return (
     <View style={styles.container}>
       <Picker
         selectedValue={selectedValue}
         style={{ height: 30, width: 110 }}
-        onValueChange={(itemValue, itemIndex) => {
-          setDistance(itemValue / 1000);
+        onValueChange={itemValue => {
           setSelectedValue(itemValue);
+          setReviewOrDistance(itemValue);
+          setDirection([]);
         }}
       >
-        {dis.map((distance, index) => {
-          return (
-            <Picker.Item key={index} label={distance + 'm'} value={distance} />
-          );
-        })}
+        <Picker.Item label="리뷰순" value="review" />
+        <Picker.Item label="거리순" value="distance" />
       </Picker>
     </View>
   );
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     marginLeft: 10,
-    position: 'absolute',
     flex: 1,
     top: 0,
     borderRadius: 10,

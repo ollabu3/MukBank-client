@@ -1,33 +1,36 @@
+import { MAPBOX_ACCESS_TOKEN } from '../../../config';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
-import MapView, { Circle, Callout } from 'react-native-maps';
+import MapView, { Circle } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 
-import Buttons from './Components/Buttons';
+import DistancePicker from './Components/DistancePicker';
+import DistanceOrReView from './Components/DistanceOrReView';
 import { locations } from './fakeData';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function MapScreen({ navigation }) {
+export default function MapScreen({ navigation, route }) {
+  let getParent = route.params.parent;
+  // console.log(getParent);
   let _carousel;
   let _map;
-  let _btn;
   let _marker;
   const [circle, setCircle] = useState(null); //
   // 초기값 => 현재 위치
   const [location, setLocation] = useState({
-    latitude: 37,
-    longitude: 127
+    latitude: 0,
+    longitude: 0
   });
-  const [datas, setDatas] = useState(locations); // 식당 데이터 배열      (객체 배열)
+  const [datas, setDatas] = useState(null); // 식당 데이터 배열      (객체 배열)
   const [direction, setDirection] = useState([]); // 길찾기 배열     (객체 배열)
   const [lastDes, setLastDes] = useState(null); // 길찾기 목적지        (배열)
   const [distance, setDistance] = useState(0.1);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [reviewOrDistance, setReviewOrDistance] = useState('review');
 
-  const mapboxKey = '';
-
+  const mapboxKey = MAPBOX_ACCESS_TOKEN;
   // 길찾기
   function getDirection() {
     axios(
@@ -54,9 +57,9 @@ export default function MapScreen({ navigation }) {
       data: {
         latitude: location.latitude,
         longitude: location.longitude,
-        sort: 'review',
+        sort: reviewOrDistance,
         distance,
-        parent: '음식점'
+        parent: getParent
       }
     }).then(res => {
       setDatas(res.data);
@@ -67,9 +70,9 @@ export default function MapScreen({ navigation }) {
 
   useEffect(() => {
     getMarkers();
-  }, [location, distance]);
+  }, [location, distance, reviewOrDistance]);
 
-  useEffect(() => {
+  function GetLocation() {
     Geolocation.getCurrentPosition(position => {
       setLocation({
         latitude: position.coords.latitude,
@@ -80,6 +83,9 @@ export default function MapScreen({ navigation }) {
         longitude: position.coords.longitude
       });
     });
+  }
+  useEffect(() => {
+    GetLocation();
   }, []);
 
   function onCarouselItemChange(index) {
@@ -104,12 +110,22 @@ export default function MapScreen({ navigation }) {
         </View>
         <View style={styles.contentsContainer}>
           {item.name > 13 ? (
-            <Text style={[styles.contentsText, { fontSize: 12 }]}>
-              {index + '. ' + item.name}
+            <Text
+              style={[
+                styles.contentsText,
+                { fontSize: 12, fontFamily: 'NanumGothic-ExtraBold' }
+              ]}
+            >
+              {index + 1 + '. ' + item.name}
             </Text>
           ) : (
-            <Text style={[styles.contentsText, { fontSize: 16 }]}>
-              {index + '.' + item.name}
+            <Text
+              style={[
+                styles.contentsText,
+                { fontSize: 16, fontFamily: 'NanumGothic-ExtraBold' }
+              ]}
+            >
+              {index + 1 + '.' + item.name}
             </Text>
           )}
           <Text style={styles.contentsText}>{item.firstchild}</Text>
@@ -120,14 +136,16 @@ export default function MapScreen({ navigation }) {
           <Text style={styles.contentsText}>
             {`${item.distance.toFixed(2)}Km`}
           </Text>
-          <Icon
-            name="bike"
-            size={25}
-            color="red"
-            onPress={() => {
-              getDirection();
-            }}
-          />
+          <View style={styles.detailBtnContainer}>
+            <Text
+              style={styles.detailBtn}
+              onPress={() => {
+                navigation.navigate('Detail', { id: datas[selectedIndex].id });
+              }}
+            >
+              Detail
+            </Text>
+          </View>
         </View>
       </View>
     );
@@ -150,8 +168,8 @@ export default function MapScreen({ navigation }) {
         }}
         style={styles.map}
         region={{
-          latitude: Number(location.latitude),
-          longitude: Number(location.longitude),
+          latitude: Number(lastDes.latitude),
+          longitude: Number(lastDes.longitude),
           latitudeDelta: distance * 0.03,
           longitudeDelta: distance * 0.03
         }}
@@ -163,6 +181,7 @@ export default function MapScreen({ navigation }) {
           strokeWidth={5}
         />
         <MapView.Marker
+          // style={{ width: 100, height: 100 }}
           ref={ref => (_map = ref)}
           coordinate={{
             latitude: Number(datas[selectedIndex].latitude),
@@ -171,7 +190,44 @@ export default function MapScreen({ navigation }) {
           onPress={() => {
             getDirection();
           }}
-        />
+        >
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Image
+              source={require('./marker.png')}
+              style={{ width: 40, height: 40 }}
+            />
+            {selectedIndex > 98 ? (
+              <Text
+                style={{
+                  position: 'absolute',
+                  bottom: '25%',
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  color: 'red'
+                }}
+              >
+                {selectedIndex + 1}
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  position: 'absolute',
+                  bottom: '25%',
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: 'red'
+                }}
+              >
+                {selectedIndex + 1}
+              </Text>
+            )}
+          </View>
+        </MapView.Marker>
         {circle ? (
           <Circle
             radius={distance * 1000}
@@ -185,6 +241,7 @@ export default function MapScreen({ navigation }) {
           <></>
         )}
       </MapView>
+
       <View style={styles.carousel}>
         <Carousel
           ref={c => {
@@ -206,7 +263,52 @@ export default function MapScreen({ navigation }) {
           }}
         />
       </View>
-      <Buttons setDistance={setDistance} distance={distance} />
+      <View style={{ position: 'absolute', flexDirection: 'row' }}>
+        <View style={{ position: 'absolute', flexDirection: 'row' }}>
+          <DistancePicker
+            setDistance={setDistance}
+            distance={distance}
+            setDirection={setDirection}
+            setLastDes={setLastDes}
+            setSelectedIndex={setSelectedIndex}
+          />
+          <DistanceOrReView
+            setDirection={setDirection}
+            setReviewOrDistance={setReviewOrDistance}
+          />
+        </View>
+        <View
+          style={[
+            styles.container,
+            {
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              marginRight: 10
+            }
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              GetLocation();
+            }}
+          >
+            <Image
+              style={{
+                backgroundColor: 'white',
+                margin: 2,
+                marginTop: 13,
+                padding: 6,
+                width: 35,
+                height: 35
+              }}
+              source={require('./gps.png')}
+              name="crosshairs-gps"
+              size={23}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
@@ -220,7 +322,7 @@ let styles = StyleSheet.create({
     position: 'absolute',
     flex: 1,
     bottom: '1%',
-    height: 110
+    height: 90
   },
   carouselRenderContainer: {
     flex: 1,
@@ -235,14 +337,27 @@ let styles = StyleSheet.create({
   },
   renderImage: {
     width: '100%',
-    height: 80,
+    height: 70,
     borderColor: 'red',
     borderWidth: 1
   },
   contentsContainer: { flex: 6, marginLeft: 5 },
   detailContainer: { flex: 2, alignItems: 'flex-end', marginRight: 10 },
   contentsText: {
+    fontFamily: 'NanumGothic',
     fontSize: 12,
     color: 'black'
+  },
+  detailBtnContainer: {
+    borderRadius: 5,
+    borderWidth: 2,
+    marginRight: 10,
+    marginTop: 10
+  },
+  detailBtn: {
+    backgroundColor: '#feee7d',
+    padding: 2,
+    fontSize: 15,
+    color: 'white'
   }
 });

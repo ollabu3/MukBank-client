@@ -10,7 +10,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 // import { fakeData } from './fakeData';
 
 export default function HateFoodsScreen({ navigation, userInfo }) {
-
   const [foodCategory, setFoodCategory] = useState([]);
   const [hateList, setHateList] = useState({
     한식: false,
@@ -28,41 +27,47 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
   });
 
   async function getHateList() {
-    const tokenStr = await AsyncStorage.getItem('jwt');
-    const token = JSON.parse(tokenStr).jwt;
-    const res = await axios('http://10.0.2.2:5001/user/hatefoodSelect', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    // res.data ==> Obj {"fd_category": "일식,중식"}
-    // fdArr ==> [일식, 중식]
-    // fdObj ==> {일식: true, 중식: true}
-    const fdArr = res.data.fd_category.split(',');
-    const fdObj = fdArr.reduce((acc, cur) => {
-      acc[cur] = true;
-      return acc;
-    }, {});
-    setHateList({ ...hateList, ...fdObj });
-    console.log('gethatelist  : ', fdObj);
-    // console.log('hateList: ', hateList);
+    try {
+      const tokenStr = await AsyncStorage.getItem('jwt');
+      const token = JSON.parse(tokenStr).jwt;
+      const res = await axios('https://mukbank.xyz:5001/user/hatefoodSelect', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      //* res.data ==> Obj {"fd_category": "일식,중식"}
+      //* fdArr ==> [일식, 중식]
+      //* fdObj ==> {일식: true, 중식: true}
+      const fdArr = res.data.fd_category.split(',');
+      const fdObj = fdArr.reduce((acc, cur) => {
+        acc[cur] = true;
+        return acc;
+      }, {});
+      setHateList({ ...hateList, ...fdObj });
+      // console.log('gethatelist  : ', fdObj);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async function postHateList() {
     // tokenStr = String {"jwt": "eyfDFE..."}
-    console.log('postHateList clik~!!!!');
-    const tokenStr = await AsyncStorage.getItem('jwt');
-    const token = JSON.parse(tokenStr).jwt;
-    console.log('token~~~', token);
-    const res = await axios({
-      method: 'post',
-      url: 'http://10.0.2.2:5001/user/hatefoodUpdate',
-      headers: { Authorization: `Bearer ${token}` },
-      data: {
-        hatefd: hateList
-      }
-    });
-    console.log('hf res.data~~~', res.data);
+    try {
+      // console.log('postHateList clik~!!!!');
+      const tokenStr = await AsyncStorage.getItem('jwt');
+      const token = JSON.parse(tokenStr).jwt;
+      // console.log('token~~~', token);
+      const res = await axios({
+        method: 'post',
+        url: 'https://mukbank.xyz:5001/user/hatefoodUpdate',
+        headers: { Authorization: `Bearer ${token}` },
+        data: {
+          hatefd: hateList
+        }
+      });
+      // console.log('hf res.data~~~', res.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
-
 
   useEffect(() => {
     axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {

@@ -70,7 +70,7 @@ export default function LoginScreen({
     try {
       const userinfo = await GoogleSignin.signIn();
       await postUserInfo('google', userinfo.user);
-      setUserInfo({
+      await setUserInfo({
         email: userinfo.user.email,
         nick: userinfo.user.nick,
         snsId: userinfo.user.id,
@@ -105,7 +105,7 @@ export default function LoginScreen({
       if (login.accessToken) {
         const userinfo = await KakaoLogins.getProfile();
         await postUserInfo('kakao', userinfo);
-        setUserInfo({
+        await setUserInfo({
           email: userinfo.email,
           nick: userinfo.nickname,
           snsId: userinfo.id,

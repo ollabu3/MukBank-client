@@ -4,10 +4,26 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import foodImgs from './foodImgs';
 
-export default function HateFoodsListEntry({ category }) {
+export default function HateFoodsListEntry({
+  category,
+  hateList,
+  setHateList
+}) {
   const [check, setCheck] = useState(false);
 
-  var checkIcon = null;
+  // console.log('category~ ', category);
+  // console.log('hateList cate ~,', hateList[category]); // true, false
+  // console.log('check: ', check);
+  // console.log('---------------------');
+  // console.log('hatelist~~~', hateList);
+  // let checked = hateList[category];
+
+  useEffect(() => {
+    // console.log('useEffect---');
+    setCheck(hateList[category]);
+  });
+
+  let checkIcon = null;
   if (check) {
     checkIcon = <Icon name="check-circle-outline" size={25} color="black" />;
     // check-box-outline
@@ -23,7 +39,10 @@ export default function HateFoodsListEntry({ category }) {
       <TouchableOpacity
         activeOpacity={1.0}
         style={[styles.Box, styles.boxMargin]}
-        onPress={() => setCheck(!check)}
+        onPress={async () => {
+          // setCheck(!check);
+          setHateList({ ...hateList, [category]: !check });
+        }}
       >
         <Grid>
           <Col size={1} />

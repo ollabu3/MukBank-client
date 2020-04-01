@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  PermissionsAndroid,
-  Alert,
-  SafeAreaView,
-  ScrollView
-} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import HateFoodsList from './HateFoodsList';
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -18,8 +10,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 // import { fakeData } from './fakeData';
 
 export default function HateFoodsScreen({ navigation, userInfo }) {
-  // console.log('hatefood userinfo: ~~  ', userInfo);
-
   const [foodCategory, setFoodCategory] = useState([]);
   const [hateList, setHateList] = useState({
     한식: false,
@@ -36,65 +26,48 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
     퓨전음식: false
   });
 
-  // 위치 권한 허용 Alert
-  async function PermissionsLocation() {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'ReactNativeCode Location Permission',
-        message: 'ReactNativeCode App needs access to your location '
-      }
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      // Alert.alert('Location Permission Granted.');
-      navigation.navigate('Map');
-    } else {
-      Alert.alert('Location Permission Not Granted');
-    }
-  }
-
   async function getHateList() {
-    const tokenStr = await AsyncStorage.getItem('jwt');
-    const token = JSON.parse(tokenStr).jwt;
-    const res = await axios('http://10.0.2.2:5001/user/hatefoodSelect', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    //* res.data ==> Obj {"fd_category": "일식,중식"}
-    //* fdArr ==> [일식, 중식]
-    //* fdObj ==> {일식: true, 중식: true}
-    const fdArr = res.data.fd_category.split(',');
-    const fdObj = fdArr.reduce((acc, cur) => {
-      acc[cur] = true;
-      return acc;
-    }, {});
-    setHateList({ ...hateList, ...fdObj });
-    console.log('gethatelist  : ', fdObj);
-    // console.log('hateList: ', hateList);
+    try {
+      const tokenStr = await AsyncStorage.getItem('jwt');
+      const token = JSON.parse(tokenStr).jwt;
+      const res = await axios('https://mukbank.xyz:5001/user/hatefoodSelect', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      //* res.data ==> Obj {"fd_category": "일식,중식"}
+      //* fdArr ==> [일식, 중식]
+      //* fdObj ==> {일식: true, 중식: true}
+      const fdArr = res.data.fd_category.split(',');
+      const fdObj = fdArr.reduce((acc, cur) => {
+        acc[cur] = true;
+        return acc;
+      }, {});
+      setHateList({ ...hateList, ...fdObj });
+      // console.log('gethatelist  : ', fdObj);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async function postHateList() {
     // tokenStr = String {"jwt": "eyfDFE..."}
-    console.log('postHateList clik~!!!!');
-    const tokenStr = await AsyncStorage.getItem('jwt');
-    const token = JSON.parse(tokenStr).jwt;
-    console.log('token~~~', token);
-    const res = await axios({
-      method: 'post',
-      url: 'http://10.0.2.2:5001/user/hatefoodUpdate',
-      headers: { Authorization: `Bearer ${token}` },
-      data: {
-        hatefd: hateList
-      }
-    });
-    console.log('hf res.data~~~', res.data);
+    try {
+      // console.log('postHateList clik~!!!!');
+      const tokenStr = await AsyncStorage.getItem('jwt');
+      const token = JSON.parse(tokenStr).jwt;
+      // console.log('token~~~', token);
+      const res = await axios({
+        method: 'post',
+        url: 'https://mukbank.xyz:5001/user/hatefoodUpdate',
+        headers: { Authorization: `Bearer ${token}` },
+        data: {
+          hatefd: hateList
+        }
+      });
+      // console.log('hf res.data~~~', res.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
-
-  // 카테고리 정보를 가져옴
-  // useEffect(() => {
-  //   axios('https://mukbank.xyz:5001/restaurant/category').then(res => {
-  //     setNotSelectedList(res.data.sort());
-  //   });
-  // }, []);
 
   useEffect(() => {
     axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
@@ -102,17 +75,9 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
       setFoodCategory(res.data);
     });
     // axios.get('http://10.0.2.2:5001/hello').then(res => console.log(res.data));
-    // console.log('hateScreen~~~~~');
     getHateList();
   }, []);
-
-  // useEffect(() => {
-  //   console.log('-----------', hateList);
-  //   getHateList();
-  //   setHateList({ ...hateList, ...fdObj });
-  // }, [hateList]);
-
-  console.log(foodCategory, '53번째줄');
+  // console.log(foodCategory, '53번째줄');
 
   return (
     <View style={{ backgroundColor: 'white' }}>
@@ -153,8 +118,8 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
                     borderRadius: 10
                   }}
                   onPress={() => {
-                    PermissionsLocation();
                     postHateList();
+                    navigation.navigate('Map', { parent: '음식점' });
                   }}
                 />
               </Col>

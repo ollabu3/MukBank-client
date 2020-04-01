@@ -36,7 +36,6 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
     퓨전음식: false
   });
 
-  // console.log('hateList~~~~', hateList);
   // 위치 권한 허용 Alert
   async function PermissionsLocation() {
     const granted = await PermissionsAndroid.request(
@@ -60,9 +59,9 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
     const res = await axios('http://10.0.2.2:5001/user/hatefoodSelect', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    // res.data ==> Obj {"fd_category": "일식,중식"}
-    // fdArr ==> [일식, 중식]
-    // fdObj ==> {일식: true, 중식: true}
+    //* res.data ==> Obj {"fd_category": "일식,중식"}
+    //* fdArr ==> [일식, 중식]
+    //* fdObj ==> {일식: true, 중식: true}
     const fdArr = res.data.fd_category.split(',');
     const fdObj = fdArr.reduce((acc, cur) => {
       acc[cur] = true;
@@ -103,8 +102,16 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
       setFoodCategory(res.data);
     });
     // axios.get('http://10.0.2.2:5001/hello').then(res => console.log(res.data));
+    // console.log('hateScreen~~~~~');
     getHateList();
   }, []);
+
+  // useEffect(() => {
+  //   console.log('-----------', hateList);
+  //   getHateList();
+  //   setHateList({ ...hateList, ...fdObj });
+  // }, [hateList]);
+
   console.log(foodCategory, '53번째줄');
 
   return (

@@ -5,7 +5,7 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import foodImgs from './foodImgs';
 
 export default function HateFoodsListEntry({
-  category,
+  category, //일식, 중식
   hateList,
   setHateList
 }) {
@@ -21,7 +21,7 @@ export default function HateFoodsListEntry({
   useEffect(() => {
     // console.log('useEffect---');
     setCheck(hateList[category]);
-  });
+  }, [hateList]);
 
   let checkIcon = null;
   if (check) {

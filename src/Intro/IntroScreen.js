@@ -1,7 +1,6 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-// import styles from './IntroStyles';
+import { View, Text } from 'react-native';
+import styles from './IntroStyles';
 
 export default function IntroScreen({ navigation, isLogin, authCheck }) {
   // isLogin이 false면 Login으로 넘어가기 아닐시 hateFoods로 넘어가기
@@ -11,7 +10,7 @@ export default function IntroScreen({ navigation, isLogin, authCheck }) {
     }, 2000);
   } else if (authCheck === true && isLogin === true) {
     setTimeout(() => {
-      navigation.replace('SelectFoodOrCafe');
+      navigation.replace('Main');
     }, 2000);
   }
 
@@ -21,15 +20,3 @@ export default function IntroScreen({ navigation, isLogin, authCheck }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  size: {
-    fontSize: 40,
-    fontWeight: 'bold'
-  }
-});

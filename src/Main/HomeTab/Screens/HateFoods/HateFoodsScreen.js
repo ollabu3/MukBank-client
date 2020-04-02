@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-import { Button } from 'react-native-elements';
-import HateFoodsList from './HateFoodsList';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
 // import { FlatList } from 'react-native-gesture-handler';
 // import { fakeData } from './fakeData';
+import HateFoodBtn from './Components/HateFoodBtn';
+import HateFoodsList from './Components/HateFoodsList';
 
 export default function HateFoodsScreen({ navigation, userInfo }) {
   const [foodCategory, setFoodCategory] = useState([]);
@@ -33,29 +33,22 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
       const res = await axios('https://mukbank.xyz:5001/user/hatefoodSelect', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      //* res.data ==> Obj {"fd_category": "일식,중식"}
-      //* fdArr ==> [일식, 중식]
-      //* fdObj ==> {일식: true, 중식: true}
       const fdArr = res.data.fd_category.split(',');
       const fdObj = fdArr.reduce((acc, cur) => {
         acc[cur] = true;
         return acc;
       }, {});
       setHateList({ ...hateList, ...fdObj });
-      // console.log('gethatelist  : ', fdObj);
     } catch (err) {
       console.log(err);
     }
   }
 
   async function postHateList() {
-    // tokenStr = String {"jwt": "eyfDFE..."}
     try {
-      // console.log('postHateList clik~!!!!');
       const tokenStr = await AsyncStorage.getItem('jwt');
       const token = JSON.parse(tokenStr).jwt;
-      // console.log('token~~~', token);
-      const res = await axios({
+      await axios({
         method: 'post',
         url: 'https://mukbank.xyz:5001/user/hatefoodUpdate',
         headers: { Authorization: `Bearer ${token}` },
@@ -63,7 +56,6 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
           hatefd: hateList
         }
       });
-      // console.log('hf res.data~~~', res.data);
     } catch (err) {
       console.log(err);
     }
@@ -71,13 +63,10 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
 
   useEffect(() => {
     axios.get('https://mukbank.xyz:5001/restaurant/category').then(res => {
-      // console.log(res.data, '51번째줄');
-      setFoodCategory(rezs.data);
+      setFoodCategory(res.data);
     });
-    // axios.get('http://10.0.2.2:5001/hello').then(res => console.log(res.data));
     getHateList();
   }, []);
-  // console.log(foodCategory, '53번째줄');
 
   return (
     <View style={{ backgroundColor: 'white' }}>
@@ -102,25 +91,10 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
             <Grid>
               <Col size={3} />
               <Col size={2.4}>
-                <Button
-                  raised
-                  title="선택 완료"
-                  style={styles.completeBtn}
-                  titleStyle={{
-                    fontFamily: 'NanumGothic-Bold',
-                    color: 'black',
-                    fontSize: 23
-                  }}
-                  containerStyle={{ height: 77 }}
-                  buttonStyle={{
-                    height: '100%',
-                    backgroundColor: '#feee7d',
-                    borderRadius: 10
-                  }}
-                  onPress={() => {
-                    postHateList();
-                    navigation.navigate('Map', { parent: '음식점' });
-                  }}
+                <HateFoodBtn
+                  navigation={navigation}
+                  styles={styles}
+                  postHateList={postHateList}
                 />
               </Col>
               <Col size={3} />

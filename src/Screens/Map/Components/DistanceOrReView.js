@@ -10,7 +10,12 @@ export default function DistanceOrReView({
     <View style={styles.container}>
       <Picker
         selectedValue={selectedValue}
-        style={{ height: 30, width: 110 }}
+        style={{
+          height: 30,
+          width: 110,
+          color: 'black',
+          backgroundColor: 'rgba(255,255,0,0.5)'
+        }}
         onValueChange={itemValue => {
           setSelectedValue(itemValue);
           setReviewOrDistance(itemValue);

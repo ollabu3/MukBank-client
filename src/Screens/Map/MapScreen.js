@@ -29,6 +29,7 @@ export default function MapScreen({ navigation, route }) {
   const [distance, setDistance] = useState(0.1);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reviewOrDistance, setReviewOrDistance] = useState('review');
+  const [count, setCount] = useState(false);
 
   const mapboxKey = MAPBOX_ACCESS_TOKEN;
   // 길찾기
@@ -50,8 +51,8 @@ export default function MapScreen({ navigation, route }) {
   }
 
   // 식당 및 카페 데이터
-  function getMarkers() {
-    axios({
+  async function getMarkers() {
+    await axios({
       method: 'post',
       url: 'https://mukbank.xyz:5001/restaurant/distance',
       data: {
@@ -63,17 +64,49 @@ export default function MapScreen({ navigation, route }) {
       }
     }).then(res => {
       setDatas(res.data);
+      console.log('aaa', res.data[0]);
       setLastDes(res.data[0]);
     });
   }
-  // 식당 혹은 카페 정보 가져오기
+  // 좋아요 몇개 있는지 가져오는 함수
+  // function getLikeCount() {
+  //   axios({
+  //     method: 'post',
+  //     url: 'https://mukbank.xyz:5001/restaurant/restlike',
+  //     data: {
+  //       rest_id: datas[selectedIndex].id
+  //     }
+  //   }).then(res => {
+  //     setCount(res.data);
+  //   });
+  // }
 
+  // // useEffect(() => {
+  // //   getLikeCount();
+  // // }, [count]);
+
+  // 좋아요 올리거나 내리는 함수
+  // async function postLike() {
+  //   const tokenStr = await AsyncStorage.getItem('jwt');
+  //   const token = await JSON.parse(tokenStr).jwt;
+  //   axios({
+  //     method: 'post',
+  //     url: 'https://mukbank.xyz:5001/restaurant/restlike',
+  //     headers: { Authorization: `Bearer ${token}` },
+  //     data: {
+  //       rest_id: 1
+  //     }
+  //   }).then(res => {
+  //     console.log(res);
+  //   });
+  // }
+  // 식당 혹은 카페 정보 가져오기
   useEffect(() => {
     getMarkers();
   }, [location, distance, reviewOrDistance]);
 
-  function GetLocation() {
-    Geolocation.getCurrentPosition(position => {
+  async function GetLocation() {
+    await Geolocation.getCurrentPosition(position => {
       setLocation({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
@@ -88,32 +121,50 @@ export default function MapScreen({ navigation, route }) {
     GetLocation();
   }, []);
 
-  function onCarouselItemChange(index) {
-    const item = datas[index];
-    _map.animateToRegion({
-      latitude: Number(item.latitude),
-      longitude: Number(item.longitude),
-      latitudeDelta: distance * 0.03,
-      longitudeDelta: distance * 0.03
-    });
-    _marker.hideCallout();
-  }
+  // function onCarouselItemChange(index) {
+  //   const item = datas[index];
+  //   _map.animateToRegion({
+  //     latitude: Number(item.latitude),
+  //     longitude: Number(item.longitude),
+  //     latitudeDelta: distance * 0.03,
+  //     longitudeDelta: distance * 0.03
+  //   });
+  // }
 
   function renderItem({ item, index }) {
     return (
       <View style={styles.carouselRenderContainer}>
         <View style={styles.imageConstainer}>
-          <Image
-            source={require('../HateFood/memo.jpg')}
-            style={styles.renderImage}
-          />
+          {item.image ? (
+            <TouchableOpacity
+              onPress={() => {
+                getLikeCount();
+              }}
+            >
+              <Image source={{ uri: item.image }} style={styles.renderImage} />
+            </TouchableOpacity>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                margin: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderColor: 'black',
+                borderWidth: 4
+              }}
+            >
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>이미지</Text>
+              <Text style={{ color: 'black', fontWeight: 'bold' }}>준비중</Text>
+            </View>
+          )}
         </View>
         <View style={styles.contentsContainer}>
-          {item.name > 13 ? (
+          {item.name.length > 13 ? (
             <Text
               style={[
                 styles.contentsText,
-                { fontSize: 12, fontFamily: 'NanumGothic-ExtraBold' }
+                { fontSize: 11, fontFamily: 'NanumGothic-ExtraBold' }
               ]}
             >
               {index + 1 + '. ' + item.name}
@@ -128,9 +179,14 @@ export default function MapScreen({ navigation, route }) {
               {index + 1 + '.' + item.name}
             </Text>
           )}
-          <Text style={styles.contentsText}>{item.firstchild}</Text>
+          {item.firstchild === 'null' ? (
+            <Text style={styles.contentsText}>카페</Text>
+          ) : (
+            <Text style={styles.contentsText}>{item.firstchild}</Text>
+          )}
           <Text style={styles.contentsText}>{item.address}</Text>
         </View>
+        <View>{count !== '' ? <Text>0</Text> : <Text>{count}</Text>}</View>
         <View style={styles.detailContainer}>
           <Text style={styles.contentsText}>{item.address.split(' ')[2]}</Text>
           <Text style={styles.contentsText}>
@@ -188,6 +244,7 @@ export default function MapScreen({ navigation, route }) {
             longitude: Number(datas[selectedIndex].longitude)
           }}
           onPress={() => {
+            setLastDes(datas[selectedIndex]);
             getDirection();
           }}
         >
@@ -235,7 +292,7 @@ export default function MapScreen({ navigation, route }) {
               latitude: circle.latitude,
               longitude: circle.longitude
             }}
-            fillColor="rgba(100, 200, 200, 0.3)"
+            fillColor="rgba(100, 200, 200, 0.2)"
           />
         ) : (
           <></>
@@ -250,16 +307,16 @@ export default function MapScreen({ navigation, route }) {
           data={datas}
           renderItem={renderItem}
           sliderWidth={Dimensions.get('window').width}
-          itemWidth={Dimensions.get('window').width * 0.9}
+          itemWidth={Dimensions.get('window').width * 0.85}
           firstItem={0}
           removeClippedSubviews={false}
-          layout="stack"
-          layoutCardOffset={19}
+          layout="default"
+          // layoutCardOffset={325}
           onSnapToItem={async index => {
             setDirection([]);
             setSelectedIndex(index);
             setLastDes(datas[index]);
-            onCarouselItemChange(index);
+            // onCarouselItemChange(index);
           }}
         />
       </View>
@@ -289,6 +346,7 @@ export default function MapScreen({ navigation, route }) {
         >
           <TouchableOpacity
             onPress={() => {
+              setDirection([]);
               GetLocation();
             }}
           >
@@ -325,9 +383,10 @@ let styles = StyleSheet.create({
     height: 90
   },
   carouselRenderContainer: {
+    padding: 3,
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,80,0.5)',
     borderWidth: 1,
     borderRadius: 15
   },
@@ -355,9 +414,9 @@ let styles = StyleSheet.create({
     marginTop: 10
   },
   detailBtn: {
-    backgroundColor: '#feee7d',
+    backgroundColor: 'rgb(255,255,80)',
     padding: 2,
     fontSize: 15,
-    color: 'white'
+    color: 'black'
   }
 });

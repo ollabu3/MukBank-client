@@ -11,8 +11,14 @@ export default function DistancePicker({
   return (
     <View style={styles.container}>
       <Picker
+        style={{ color: 'white' }}
         selectedValue={selectedValue}
-        style={{ height: 30, width: 110 }}
+        style={{
+          height: 30,
+          width: 110,
+          color: 'black',
+          backgroundColor: 'rgba(255,255,0,0.5)'
+        }}
         onValueChange={(itemValue, itemIndex) => {
           setDistance(itemValue / 1000);
           setSelectedValue(itemValue);

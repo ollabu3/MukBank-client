@@ -94,7 +94,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    console.log('getuser()');
+    // console.log('getuser()');
     getUser();
   }, []);
 

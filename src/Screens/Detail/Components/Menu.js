@@ -9,9 +9,9 @@ export default function Menu({ menu, styles, grid }) {
         <Text style={styles.gridLeftSub}>메뉴</Text>
       </Col>
       <Col size={grid.right} style={styles.gridRight}>
-        {menu ? (
-          menu.map(item => {
-            return <Text>{item}</Text>;
+        {menu !== '' ? (
+          JSON.parse(menu).map(item => {
+            return <Text key={JSON.stringify(item)}>{item}</Text>;
           })
         ) : (
           <></>

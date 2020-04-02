@@ -10,8 +10,8 @@ export default function Option({ option, styles, grid }) {
       </Col>
       <Col size={grid.right} style={styles.gridRight}>
         {option ? (
-          menu.map(item => {
-            return <Text>{option}</Text>;
+          JSON.parse(option).map(item => {
+            return <Text key={JSON.stringify(item)}>{item}</Text>;
           })
         ) : (
           <></>

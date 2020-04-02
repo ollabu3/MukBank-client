@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Dimensions, StyleSheet } from 'react-native';
+import { Text, View, Dimensions, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Card } from 'react-native-elements';
 
 import MainImg from './Components/MainImg';
 import Title from './Components/Title';
@@ -16,27 +16,19 @@ import MenuImage from './Components/MenuImg';
 
 export default function DetailScreen({ route, navigation }) {
   const [detail, setDetail] = useState('');
-  const [option, setOption] = useState('');
-  const [menu, setMenu] = useState('');
-  console.log(detail);
   useEffect(() => {
     axios({
       method: 'post',
       url: 'https://mukbank.xyz:5001/restaurant/detail',
       data: {
-        // rest_id: route.params.id,
         rest_id: route.params.id
       }
     }).then(res => {
-      // console.log(route.params.id);
-      console.log(res.data.name);
       if (res.data === '') {
         navigation.navigate('Map');
         Alert.alert('이 곳은 상세 데이터가 없습니다.');
       } else {
         setDetail(res.data);
-        setOption(JSON.parse(res.option));
-        setMenu(JSON.parse(res.menu));
       }
     });
   }, []);
@@ -76,7 +68,13 @@ export default function DetailScreen({ route, navigation }) {
         </>
       ) : (
         <View>
-          <MainImg img={detail.image} styles={styles} />
+          {detail.image ? (
+            <MainImg img={detail.image} styles={styles} />
+          ) : (
+            <View>
+              <Text>이미지 없음</Text>
+            </View>
+          )}
           <Card>
             <Title name={detail.name} styles={styles} />
           </Card>
@@ -93,10 +91,10 @@ export default function DetailScreen({ route, navigation }) {
             <Clock clock={detail.clock} grid={grid} styles={styles} />
           </Card>
           <Card>
-            <Option option={option} grid={grid} styles={styles} />
+            <Option option={detail.option} grid={grid} styles={styles} />
           </Card>
           <Card>
-            <Menu menu={menu} grid={grid} styles={styles} />
+            <Menu menu={detail.menu} grid={grid} styles={styles} />
           </Card>
           <MenuImage img={detail.menuImage} style={styles} />
         </View>

@@ -32,6 +32,9 @@ export default function DetailScreen({ route, navigation }) {
       }
     });
   }, []);
+
+  // "[\"와이파이\",\"주차장\",\"배달\",\"무료\"]"
+
   const styles = StyleSheet.create({
     MainImg: {
       width: Dimensions.get('window').width,

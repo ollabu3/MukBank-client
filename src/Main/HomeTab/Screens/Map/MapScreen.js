@@ -14,6 +14,7 @@ import CarouselLocation from './RenderComponent/CarouselLocation';
 import DistanceOrReView from './Components/DistanceOrReView';
 // import { locations } from './fakeData';
 import styles from './MapStyles';
+import Loader from 'react-native-modal-loader';
 
 export default function MapScreen({ navigation, userInfo, route }) {
   let getParent = route.params.parent;
@@ -33,7 +34,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reviewOrDistance, setReviewOrDistance] = useState('review');
   const [count, setCount] = useState(false);
-
+  const [isloading, setloading] = useState(false); //loading bar modal state 관리..
   const mapboxKey = MAPBOX_ACCESS_TOKEN;
   // 길찾기
   function getDirection() {
@@ -90,10 +91,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
     });
   }
 
-  useEffect(() => {
-    getLikeCount();
-  }, [count]);
-
   // 좋아요 올리거나 내리는 함수
   async function postLike() {
     const tokenStr = await AsyncStorage.getItem('jwt');
@@ -109,10 +106,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
       console.log(res);
     });
   }
-  // 식당 혹은 카페 정보 가져오기
-  useEffect(() => {
-    getMarkers();
-  }, [location, distance, reviewOrDistance]);
 
   async function GetLocation() {
     await Geolocation.getCurrentPosition(position => {
@@ -126,9 +119,38 @@ export default function MapScreen({ navigation, userInfo, route }) {
       });
     });
   }
+
   useEffect(() => {
     GetLocation();
   }, []);
+
+  useEffect(() => {
+    getLikeCount();
+  }, [count]);
+
+  //loading
+  showLoader = () => {
+    setloading(true);
+  };
+
+  // 식당 혹은 카페 정보 가져오기
+  useEffect(() => {
+    getMarkers();
+  }, [location, distance, reviewOrDistance]);
+
+  useEffect(() => {
+    if (isloading) {
+      setTimeout(() => {
+        setloading(false);
+      }, 300);
+    }
+  }, [isloading]);
+
+  useEffect(() => {
+    if (datas) {
+      setLastDes(datas[selectedIndex]);
+    }
+  }, [selectedIndex]);
 
   function carouselIndexReset(selectedIndex) {
     _carousel.snapToItem(selectedIndex);
@@ -167,6 +189,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
 
   return (
     <View style={styles.container}>
+      <Loader loading={isloading} color="#2089dc" size="large" />
       <MapView
         showsUserLocation
         ref={map => {
@@ -193,7 +216,8 @@ export default function MapScreen({ navigation, userInfo, route }) {
             longitude: Number(datas[selectedIndex].longitude)
           }}
           onPress={() => {
-            setLastDes(datas[selectedIndex]);
+            // setLastDes(datas[selectedIndex]);
+            showLoader();
             getDirection();
           }}
         >
@@ -245,7 +269,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
           onSnapToItem={async index => {
             setDirection([]);
             setSelectedIndex(index);
-            setLastDes(datas[index]);
+            // setLastDes(datas[index]);
           }}
         />
       </View>
@@ -277,8 +301,9 @@ export default function MapScreen({ navigation, userInfo, route }) {
         >
           <TouchableOpacity
             onPress={() => {
-              // GetLocation();
-              setLastDes(circle);
+              setDirection([]);
+              GetLocation();
+              // setLastDes(circle);
             }}
           >
             <Image

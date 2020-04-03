@@ -7,17 +7,18 @@ const styles = StyleSheet.create({
   },
   carousel: {
     position: 'absolute',
+    elevation: 20,
     flex: 1,
     bottom: '1%',
     height: 90
   },
   carouselRenderContainer: {
+    paddingTop: 3,
     padding: 3,
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'rgba(255,255,80,0.5)',
-    borderWidth: 1,
-    borderRadius: 15
+    backgroundColor: 'white',
+    borderRadius: 4
   },
   imageConstainer: {
     flex: 2,
@@ -25,28 +26,28 @@ const styles = StyleSheet.create({
   },
   renderImage: {
     width: '100%',
-    height: 70,
-    borderColor: 'red',
-    borderWidth: 1
+    height: 70
   },
   contentsContainer: { flex: 6, marginLeft: 5 },
   detailContainer: { flex: 2, alignItems: 'flex-end', marginRight: 10 },
   contentsText: {
-    fontFamily: 'NanumGothic',
+    fontFamily: 'NanumGothic-Regular',
     fontSize: 12,
     color: 'black'
   },
   detailBtnContainer: {
-    borderRadius: 5,
-    borderWidth: 2,
     marginRight: 10,
-    marginTop: 10
+    marginTop: 10,
+    elevation: 2,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: '#2089dc'
   },
   detailBtn: {
-    backgroundColor: 'rgb(255,255,80)',
+    backgroundColor: '#2089dc',
     padding: 2,
     fontSize: 15,
-    color: 'black'
+    color: 'white'
   },
   currentLocation: {
     backgroundColor: 'white',
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: 'black',
-    borderWidth: 4
+    borderWidth: 1
   },
   markerNum: {
     position: 'absolute',

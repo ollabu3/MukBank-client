@@ -18,8 +18,7 @@ export default function DistancePicker({
         style={{
           height: 30,
           width: 110,
-          color: 'black',
-          backgroundColor: 'rgba(255,255,0,0.5)'
+          color: 'black'
         }}
         onValueChange={(itemValue, itemIndex) => {
           setDistance(itemValue / 1000);

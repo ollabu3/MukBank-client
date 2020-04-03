@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -8,9 +8,10 @@ import styles from '../HateFoodsStyles';
 import foodImgs from './foodImgs';
 
 export default function HateFoodsListEntry({
-  category, //일식, 중식
+  category,
   hateList,
-  setHateList
+  setHateList,
+  setSelectCategory
 }) {
   const [check, setCheck] = useState(false);
 
@@ -32,8 +33,9 @@ export default function HateFoodsListEntry({
       <TouchableOpacity
         activeOpacity={1.0}
         style={[styles.Box, styles.boxMargin]}
-        onPress={async () => {
+        onPress={() => {
           setHateList({ ...hateList, [category]: !check });
+          setSelectCategory(category);
         }}
       >
         <Grid>

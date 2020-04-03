@@ -5,7 +5,12 @@ import { View } from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import HateFoodsListEntry from './HateFoodsListEntry';
 
-export default function HateFoodsList({ foodCategory, hateList, setHateList }) {
+export default function HateFoodsList({
+  foodCategory,
+  hateList,
+  setHateList,
+  setSelectCategory
+}) {
   var oddCategory = [];
   var evenCategory = [];
 
@@ -27,6 +32,7 @@ export default function HateFoodsList({ foodCategory, hateList, setHateList }) {
                 category={item}
                 hateList={hateList}
                 setHateList={setHateList}
+                setSelectCategory={setSelectCategory}
               />
             </View>
           ))}
@@ -38,6 +44,7 @@ export default function HateFoodsList({ foodCategory, hateList, setHateList }) {
                 category={item}
                 hateList={hateList}
                 setHateList={setHateList}
+                setSelectCategory={setSelectCategory}
               />
             </View>
           ))}

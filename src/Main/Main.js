@@ -25,7 +25,6 @@ export default function Main({ userInfo, setUserInfo }) {
       <MainTab.Screen
         name="Home"
         options={{
-          tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={37} />
           )

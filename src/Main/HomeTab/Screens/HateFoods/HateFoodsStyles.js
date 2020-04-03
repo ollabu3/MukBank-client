@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   completeBtn: {
-    backgroundColor: '#feee7d',
+    // backgroundColor: '#feee7d',
     borderRadius: 10
   },
 

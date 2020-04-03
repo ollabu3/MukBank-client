@@ -12,13 +12,13 @@ export default function({ navigation, postHateList }) {
         style={styles.completeBtn}
         titleStyle={{
           fontFamily: 'NanumGothic-Bold',
-          color: 'black',
+          // color: 'black',
           fontSize: 23
         }}
         containerStyle={{ height: 77 }}
         buttonStyle={{
           height: '100%',
-          backgroundColor: '#feee7d',
+          // backgroundColor: '#feee7d',
           borderRadius: 10
         }}
         onPress={() => {

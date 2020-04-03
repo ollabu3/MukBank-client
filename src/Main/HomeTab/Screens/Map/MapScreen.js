@@ -1,6 +1,6 @@
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { Text, View, Dimensions, Image, ToastAndroid } from 'react-native';
+import { Text, View, Dimensions, Image, ActivityIndicator } from 'react-native';
 import MapView, { Circle } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
@@ -14,6 +14,7 @@ import CarouselLocation from './RenderComponent/CarouselLocation';
 import DistanceOrReView from './Components/DistanceOrReView';
 // import { locations } from './fakeData';
 import styles from './MapStyles';
+import Loader from 'react-native-modal-loader';
 
 export default function MapScreen({ navigation, userInfo, route }) {
   let getParent = route.params.parent;
@@ -33,7 +34,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reviewOrDistance, setReviewOrDistance] = useState('review');
   const [count, setCount] = useState(false);
-
+  const [isloading, setloading] = useState(false); //loading bar modal state 관리..
   const mapboxKey = MAPBOX_ACCESS_TOKEN;
   // 길찾기
   function getDirection() {
@@ -71,8 +72,11 @@ export default function MapScreen({ navigation, userInfo, route }) {
       }
     }).then(res => {
       setDatas(res.data);
-      setLastDes(res.data[0]);
+      setLastDes(res.data[selectedIndex]);
     });
+  }
+  function onMarkerPressed(index) {
+    _carousel.snapToItem(selectedIndex);
   }
   // 좋아요 몇개 있는지 가져오는 함수
   function getLikeCount() {
@@ -86,10 +90,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
       setCount(res.data);
     });
   }
-
-  useEffect(() => {
-    getLikeCount();
-  }, [count]);
 
   // 좋아요 올리거나 내리는 함수
   async function postLike() {
@@ -106,10 +106,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
       console.log(res);
     });
   }
-  // 식당 혹은 카페 정보 가져오기
-  useEffect(() => {
-    getMarkers();
-  }, [location, distance, reviewOrDistance]);
 
   async function GetLocation() {
     await Geolocation.getCurrentPosition(position => {
@@ -123,19 +119,42 @@ export default function MapScreen({ navigation, userInfo, route }) {
       });
     });
   }
+
   useEffect(() => {
     GetLocation();
   }, []);
 
-  // function onCarouselItemChange(index) {
-  //   const item = datas[index];
-  //   _map.animateToRegion({
-  //     latitude: Number(item.latitude),
-  //     longitude: Number(item.longitude),
-  //     latitudeDelta: distance * 0.03,
-  //     longitudeDelta: distance * 0.03
-  //   });
-  // }
+  useEffect(() => {
+    getLikeCount();
+  }, [count]);
+
+  //loading
+  showLoader = () => {
+    setloading(true);
+  };
+
+  // 식당 혹은 카페 정보 가져오기
+  useEffect(() => {
+    getMarkers();
+  }, [location, distance, reviewOrDistance]);
+
+  useEffect(() => {
+    if (isloading) {
+      setTimeout(() => {
+        setloading(false);
+      }, 300);
+    }
+  }, [isloading]);
+
+  useEffect(() => {
+    if (datas) {
+      setLastDes(datas[selectedIndex]);
+    }
+  }, [selectedIndex]);
+
+  function carouselIndexReset(selectedIndex) {
+    _carousel.snapToItem(selectedIndex);
+  }
 
   function renderItem({ item, index }) {
     return (
@@ -161,30 +180,16 @@ export default function MapScreen({ navigation, userInfo, route }) {
   if (!datas || !lastDes) {
     return (
       <>
-        <Text>로딩중</Text>
-        {/* <View style={styles.container}>
-          <MapView
-            showsUserLocation
-            style={styles.map}
-            region={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: distance * 0.03,
-              longitudeDelta: distance * 0.03
-            }}
-          />
-          {ToastAndroid.showWithGravity(
-            '이 주변에 데이터가 없습니다',
-            ToastAndroid.SHORT,
-            ToastAndroid.CENTER
-          )}
-        </View> */}
+        <View style={[styles.container, styles.horizontal]}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
       </>
     );
   }
 
   return (
     <View style={styles.container}>
+      <Loader loading={isloading} color="#2089dc" size="large" />
       <MapView
         showsUserLocation
         ref={map => {
@@ -205,7 +210,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
           strokeWidth={5}
         />
         <MapView.Marker
-          // style={{ width: 100, height: 100 }}
           ref={ref => (_map = ref)}
           coordinate={{
             latitude: Number(datas[selectedIndex].latitude),
@@ -213,6 +217,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
           }}
           onPress={() => {
             // setLastDes(datas[selectedIndex]);
+            showLoader();
             getDirection();
           }}
         >
@@ -235,7 +240,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
             )}
           </View>
         </MapView.Marker>
-        {/* circle : Location 첫 위치 */}
         {circle ? (
           <Circle
             radius={distance * 1000}
@@ -262,27 +266,30 @@ export default function MapScreen({ navigation, userInfo, route }) {
           firstItem={0}
           removeClippedSubviews={false}
           layout="default"
-          // layoutCardOffset={325}
           onSnapToItem={async index => {
             setDirection([]);
             setSelectedIndex(index);
-            setLastDes(datas[index]);
-            // onCarouselItemChange(index);
+            // setLastDes(datas[index]);
           }}
         />
       </View>
       <View style={{ position: 'absolute', flexDirection: 'row' }}>
         <View style={{ position: 'absolute', flexDirection: 'row' }}>
           <DistancePicker
+            carouselIndexReset={carouselIndexReset}
             setDistance={setDistance}
             distance={distance}
             setDirection={setDirection}
             setLastDes={setLastDes}
             setSelectedIndex={setSelectedIndex}
+            showLoader={showLoader}
           />
           <DistanceOrReView
+            carouselIndexReset={carouselIndexReset}
             setDirection={setDirection}
             setReviewOrDistance={setReviewOrDistance}
+            showLoader={showLoader}
+            distance={distance}
           />
         </View>
         <View
@@ -299,6 +306,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
             onPress={() => {
               setDirection([]);
               GetLocation();
+              // setLastDes(circle);
             }}
           >
             <Image

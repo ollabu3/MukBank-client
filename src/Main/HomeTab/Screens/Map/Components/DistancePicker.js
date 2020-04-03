@@ -5,7 +5,9 @@ export default function DistancePicker({
   setDistance,
   setSelectedIndex,
   setDirection,
-  distance
+  distance,
+  carouselIndexReset,
+  showLoader
 }) {
   const [selectedValue, setSelectedValue] = useState(`${distance * 1000}`);
   const dis = useState(['100', '200', '300', '400', '500'])[0];
@@ -17,14 +19,18 @@ export default function DistancePicker({
         style={{
           height: 30,
           width: 110,
-          color: 'black',
-          backgroundColor: 'rgba(255,255,0,0.5)'
+          color: 'black'
         }}
         onValueChange={(itemValue, itemIndex) => {
           setDistance(itemValue / 1000);
           setSelectedValue(itemValue);
           setSelectedIndex(0);
           setDirection([]);
+          carouselIndexReset();
+          if (itemValue / 1000 >= 0.3) {
+            console.log(itemValue / 1000);
+            showLoader();
+          }
         }}
       >
         {dis.map((distance, index) => {

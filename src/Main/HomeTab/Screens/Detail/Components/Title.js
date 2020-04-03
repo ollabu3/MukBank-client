@@ -6,10 +6,10 @@ export default function MainIng({ name }) {
     <View style={{ alignItems: 'center' }}>
       <Text
         style={{
-          fontFamily: 'NanumGothic-ExtraBold',
-          fontSize: 28,
-          color: 'black',
-          fontWeight: 'bold'
+          fontFamily: 'NanumGothic-Bold',
+          fontSize: 25,
+          color: 'black'
+          // fontWeight: 'bold'
         }}
       >
         {name}

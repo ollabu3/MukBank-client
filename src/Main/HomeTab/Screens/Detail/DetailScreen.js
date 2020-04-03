@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Dimensions, StyleSheet, Alert } from 'react-native';
+import { Text, View, Alert } from 'react-native';
 import axios from 'axios';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Card } from 'react-native-elements';
+import { Card, Divider } from 'react-native-elements';
 
 import MainImg from './Components/MainImg';
-import Title from './Components/Title';
 import Description from './Components/Description';
 import Phone from './Components/Phone';
 import Address from './Components/Address';
 import Clock from './Components/Clock';
 import Option from './Components/Option';
 import Menu from './Components/Menu';
-import MenuImage from './Components/MenuImg';
+import styles from './DetailStyles';
+// import MenuImage from './Components/MenuImg';
 
 export default function DetailScreen({ route, navigation }) {
   const [detail, setDetail] = useState('');
@@ -33,30 +33,6 @@ export default function DetailScreen({ route, navigation }) {
     });
   }, []);
 
-  // "[\"와이파이\",\"주차장\",\"배달\",\"무료\"]"
-
-  const styles = StyleSheet.create({
-    MainImg: {
-      width: Dimensions.get('window').width,
-      height: 300
-    },
-    grid: {
-      flexDirection: 'row',
-      backgroundColor: 'red',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    gridLeft: {
-      alignItems: 'center'
-    },
-    gridLeftSub: {
-      fontFamily: 'NanumGothic-ExtraBold'
-    },
-    gridRightContent: {
-      fontFamily: 'NanumGothic'
-    }
-  });
-
   // 주소, 전화번호, 설명, 영업시간 등 grid 좌우 비율
   const grid = {
     left: 1,
@@ -75,31 +51,24 @@ export default function DetailScreen({ route, navigation }) {
             <MainImg img={detail.image} styles={styles} />
           ) : (
             <View>
-              <Text>이미지 없음</Text>
+              <Text>이미지 준비중</Text>
             </View>
           )}
-          <Card>
-            <Title name={detail.name} styles={styles} />
-          </Card>
-          <Card>
+          <Card title={detail.name} titleStyle={styles.title}>
             <Description des={detail.restdetail} grid={grid} styles={styles} />
-          </Card>
-          <Card>
+            <Divider style={styles.divider} />
             <Phone phone={detail.phone} grid={grid} styles={styles} />
-          </Card>
-          <Card>
+            <Divider style={styles.divider} />
             <Address address={detail.roadAddress} grid={grid} styles={styles} />
-          </Card>
-          <Card>
+            <Divider style={styles.divider} />
             <Clock clock={detail.clock} grid={grid} styles={styles} />
-          </Card>
-          <Card>
+            <Divider style={styles.divider} />
             <Option option={detail.option} grid={grid} styles={styles} />
-          </Card>
-          <Card>
+            <Divider style={styles.divider} />
             <Menu menu={detail.menu} grid={grid} styles={styles} />
           </Card>
-          <MenuImage img={detail.menuImage} style={styles} />
+          <View style={{ height: 50 }} />
+          {/* <MenuImage img={detail.menuImage} style={styles} /> */}
         </View>
       )}
     </ScrollView>

@@ -4,7 +4,9 @@ import { View, StyleSheet, Picker } from 'react-native';
 export default function DistanceOrReView({
   setDirection,
   setReviewOrDistance,
-  carouselIndexReset
+  carouselIndexReset,
+  showLoader,
+  distance
 }) {
   const [selectedValue, setSelectedValue] = useState('review');
   return (
@@ -21,6 +23,9 @@ export default function DistanceOrReView({
           setReviewOrDistance(itemValue);
           setDirection([]);
           carouselIndexReset();
+          if (distance >= 0.3) {
+            showLoader();
+          }
         }}
       >
         <Picker.Item label="리뷰순" value="review" />

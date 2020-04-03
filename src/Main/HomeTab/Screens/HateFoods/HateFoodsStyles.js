@@ -5,8 +5,8 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'NanumGothic-ExtraBold',
     textAlign: 'center',
-    fontSize: 35
-    // color: 'black'
+    fontSize: 35,
+    color: 'black'
   },
   completeBtn: {
     // backgroundColor: '#feee7d',

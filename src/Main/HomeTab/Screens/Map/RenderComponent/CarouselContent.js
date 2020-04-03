@@ -9,7 +9,7 @@ export default function CarouselContent({ item, styles, index, count }) {
           <Text
             style={[
               styles.contentsText,
-              { fontSize: 11, fontFamily: 'NanumGothic-ExtraBold' }
+              { fontSize: 11, fontFamily: 'NanumGothic-Bold' }
             ]}
           >
             {index + 1 + '. ' + item.name}
@@ -18,7 +18,7 @@ export default function CarouselContent({ item, styles, index, count }) {
           <Text
             style={[
               styles.contentsText,
-              { fontSize: 16, fontFamily: 'NanumGothic-ExtraBold' }
+              { fontSize: 16, fontFamily: 'NanumGothic-Bold' }
             ]}
           >
             {index + 1 + '.' + item.name}

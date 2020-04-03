@@ -282,11 +282,14 @@ export default function MapScreen({ navigation, userInfo, route }) {
             setDirection={setDirection}
             setLastDes={setLastDes}
             setSelectedIndex={setSelectedIndex}
+            showLoader={showLoader}
           />
           <DistanceOrReView
             carouselIndexReset={carouselIndexReset}
             setDirection={setDirection}
             setReviewOrDistance={setReviewOrDistance}
+            showLoader={showLoader}
+            distance={distance}
           />
         </View>
         <View

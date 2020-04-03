@@ -8,9 +8,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 // import { fakeData } from './fakeData';
 import HateFoodBtn from './Components/HateFoodBtn';
 import HateFoodsList from './Components/HateFoodsList';
+import HateFoodOverlay from './Components/HateFoodOverlay';
 
 export default function HateFoodsScreen({ navigation, userInfo }) {
   const [foodCategory, setFoodCategory] = useState([]);
+  const [selectCategory, setSelectCategory] = useState('');
+  const [overlayVisible, setOverlayVisible] = useState(false);
   const [hateList, setHateList] = useState({
     한식: false,
     일식: false,
@@ -68,11 +71,28 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
     getHateList();
   }, []);
 
+  useEffect(() => {
+    const hateValueArr = Object.values(hateList);
+    const trueValueCnt = hateValueArr.reduce((acc, cur) => {
+      if (cur === false) return acc;
+      if (cur === true) return acc + 1;
+    }, 0);
+    if (trueValueCnt === 12) {
+      setHateList({ ...hateList, [selectCategory]: false });
+      setOverlayVisible(true);
+    }
+  });
+
   return (
     <View style={{ backgroundColor: 'white' }}>
       <SafeAreaView>
         <ScrollView>
           <View>
+            <HateFoodOverlay
+              styles={styles}
+              overlayVisible={overlayVisible}
+              setOverlayVisible={setOverlayVisible}
+            />
             <Text
               style={[
                 styles.titleText,
@@ -86,6 +106,7 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
             foodCategory={foodCategory}
             hateList={hateList}
             setHateList={setHateList}
+            setSelectCategory={setSelectCategory}
           />
           <View style={{ marginTop: '5%', marginBottom: '5%' }}>
             <Grid>
@@ -116,5 +137,17 @@ const styles = StyleSheet.create({
   completeBtn: {
     backgroundColor: '#feee7d',
     borderRadius: 10
+  },
+  overlayTitle: {
+    textAlign: 'center',
+    fontFamily: 'NanumGothic-ExtraBold',
+    fontSize: 28,
+    color: '#2c3e50'
+  },
+  overlayMessage: {
+    textAlign: 'center',
+    fontFamily: 'NanumGothic-Bold',
+    fontSize: 20,
+    color: '#130f40'
   }
 });

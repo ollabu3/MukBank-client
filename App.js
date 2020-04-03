@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import IntroScreen from './src/Intro/IntroScreen';
 import LoginScreen from './src/Login/LoginScreen';
 import Main from './src/Main/Main';
+import DetailScreen from './src/Main/HomeTab/Screens/Detail/DetailScreen';
 
 axios.defaults.withCredentials = true;
 
@@ -95,6 +96,8 @@ export default function App() {
             <Main {...props} userInfo={userInfo} setUserInfo={setUserInfo} />
           )}
         </StackNav.Screen>
+
+        <StackNav.Screen name="Detail" component={DetailScreen} />
       </StackNav.Navigator>
     </NavigationContainer>
   );

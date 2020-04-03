@@ -25,7 +25,12 @@ const styles = StyleSheet.create({
     height: 100,
     marginTop: '2.5%',
     borderRadius: 4,
-    elevation: 2
+    elevation: 3
+  },
+  lkeBoxText: {
+    fontFamily: 'NanumGothic-Bold',
+    color: 'black',
+    fontSize: 25
   }
 });
 

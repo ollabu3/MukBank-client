@@ -21,7 +21,6 @@ export default function HomeTab({ userInfo }) {
         <HomeStack.Screen name="Map">
           {props => <MapScreen {...props} userInfo={userInfo} />}
         </HomeStack.Screen>
-        <HomeStack.Screen name="Detail" component={DetailScreen} />
       </HomeStack.Navigator>
     </>
   );

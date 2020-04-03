@@ -1,10 +1,29 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView
+} from 'react-native';
+import { Grid, Col, Row } from 'react-native-easy-grid';
+import { Card, Button, Avatar } from 'react-native-elements';
 
-export default function MyPageScreen() {
+import styles from './MyPageStyles';
+import Profile from './Components/Profile';
+
+export default function MyPageScreen({ userInfo, setUserInfo }) {
+  // console.log(userInfo);
+  // userInfo.email: YunJu Lee
+  // userInfo.nick: YunJu Lee
+  // userInfo.userimage
+
   return (
-    <View>
-      <Text>MyPage</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Profile userInfo={userInfo} setUserInfo={setUserInfo} />
+      <View style={styles.likeContainer}></View>
+    </SafeAreaView>
   );
 }

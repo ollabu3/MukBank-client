@@ -21,33 +21,23 @@ const styles = StyleSheet.create({
     borderRadius: 4
   },
   imageConstainer: {
-    flex: 2,
+    flex: 1.5,
     justifyContent: 'center'
   },
   renderImage: {
     width: '100%',
     height: 70
   },
-  contentsContainer: { flex: 6, marginLeft: 5 },
-  detailContainer: { flex: 2, alignItems: 'flex-end', marginRight: 10 },
+  contentsContainer: {
+    flex: 6,
+    marginLeft: 5,
+    marginTop: 10
+  },
+  detailContainer: { flex: 1, alignItems: 'flex-start', marginLeft: 10 },
   contentsText: {
     fontFamily: 'NanumGothic-Regular',
     fontSize: 12,
     color: 'black'
-  },
-  detailBtnContainer: {
-    marginRight: 10,
-    marginTop: 10,
-    elevation: 2,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: '#2089dc'
-  },
-  detailBtn: {
-    backgroundColor: '#2089dc',
-    padding: 2,
-    fontSize: 15,
-    color: 'white'
   },
   currentLocation: {
     backgroundColor: 'white',
@@ -71,6 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: 'red'
-  }
+  },
+  divider: { backgroundColor: 'gray', margin: 5 }
 });
 export default styles;

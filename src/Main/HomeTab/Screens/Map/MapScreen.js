@@ -74,7 +74,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
       }
     }).then(res => {
       setDatas(res.data);
-      console.log(res.data);
       setLastDes(res.data[selectedIndex]);
     });
   }

@@ -72,16 +72,17 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
   }, []);
 
   useEffect(() => {
-    const hateValueArr = Object.values(hateList);
-    const trueValueCnt = hateValueArr.reduce((acc, cur) => {
-      if (cur === false) return acc;
-      if (cur === true) return acc + 1;
-    }, 0);
+    let trueValueCnt = 0;
+    for (let key in hateList) {
+      if (key !== '' && hateList[key] === true) {
+        trueValueCnt += 1;
+      }
+    }
     if (trueValueCnt === 12) {
       setHateList({ ...hateList, [selectCategory]: false });
       setOverlayVisible(true);
     }
-  });
+  }, [hateList]);
 
   return (
     <View style={{ backgroundColor: 'white' }}>

@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Row, Grid, Col } from 'react-native-easy-grid';
 
 const selectimgs = {
-  카페: require('./selectImages/카페.png'),
-  음식점: require('./selectImages/음식점.png')
+  카페: require('./selectImages/cafe.png'),
+  음식점: require('./selectImages/rest.png')
 };
 
 export default function SelectBtn({

@@ -13,7 +13,16 @@ export default function LikeBoxes({
 }) {
   return (
     <>
-      <TouchableOpacity style={styles.likeBox} activeOpacity={1.0}>
+      <TouchableOpacity
+        style={styles.likeBox}
+        activeOpacity={1.0}
+        onPress={() =>
+          navigation.navigate('LikeList', {
+            title: `좋아요한 ${likeText}`,
+            parent: `${likeText}`
+          })
+        }
+      >
         <Grid>
           <Col size={4} style={{ justifyContent: 'center', marginLeft: '10%' }}>
             <View>

@@ -24,8 +24,16 @@ export default function DetailScreen({ route, navigation }) {
         rest_id: route.params.id
       }
     }).then(res => {
+      //이미지 데이터가 없을떄...
       if (res.data === '') {
-        navigation.navigate('Map');
+        //부모값이 있을떄랑
+        if (route.params.parent) {
+          navigation.navigate('LikeList');
+        }
+        //부모값이 없을떄....
+        else {
+          navigation.navigate('Map');
+        }
         Alert.alert('이 곳은 상세 데이터가 없습니다.');
       } else {
         setDetail(res.data);

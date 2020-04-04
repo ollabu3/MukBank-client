@@ -1,9 +1,17 @@
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { Text, View, Dimensions, Image, ActivityIndicator } from 'react-native';
+import {
+  Text,
+  View,
+  Dimensions,
+  Image,
+  ActivityIndicator,
+  AsyncStorage
+} from 'react-native';
 import MapView, { Circle } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
+import Loader from 'react-native-modal-loader';
 import axios from 'axios';
 import { MAPBOX_ACCESS_TOKEN } from '../../../../../config';
 
@@ -14,13 +22,10 @@ import CarouselLocation from './RenderComponent/CarouselLocation';
 import DistanceOrReView from './Components/DistanceOrReView';
 // import { locations } from './fakeData';
 import styles from './MapStyles';
-import Loader from 'react-native-modal-loader';
 
 export default function MapScreen({ navigation, userInfo, route }) {
-  let getParent = route.params.parent;
+  const getParent = route.params.parent;
   let _carousel;
-  let _map;
-  let _marker;
   const [circle, setCircle] = useState(null); // location 첫 위치
   // 초기값 => 현재 위치
   const [location, setLocation] = useState({
@@ -33,8 +38,9 @@ export default function MapScreen({ navigation, userInfo, route }) {
   const [distance, setDistance] = useState(0.3);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reviewOrDistance, setReviewOrDistance] = useState('review');
-  const [count, setCount] = useState(false);
-  const [isloading, setloading] = useState(false); //loading bar modal state 관리..
+  const [count, setCount] = useState(0);
+  const [like, setLike] = useState(false);
+  const [isloading, setloading] = useState(false); // loading bar modal state 관리..
   const mapboxKey = MAPBOX_ACCESS_TOKEN;
   // 길찾기
   function getDirection() {
@@ -72,6 +78,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
       }
     }).then(res => {
       setDatas(res.data);
+      console.log(res.data);
       setLastDes(res.data[selectedIndex]);
     });
   }
@@ -80,15 +87,17 @@ export default function MapScreen({ navigation, userInfo, route }) {
   }
   // 좋아요 몇개 있는지 가져오는 함수
   function getLikeCount() {
-    axios({
-      method: 'post',
-      url: 'https://mukbank.xyz:5001/restaurant/restlike',
-      data: {
-        // rest_id: datas[selectedIndex].id
-      }
-    }).then(res => {
-      setCount(res.data);
-    });
+    if (datas !== null) {
+      axios({
+        method: 'post',
+        url: 'https://mukbank.xyz:5001/restaurant/restlike',
+        data: {
+          rest_id: datas[selectedIndex].id
+        }
+      }).then(res => {
+        setCount(res.data);
+      });
+    }
   }
 
   // 좋아요 올리거나 내리는 함수
@@ -100,10 +109,10 @@ export default function MapScreen({ navigation, userInfo, route }) {
       url: 'https://mukbank.xyz:5001/restaurant/restlike',
       headers: { Authorization: `Bearer ${token}` },
       data: {
-        rest_id: 1
+        rest_id: datas[selectedIndex].id
       }
-    }).then(res => {
-      console.log(res);
+    }).then(() => {
+      setLike(like ? false : true);
     });
   }
 
@@ -120,18 +129,17 @@ export default function MapScreen({ navigation, userInfo, route }) {
     });
   }
 
+  function showLoader() {
+    setloading(true);
+  }
+
   useEffect(() => {
     GetLocation();
   }, []);
 
   useEffect(() => {
     getLikeCount();
-  }, [count]);
-
-  //loading
-  showLoader = () => {
-    setloading(true);
-  };
+  }, [like]);
 
   // 식당 혹은 카페 정보 가져오기
   useEffect(() => {
@@ -152,21 +160,28 @@ export default function MapScreen({ navigation, userInfo, route }) {
     }
   }, [selectedIndex]);
 
-  function carouselIndexReset(selectedIndex) {
+  const carouselIndexReset = () => {
     _carousel.snapToItem(selectedIndex);
-  }
+  };
 
   function renderItem({ item, index }) {
     return (
       <View style={styles.carouselRenderContainer}>
         <CarouselImg item={item} getLikeCount={getLikeCount} styles={styles} />
-        <CarouselContent
-          item={item}
-          styles={styles}
-          index={index}
-          count={count}
-        />
+        <TouchableOpacity
+          // activeOpacity={false}
+          style={{ height: 120 }}
+          onPress={() => {
+            navigation.navigate('Detail', { id: datas[selectedIndex].id });
+          }}
+        >
+          <CarouselContent item={item} styles={styles} index={index} />
+        </TouchableOpacity>
         <CarouselLocation
+          like={like}
+          phone={item.phone}
+          postLike={postLike}
+          count={count}
           styles={styles}
           item={item}
           navigation={navigation}
@@ -180,7 +195,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
   if (!datas || !lastDes) {
     return (
       <>
-        <View style={[styles.container, styles.horizontal]}>
+        <View>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       </>
@@ -192,9 +207,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
       <Loader loading={isloading} color="#2089dc" size="large" />
       <MapView
         showsUserLocation
-        ref={map => {
-          _marker = map;
-        }}
         style={styles.map}
         region={{
           latitude: Number(lastDes.latitude),
@@ -210,13 +222,11 @@ export default function MapScreen({ navigation, userInfo, route }) {
           strokeWidth={5}
         />
         <MapView.Marker
-          ref={ref => (_map = ref)}
           coordinate={{
             latitude: Number(datas[selectedIndex].latitude),
             longitude: Number(datas[selectedIndex].longitude)
           }}
           onPress={() => {
-            // setLastDes(datas[selectedIndex]);
             showLoader();
             getDirection();
           }}
@@ -269,7 +279,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
           onSnapToItem={async index => {
             setDirection([]);
             setSelectedIndex(index);
-            // setLastDes(datas[index]);
           }}
         />
       </View>
@@ -301,9 +310,8 @@ export default function MapScreen({ navigation, userInfo, route }) {
         >
           <TouchableOpacity
             onPress={() => {
-              setDirection([]);
+              // setDirection([]);
               GetLocation();
-              // setLastDes(circle);
             }}
           >
             <Image

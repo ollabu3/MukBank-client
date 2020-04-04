@@ -1,20 +1,11 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import { Grid, Col, Row } from 'react-native-easy-grid';
-import { Card, Button, Avatar } from 'react-native-elements';
+import { SafeAreaView, View } from 'react-native';
 
 import styles from './MyPageStyles';
 import Profile from './Components/Profile';
+import LikeBoxes from './Components/LikeBoxes';
 
-export default function MyPageScreen({ userInfo, setUserInfo }) {
+export default function MyPageScreen({ navigation, userInfo, setUserInfo }) {
   // console.log(userInfo);
   // userInfo.email: YunJu Lee
   // userInfo.nick: YunJu Lee
@@ -23,7 +14,19 @@ export default function MyPageScreen({ userInfo, setUserInfo }) {
   return (
     <SafeAreaView style={styles.container}>
       <Profile userInfo={userInfo} setUserInfo={setUserInfo} />
-      <View style={styles.likeContainer}></View>
+      <View style={styles.likeContainer}>
+        <LikeBoxes
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
+          navigation={navigation}
+          likeText={'음식점'}
+        />
+        <LikeBoxes
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
+          likeText={'카페'}
+        />
+      </View>
     </SafeAreaView>
   );
 }

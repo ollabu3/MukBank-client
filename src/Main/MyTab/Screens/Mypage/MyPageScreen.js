@@ -24,6 +24,7 @@ export default function MyPageScreen({ navigation, userInfo, setUserInfo }) {
         <LikeBoxes
           userInfo={userInfo}
           setUserInfo={setUserInfo}
+          navigation={navigation}
           likeText={'카페'}
         />
       </View>

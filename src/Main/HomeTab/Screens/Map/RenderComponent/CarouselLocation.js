@@ -21,8 +21,6 @@ export default function CarouselLocation({
     const token = await JSON.parse(tokenStr).jwt;
 
     if (item !== null) {
-      console.log(item);
-      console.log(item.id);
       axios({
         method: 'post',
         url: 'https://mukbank.xyz:5001/user/userrestsel',

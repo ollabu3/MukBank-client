@@ -48,9 +48,9 @@ export default function CarouselContent({ item, styles, index, count }) {
         )}
         <Text style={styles.contentsText}>{item.address}</Text>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={[styles.contentsText, { paddingRight: 20 }]}>
+          {/* <Text style={[styles.contentsText, { paddingRight: 20 }]}>
             {item.address.split(' ')[2]}
-          </Text>
+          </Text> */}
         </View>
       </View>
     </>

@@ -38,8 +38,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
   const [distance, setDistance] = useState(0.3);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reviewOrDistance, setReviewOrDistance] = useState('review');
-  const [count, setCount] = useState(0);
-  const [like, setLike] = useState(false);
+
   const [isloading, setloading] = useState(false); // loading bar modal state 관리..
   const mapboxKey = MAPBOX_ACCESS_TOKEN;
   // 길찾기
@@ -86,35 +85,8 @@ export default function MapScreen({ navigation, userInfo, route }) {
     _carousel.snapToItem(selectedIndex);
   }
   // 좋아요 몇개 있는지 가져오는 함수
-  function getLikeCount() {
-    if (datas !== null) {
-      axios({
-        method: 'post',
-        url: 'https://mukbank.xyz:5001/restaurant/restlike',
-        data: {
-          rest_id: datas[selectedIndex].id
-        }
-      }).then(res => {
-        setCount(res.data);
-      });
-    }
-  }
 
   // 좋아요 올리거나 내리는 함수
-  async function postLike() {
-    const tokenStr = await AsyncStorage.getItem('jwt');
-    const token = await JSON.parse(tokenStr).jwt;
-    axios({
-      method: 'post',
-      url: 'https://mukbank.xyz:5001/restaurant/restlike',
-      headers: { Authorization: `Bearer ${token}` },
-      data: {
-        rest_id: datas[selectedIndex].id
-      }
-    }).then(() => {
-      setLike(like ? false : true);
-    });
-  }
 
   async function GetLocation() {
     await Geolocation.getCurrentPosition(position => {
@@ -137,10 +109,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
     GetLocation();
   }, []);
 
-  useEffect(() => {
-    getLikeCount();
-  }, [like]);
-
   // 식당 혹은 카페 정보 가져오기
   useEffect(() => {
     getMarkers();
@@ -161,13 +129,13 @@ export default function MapScreen({ navigation, userInfo, route }) {
   }, [selectedIndex]);
 
   const carouselIndexReset = () => {
-    _carousel.snapToItem(selectedIndex);
+    _carousel.snapToItem(0);
   };
 
   function renderItem({ item, index }) {
     return (
       <View style={styles.carouselRenderContainer}>
-        <CarouselImg item={item} getLikeCount={getLikeCount} styles={styles} />
+        <CarouselImg item={item} styles={styles} />
         <TouchableOpacity
           // activeOpacity={false}
           style={{ height: 120 }}
@@ -178,10 +146,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
           <CarouselContent item={item} styles={styles} index={index} />
         </TouchableOpacity>
         <CarouselLocation
-          like={like}
           phone={item.phone}
-          postLike={postLike}
-          count={count}
           styles={styles}
           item={item}
           navigation={navigation}

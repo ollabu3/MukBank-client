@@ -3,7 +3,7 @@ import { Button } from 'react-native-elements';
 
 import styles from '../HateFoodsStyles';
 
-export default function({ navigation, postHateList }) {
+export default function({ navigation, postHateList, hateList }) {
   return (
     <>
       <Button
@@ -23,7 +23,7 @@ export default function({ navigation, postHateList }) {
         }}
         onPress={() => {
           postHateList();
-          navigation.navigate('Map', { parent: '음식점' });
+          navigation.navigate('Map', { parent: '음식점', hateList });
         }}
       />
     </>

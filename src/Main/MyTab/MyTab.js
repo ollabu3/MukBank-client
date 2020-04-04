@@ -7,6 +7,7 @@ import { GoogleSignin } from '@react-native-community/google-signin';
 import KakaoLogins from '@react-native-seoul/kakao-login';
 
 import MyPageScreen from './Screens/Mypage/MyPageScreen';
+import LikeListScreen from './Screens/LikeList/LikeListScreen';
 
 const MyStack = createStackNavigator();
 
@@ -86,6 +87,15 @@ export default function MyTab({
       >
         {props => (
           <MyPageScreen
+            {...props}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+          />
+        )}
+      </MyStack.Screen>
+      <MyStack.Screen name="LikeList" options={{ title: '좋아요 리스트' }}>
+        {props => (
+          <LikeListScreen
             {...props}
             userInfo={userInfo}
             setUserInfo={setUserInfo}

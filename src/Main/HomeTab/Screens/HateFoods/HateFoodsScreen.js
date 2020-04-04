@@ -74,18 +74,17 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
   }, []);
 
   useEffect(() => {
-    console.log('hateList: ', hateList);
-    const hateValueArr = Object.values(hateList);
-    const trueValueCnt = hateValueArr.reduce((acc, cur) => {
-      if (cur === false) return acc;
-      if (cur === true) return acc + 1;
-    }, 0);
-    console.log('trueValueCnt: ', trueValueCnt);
+    let trueValueCnt = 0;
+    for (let key in hateList) {
+      if (key !== '' && hateList[key] === true) {
+        trueValueCnt += 1;
+      }
+    }
     if (trueValueCnt === 12) {
       setHateList({ ...hateList, [selectCategory]: false });
       setOverlayVisible(true);
     }
-  });
+  }, [hateList]);
 
   return (
     <View style={{ backgroundColor: 'white' }}>
@@ -120,6 +119,7 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
                   navigation={navigation}
                   styles={styles}
                   postHateList={postHateList}
+                  hateList={hateList}
                 />
               </Col>
               <Col size={3} />

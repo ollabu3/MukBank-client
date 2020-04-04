@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import MyPageScreen from './Screens/MyPageScreen';
+import MyPageScreen from './Screens/Mypage/MyPageScreen';
 
 const MyStack = createStackNavigator();
 

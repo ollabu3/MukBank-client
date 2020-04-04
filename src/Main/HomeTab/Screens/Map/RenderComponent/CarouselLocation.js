@@ -10,9 +10,7 @@ export default function CarouselLocation({
   navigation,
   datas,
   phone,
-  selectedIndex,
-  distance,
-  reviewOrDistance
+  selectedIndex
 }) {
   const [like, setLike] = useState(false);
   const [count, setCount] = useState(0);
@@ -36,7 +34,6 @@ export default function CarouselLocation({
         setLike(res.data);
       });
     }
-    // console.log('토큰 값ㅇ~~~~', datas[selectedIndex].id);
   }
 
   function getLikeCount() {
@@ -72,15 +69,13 @@ export default function CarouselLocation({
     });
   }
 
+  //item의 기준으로 useeffect 좋아요 를 실행시킨다...
   useEffect(() => {
-    getLikeCount();
-  }, [like, selectedIndex]);
-
-  useEffect(() => {
-    if (distance !== null && reviewOrDistance !== null) {
+    if (datas[selectedIndex].id === item.id) {
       getIsLike();
+      getLikeCount();
     }
-  }, [distance, reviewOrDistance]);
+  }, [like, selectedIndex, item]);
 
   return (
     <>
@@ -110,30 +105,34 @@ export default function CarouselLocation({
             )}
           </Row>
           <Row>
-            <View
-              style={{ flexDirection: 'row', justifyContent: 'flex-start' }}
-            >
-              {like ? (
-                <Icon
-                  name="cards-heart"
-                  size={25}
-                  color="red"
-                  onPress={() => {
-                    postLike();
-                  }}
-                />
-              ) : (
-                <Icon
-                  name="heart-outline"
-                  size={25}
-                  color="black"
-                  onPress={() => {
-                    postLike();
-                  }}
-                />
-              )}
-              {<Text>{count}</Text>}
-            </View>
+            {datas[selectedIndex].id === item.id ? (
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'flex-start' }}
+              >
+                {like ? (
+                  <Icon
+                    name="cards-heart"
+                    size={25}
+                    color="red"
+                    onPress={() => {
+                      postLike();
+                    }}
+                  />
+                ) : (
+                  <Icon
+                    name="heart-outline"
+                    size={25}
+                    color="black"
+                    onPress={() => {
+                      postLike();
+                    }}
+                  />
+                )}
+                {<Text>{count}</Text>}
+              </View>
+            ) : (
+              <></>
+            )}
           </Row>
         </Grid>
       </View>

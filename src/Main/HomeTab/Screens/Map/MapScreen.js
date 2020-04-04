@@ -140,7 +140,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
           // activeOpacity={false}
           style={{ height: 120 }}
           onPress={() => {
-            navigation.navigate('Detail', { id: datas[selectedIndex].id });
+            navigation.navigate('Detail', { id: datas[index].id });
           }}
         >
           <CarouselContent item={item} styles={styles} index={index} />
@@ -152,8 +152,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
           navigation={navigation}
           datas={datas}
           selectedIndex={selectedIndex}
-          distance={distance}
-          reviewOrDistance={reviewOrDistance}
         />
       </View>
     );

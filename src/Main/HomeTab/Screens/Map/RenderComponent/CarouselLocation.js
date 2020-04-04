@@ -17,11 +17,13 @@ export default function CarouselLocation({
   const [like, setLike] = useState(false);
   const [count, setCount] = useState(0);
 
+  //처음 getislike 셋팅...
   async function getIsLike() {
     const tokenStr = await AsyncStorage.getItem('jwt');
     const token = await JSON.parse(tokenStr).jwt;
-    console.log(item);
-    if (datas !== null) {
+
+    if (item !== null) {
+      console.log(item);
       console.log(item.id);
       axios({
         method: 'post',
@@ -33,31 +35,17 @@ export default function CarouselLocation({
       }).then(res => {
         setLike(res.data);
       });
-
-      axios({
-        method: 'post',
-        url: 'https://mukbank.xyz:5001/restaurant/restlike',
-        data: {
-          rest_id: item.id
-        }
-      }).then(res => {
-        if (res) {
-          setCount(res.data.count);
-        } else {
-          setCount(0);
-        }
-      });
     }
     // console.log('토큰 값ㅇ~~~~', datas[selectedIndex].id);
   }
 
   function getLikeCount() {
-    if (datas !== null) {
+    if (item !== null) {
       axios({
         method: 'post',
         url: 'https://mukbank.xyz:5001/restaurant/restlike',
         data: {
-          rest_id: datas[selectedIndex].id
+          rest_id: item.id
         }
       }).then(res => {
         if (res) {
@@ -77,7 +65,7 @@ export default function CarouselLocation({
       url: 'https://mukbank.xyz:5001/user/restlikeupdate',
       headers: { Authorization: `Bearer ${token}` },
       data: {
-        rest_id: datas[selectedIndex].id
+        rest_id: item.id
       }
     }).then(res => {
       setLike(res.data.likecheck);
@@ -86,7 +74,7 @@ export default function CarouselLocation({
 
   useEffect(() => {
     getLikeCount();
-  }, [like]);
+  }, [like, selectedIndex]);
 
   useEffect(() => {
     if (distance !== null && reviewOrDistance !== null) {

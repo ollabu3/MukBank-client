@@ -34,7 +34,7 @@ export default function Profile({ userInfo, setUserInfo }) {
                   { fontFamily: 'NanumGothic-Regular', fontSize: 15 }
                 ]}
               >
-                ollabu3@gmail.com
+                {userInfo.email}
               </Text>
             </View>
           </Row>

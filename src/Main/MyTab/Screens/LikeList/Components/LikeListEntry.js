@@ -23,7 +23,10 @@ export default function LikeListEntry({ list, navigation, parent }) {
         style={styles.LikeListBoxContatiner}
         activeOpacity={1.0}
         onPress={() => {
-          navigation.navigate('Detail', { id: list.rest_id });
+          navigation.navigate('Detail', {
+            id: list.rest_id,
+            parent: parent
+          });
         }}
       >
         <Grid>

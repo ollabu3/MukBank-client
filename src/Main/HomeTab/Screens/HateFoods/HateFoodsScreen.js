@@ -36,12 +36,14 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
       const res = await axios('https://mukbank.xyz:5001/user/hatefoodSelect', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const fdArr = res.data.fd_category.split(',');
-      const fdObj = fdArr.reduce((acc, cur) => {
-        acc[cur] = true;
-        return acc;
-      }, {});
-      setHateList({ ...hateList, ...fdObj });
+      if (res.data.fd_category !== '') {
+        const fdArr = res.data.fd_category.split(',');
+        const fdObj = fdArr.reduce((acc, cur) => {
+          acc[cur] = true;
+          return acc;
+        }, {});
+        setHateList({ ...hateList, ...fdObj });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -72,11 +74,13 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
   }, []);
 
   useEffect(() => {
+    console.log('hateList: ', hateList);
     const hateValueArr = Object.values(hateList);
     const trueValueCnt = hateValueArr.reduce((acc, cur) => {
       if (cur === false) return acc;
       if (cur === true) return acc + 1;
     }, 0);
+    console.log('trueValueCnt: ', trueValueCnt);
     if (trueValueCnt === 12) {
       setHateList({ ...hateList, [selectCategory]: false });
       setOverlayVisible(true);

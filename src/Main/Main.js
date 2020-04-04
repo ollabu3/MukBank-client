@@ -7,7 +7,7 @@ import MyTab from './MyTab/MyTab';
 
 const MainTab = createBottomTabNavigator();
 
-export default function Main({ userInfo, setUserInfo }) {
+export default function Main({ userInfo, setUserInfo, setIsLogin }) {
   return (
     <MainTab.Navigator
       initialRouteName="Home"
@@ -43,7 +43,12 @@ export default function Main({ userInfo, setUserInfo }) {
         }}
       >
         {props => (
-          <MyTab {...props} userInfo={userInfo} setUserInfo={setUserInfo} />
+          <MyTab
+            {...props}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+            setIsLogin={setIsLogin}
+          />
         )}
       </MainTab.Screen>
     </MainTab.Navigator>

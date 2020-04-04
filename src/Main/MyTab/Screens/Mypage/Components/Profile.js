@@ -6,6 +6,7 @@ import { Button, Avatar } from 'react-native-elements';
 import styles from '../MyPageStyles';
 
 export default function Profile({ userInfo, setUserInfo }) {
+  // console.log(userInfo);
   return (
     <>
       <View style={styles.profileBox}>
@@ -19,15 +20,14 @@ export default function Profile({ userInfo, setUserInfo }) {
               rounded
               size={120}
               source={{
-                uri:
-                  'https://lh3.googleusercontent.com/a-/AOh14Gg9FSHxSSG4n-e4HBfiOz5b_WfLqbA6c5DnZjU5=s96-c'
+                uri: `${userInfo.profile}`
               }}
             />
           </Row>
           {/* 프로필 닉네임, 메일 */}
           <Row size={0.6}>
             <View style={styles.profileBox}>
-              <Text style={styles.profileText}>Yunju Lee님</Text>
+              <Text style={styles.profileText}>{userInfo.name}님</Text>
               <Text
                 style={[
                   styles.profileText,

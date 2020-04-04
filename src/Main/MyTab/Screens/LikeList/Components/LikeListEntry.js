@@ -13,15 +13,22 @@ import styles from './LikeListStyles';
 import LikeListImg from './ListComponents/LikeListImg';
 import LikeListText from './ListComponents/LikeListText';
 
-export default function LikeListEntry({ item }) {
+export default function LikeListEntry({ list, navigation, parent }) {
   // console.log(route);
-
+  // console.log(parent);
+  // console.log(list);
   return (
-    <View style={styles.LikeListBoxContatiner}>
-      <TouchableOpacity activeOpacity={1.0}>
+    <View>
+      <TouchableOpacity
+        style={styles.LikeListBoxContatiner}
+        activeOpacity={1.0}
+        onPress={() => {
+          navigation.navigate('Detail', { id: list.rest_id });
+        }}
+      >
         <Grid>
-          <LikeListImg item={item} />
-          <LikeListText item={item} />
+          <LikeListImg list={list} />
+          <LikeListText list={list} />
         </Grid>
       </TouchableOpacity>
     </View>

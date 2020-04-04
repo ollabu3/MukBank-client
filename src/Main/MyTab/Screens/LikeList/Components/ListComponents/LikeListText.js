@@ -4,19 +4,19 @@ import { Col } from 'react-native-easy-grid';
 import { Divider } from 'react-native-elements';
 import styles from '../LikeListStyles';
 
-export default function LikeListText({ item }) {
+export default function LikeListText({ list }) {
   return (
     <>
       <Col size={3}>
-        <Text style={styles.listTitleText}>{item.name}</Text>
+        <Text style={styles.listTitleText}>{list.name}</Text>
 
         <Divider style={{ backgroundColor: 'gray' }} />
 
         <Text style={[styles.listText, { fontSize: 14.5 }]}>
-          {item.address}
+          {list.address}
         </Text>
 
-        <Text style={styles.listText}>{item.firstchild}</Text>
+        <Text style={styles.listText}>{list.secondchild}</Text>
       </Col>
     </>
   );

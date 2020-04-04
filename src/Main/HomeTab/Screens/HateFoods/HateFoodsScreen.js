@@ -116,6 +116,7 @@ export default function HateFoodsScreen({ navigation, userInfo }) {
                   navigation={navigation}
                   styles={styles}
                   postHateList={postHateList}
+                  hateList={hateList}
                 />
               </Col>
               <Col size={3} />

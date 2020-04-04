@@ -1,13 +1,6 @@
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import {
-  Text,
-  View,
-  Dimensions,
-  Image,
-  ActivityIndicator,
-  AsyncStorage
-} from 'react-native';
+import { Text, View, Dimensions, Image, ActivityIndicator } from 'react-native';
 import MapView, { Circle } from 'react-native-maps';
 import Carousel from 'react-native-snap-carousel';
 import Geolocation from 'react-native-geolocation-service';
@@ -25,6 +18,7 @@ import styles from './MapStyles';
 
 export default function MapScreen({ navigation, userInfo, route }) {
   const getParent = route.params.parent;
+  const hateList = route.params.hateList;
   let _carousel;
   const [circle, setCircle] = useState(null); // location 첫 위치
   // 초기값 => 현재 위치
@@ -38,6 +32,8 @@ export default function MapScreen({ navigation, userInfo, route }) {
   const [distance, setDistance] = useState(0.3);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [reviewOrDistance, setReviewOrDistance] = useState('review');
+
+  const [hatefd_category, setHatefd_category] = useState(null);
 
   const [isloading, setloading] = useState(false); // loading bar modal state 관리..
   const mapboxKey = MAPBOX_ACCESS_TOKEN;
@@ -72,6 +68,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
         latitude: location.latitude,
         longitude: location.longitude,
         sort: reviewOrDistance,
+        hatefd_category,
         distance,
         parent: getParent
       }
@@ -81,12 +78,6 @@ export default function MapScreen({ navigation, userInfo, route }) {
       setLastDes(res.data[selectedIndex]);
     });
   }
-  function onMarkerPressed(index) {
-    _carousel.snapToItem(selectedIndex);
-  }
-  // 좋아요 몇개 있는지 가져오는 함수
-
-  // 좋아요 올리거나 내리는 함수
 
   async function GetLocation() {
     await Geolocation.getCurrentPosition(position => {
@@ -104,9 +95,19 @@ export default function MapScreen({ navigation, userInfo, route }) {
   function showLoader() {
     setloading(true);
   }
+  function HateStrig() {
+    let hateArr = [];
+    for (const key in hateList) {
+      if (hateList[key] === true) {
+        hateArr.push(key);
+      }
+    }
+    setHatefd_category(hateArr.join());
+  }
 
   useEffect(() => {
     GetLocation();
+    HateStrig();
   }, []);
 
   // 식당 혹은 카페 정보 가져오기
@@ -160,7 +161,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
   if (!datas || !lastDes) {
     return (
       <>
-        <View>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       </>

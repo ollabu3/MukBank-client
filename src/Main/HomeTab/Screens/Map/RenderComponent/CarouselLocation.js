@@ -10,7 +10,9 @@ export default function CarouselLocation({
   navigation,
   datas,
   phone,
-  selectedIndex
+  selectedIndex,
+  distance,
+  reviewOrDistance
 }) {
   const [like, setLike] = useState(false);
   const [count, setCount] = useState(0);
@@ -18,17 +20,32 @@ export default function CarouselLocation({
   async function getIsLike() {
     const tokenStr = await AsyncStorage.getItem('jwt');
     const token = await JSON.parse(tokenStr).jwt;
+    console.log(item);
     if (datas !== null) {
+      console.log(item.id);
       axios({
         method: 'post',
         url: 'https://mukbank.xyz:5001/user/userrestsel',
         headers: { Authorization: `Bearer ${token}` },
         data: {
-          rest_id: datas[selectedIndex].id
+          rest_id: item.id
         }
       }).then(res => {
-        console.log('-----------------', res);
-        // setLike(res.data);
+        setLike(res.data);
+      });
+
+      axios({
+        method: 'post',
+        url: 'https://mukbank.xyz:5001/restaurant/restlike',
+        data: {
+          rest_id: item.id
+        }
+      }).then(res => {
+        if (res) {
+          setCount(res.data.count);
+        } else {
+          setCount(0);
+        }
       });
     }
     // console.log('토큰 값ㅇ~~~~', datas[selectedIndex].id);
@@ -43,7 +60,11 @@ export default function CarouselLocation({
           rest_id: datas[selectedIndex].id
         }
       }).then(res => {
-        setCount(res.data);
+        if (res) {
+          setCount(res.data.count);
+        } else {
+          setCount(0);
+        }
       });
     }
   }
@@ -53,13 +74,13 @@ export default function CarouselLocation({
     const token = await JSON.parse(tokenStr).jwt;
     axios({
       method: 'post',
-      url: 'https://mukbank.xyz:5001/restaurant/restlike',
+      url: 'https://mukbank.xyz:5001/user/restlikeupdate',
       headers: { Authorization: `Bearer ${token}` },
       data: {
         rest_id: datas[selectedIndex].id
       }
-    }).then(() => {
-      setLike(like ? false : true);
+    }).then(res => {
+      setLike(res.data.likecheck);
     });
   }
 
@@ -68,8 +89,10 @@ export default function CarouselLocation({
   }, [like]);
 
   useEffect(() => {
-    getIsLike();
-  }, []);
+    if (distance !== null && reviewOrDistance !== null) {
+      getIsLike();
+    }
+  }, [distance, reviewOrDistance]);
 
   return (
     <>
@@ -121,7 +144,7 @@ export default function CarouselLocation({
                   }}
                 />
               )}
-              {like ? <Text>{count + 1}</Text> : <Text>{Number(count)}</Text>}
+              {<Text>{count}</Text>}
             </View>
           </Row>
         </Grid>

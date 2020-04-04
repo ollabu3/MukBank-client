@@ -16,13 +16,21 @@ export default function Profile({ userInfo, setUserInfo }) {
             style={{ alignItems: 'flex-end', justifyContent: 'center' }}
           >
             {/* 프로필이미지 */}
-            <Avatar
-              rounded
-              size={120}
-              source={{
-                uri: `${userInfo.profile}`
-              }}
-            />
+            {userInfo.profile ? (
+              <Avatar
+                rounded
+                size={120}
+                source={{
+                  uri: `${userInfo.profile}`
+                }}
+              />
+            ) : (
+              <Avatar
+                rounded
+                size={120}
+                source={require('./images/user.png')}
+              />
+            )}
           </Row>
           {/* 프로필 닉네임, 메일 */}
           <Row size={0.6}>

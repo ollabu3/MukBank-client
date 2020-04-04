@@ -9,8 +9,20 @@ const MyStack = createStackNavigator();
 export default function MyTab({ navigation, userInfo, setUserInfo }) {
   // console.log(userInfo);
   return (
-    <MyStack.Navigator>
-      <MyStack.Screen name="MyPage">
+    <MyStack.Navigator
+      screenOptions={{
+        headerTitleContainerStyle: {
+          left: 0,
+          right: 0,
+          alignItems: 'center'
+        },
+        headerTitleStyle: {
+          fontFamily: 'NanumGothic-Bold',
+          fontSize: 17
+        }
+      }}
+    >
+      <MyStack.Screen name="MyPage" options={{ title: '마이페이지' }}>
         {props => (
           <MyPageScreen
             {...props}

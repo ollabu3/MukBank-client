@@ -152,6 +152,8 @@ export default function MapScreen({ navigation, userInfo, route }) {
           navigation={navigation}
           datas={datas}
           selectedIndex={selectedIndex}
+          distance={distance}
+          reviewOrDistance={reviewOrDistance}
         />
       </View>
     );

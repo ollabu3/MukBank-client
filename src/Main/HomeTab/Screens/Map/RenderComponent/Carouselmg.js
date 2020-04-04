@@ -1,17 +1,28 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
+import { Avatar } from 'react-native-elements';
 
 export default function CarouselImg({ item, getLikeCount, styles }) {
   return (
     <>
       <View style={styles.imageConstainer}>
         {item.image ? (
-          <Image source={{ uri: item.image }} style={styles.renderImage} />
+          <Avatar
+            rounded
+            size={60}
+            source={{
+              uri: item.image
+            }}
+          />
         ) : (
-          <View style={styles.WaingImageText}>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}>이미지</Text>
-            <Text style={{ color: 'black', fontWeight: 'bold' }}>준비중</Text>
-          </View>
+          <Avatar
+            size={60}
+            rounded
+            title={'이미지\n준비중'}
+            titleStyle={{ fontSize: 11, fontFamily: 'NanumGothic-Regular' }}
+            onPress={() => console.log('Works!')}
+            activeOpacity={0.7}
+          />
         )}
       </View>
     </>

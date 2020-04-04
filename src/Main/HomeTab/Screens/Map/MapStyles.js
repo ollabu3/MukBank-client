@@ -21,15 +21,13 @@ const styles = StyleSheet.create({
     borderRadius: 4
   },
   imageConstainer: {
-    flex: 1.5,
+    flex: 1.3,
     justifyContent: 'center'
   },
-  renderImage: {
-    width: '100%',
-    height: 70
-  },
+
   contentsContainer: {
     flex: 6,
+    // width: 210,
     marginLeft: 5,
     marginTop: 10
   },
@@ -47,14 +45,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35
   },
-  WaingImageText: {
-    flex: 1,
-    margin: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'black',
-    borderWidth: 1
-  },
+
   markerNum: {
     position: 'absolute',
     bottom: '25%',

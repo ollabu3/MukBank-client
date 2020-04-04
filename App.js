@@ -93,7 +93,12 @@ export default function App() {
         </StackNav.Screen>
         <StackNav.Screen name="Main">
           {props => (
-            <Main {...props} userInfo={userInfo} setUserInfo={setUserInfo} />
+            <Main
+              {...props}
+              userInfo={userInfo}
+              setUserInfo={setUserInfo}
+              setIsLogin={setIsLogin}
+            />
           )}
         </StackNav.Screen>
 

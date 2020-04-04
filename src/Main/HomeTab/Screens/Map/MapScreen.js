@@ -159,11 +159,15 @@ export default function MapScreen({ navigation, userInfo, route }) {
   //  여기 위까지가 renderItem
   if (!datas || !lastDes) {
     return (
-      <>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      </>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'stretch',
+          height: Dimensions.get('window').height * 0.8
+        }}
+      >
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     );
   }
 

@@ -129,7 +129,7 @@ export default function CarouselLocation({
                 {<Text>{count}</Text>}
               </View>
             ) : (
-              <></>
+              <Icon name="heart-outline" size={25} color="black" />
             )}
           </Row>
         </Grid>

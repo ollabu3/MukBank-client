@@ -49,8 +49,6 @@ export default function LikeListEntry({ list, navigation, parent }) {
       <TouchableOpacity
         style={styles.LikeListBoxContatiner}
         activeOpacity={1.0}
-        // 길게누를시에는 리스트 삭제
-        onLongPress={() => removeAlert()}
         // 누를 시 디테일로 이동
         onPress={() => {
           navigation.navigate('Detail', {
@@ -61,7 +59,7 @@ export default function LikeListEntry({ list, navigation, parent }) {
       >
         <Grid>
           <LikeListImg list={list} />
-          <LikeListText list={list} />
+          <LikeListText list={list} removeAlert={removeAlert} />
         </Grid>
       </TouchableOpacity>
     </View>

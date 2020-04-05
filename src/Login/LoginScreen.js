@@ -55,15 +55,16 @@ export default function LoginScreen({
     }
   }, [isLogin]);
 
+  //구글로그인
   const googleSignIn = async () => {
     try {
       const userinfo = await GoogleSignin.signIn();
       await postUserInfo('google', userinfo.user);
       await setUserInfo({
         email: userinfo.user.email,
-        nick: userinfo.user.nick,
+        name: userinfo.user.name,
         snsId: userinfo.user.id,
-        userimage: userinfo.user.photo,
+        profile: userinfo.user.photo,
         provider: 'google'
       });
       setIsLogin(true);
@@ -88,6 +89,7 @@ export default function LoginScreen({
     }
   };
 
+  //카카오로그인
   const kakaoSignIn = async () => {
     try {
       const login = await KakaoLogins.login();
@@ -96,9 +98,9 @@ export default function LoginScreen({
         await postUserInfo('kakao', userinfo);
         await setUserInfo({
           email: userinfo.email,
-          nick: userinfo.nickname,
+          name: userinfo.nickname,
           snsId: userinfo.id,
-          userimage: userinfo.profile_image_url,
+          profile: userinfo.profile_image_url,
           provider: 'kakao'
         });
         setIsLogin(true);
@@ -107,7 +109,7 @@ export default function LoginScreen({
       }
     } catch (error) {
       ToastAndroid.showWithGravity(
-        error[0],
+        '다시 로그인을 시도해주세요',
         ToastAndroid.SHORT,
         ToastAndroid.CENTER
       );

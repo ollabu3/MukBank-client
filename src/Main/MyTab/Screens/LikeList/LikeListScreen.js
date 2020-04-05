@@ -38,6 +38,10 @@ export default function LikeListScreen({
     likeLists();
   }, []);
 
+  useEffect(() => {
+    likeLists();
+  }, [likeList]);
+
   return (
     <ScrollView>
       {likeList.map(list => (

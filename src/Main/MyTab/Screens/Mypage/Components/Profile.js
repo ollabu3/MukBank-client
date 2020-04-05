@@ -6,7 +6,6 @@ import { Button, Avatar } from 'react-native-elements';
 import styles from '../MyPageStyles';
 
 export default function Profile({ userInfo, setUserInfo }) {
-  // console.log(userInfo);
   return (
     <>
       <View style={styles.profileBox}>
@@ -16,7 +15,8 @@ export default function Profile({ userInfo, setUserInfo }) {
             style={{ alignItems: 'flex-end', justifyContent: 'center' }}
           >
             {/* 프로필이미지 */}
-            {userInfo.profile ? (
+
+            {userInfo.profile /* 이미지 있을때 */ ? (
               <Avatar
                 rounded
                 size={120}
@@ -25,7 +25,7 @@ export default function Profile({ userInfo, setUserInfo }) {
                 }}
               />
             ) : (
-              <Avatar
+              <Avatar /*이미지 없을때 */
                 rounded
                 size={120}
                 source={require('./images/user.png')}

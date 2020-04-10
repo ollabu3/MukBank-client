@@ -8,7 +8,7 @@ import Loader from 'react-native-modal-loader';
 import axios from 'axios';
 import { MAPBOX_ACCESS_TOKEN } from '../../../../../config';
 
-import CarouselImg from './RenderComponent/Carouselmg';
+import CarouselImg from './RenderComponent/CarouselImg';
 import CarouselContent from './RenderComponent/CarouselContent';
 import DistancePicker from './Components/DistancePicker';
 import CarouselLocation from './RenderComponent/CarouselLocation';
@@ -23,8 +23,8 @@ export default function MapScreen({ navigation, userInfo, route }) {
   const [circle, setCircle] = useState(null); // location 첫 위치
   // 초기값 => 현재 위치
   const [location, setLocation] = useState({
-    latitude: 0,
-    longitude: 0
+    latitude: 39,
+    longitude: 127
   });
   const [datas, setDatas] = useState(null); // 식당 데이터 배열      (객체 배열)
   const [direction, setDirection] = useState([]); // 길찾기 배열     (객체 배열)
@@ -207,7 +207,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
             }}
           >
             <Image
-              source={require('./marker.png')}
+              source={require('./MapImgs/marker.png')}
               style={{ width: 40, height: 40 }}
             />
             {selectedIndex > 98 ? (
@@ -288,7 +288,7 @@ export default function MapScreen({ navigation, userInfo, route }) {
           >
             <Image
               style={styles.currentLocation}
-              source={require('./gps.png')}
+              source={require('./MapImgs/gps.png')}
               name="crosshairs-gps"
               size={23}
               color="gray"
